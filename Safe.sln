@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Safe.Storage", "Safe.Storage\Safe.Storage.csproj", "{2D478989-A088-4DB8-B7EA-3FB980520F28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{03EB4ADB-B0E3-45EB-904A-32E1EB9B8777}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Safe.Storage.Tests", "Safe.Storage.Tests\Safe.Storage.Tests.csproj", "{769CE728-B850-4B6B-AD87-ABD05A8A5BAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D478989-A088-4DB8-B7EA-3FB980520F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D478989-A088-4DB8-B7EA-3FB980520F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D478989-A088-4DB8-B7EA-3FB980520F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D478989-A088-4DB8-B7EA-3FB980520F28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{769CE728-B850-4B6B-AD87-ABD05A8A5BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{769CE728-B850-4B6B-AD87-ABD05A8A5BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{769CE728-B850-4B6B-AD87-ABD05A8A5BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{769CE728-B850-4B6B-AD87-ABD05A8A5BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{769CE728-B850-4B6B-AD87-ABD05A8A5BAA} = {03EB4ADB-B0E3-45EB-904A-32E1EB9B8777}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF212340-648E-4354-9971-28172A755350}
+	EndGlobalSection
+EndGlobal
