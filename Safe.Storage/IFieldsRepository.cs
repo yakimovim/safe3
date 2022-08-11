@@ -6,7 +6,7 @@ namespace EdlinSoftware.Safe.Storage
 {
     public interface IFieldsRepository
     {
-        Field GetField(int id);
+        Field? GetField(int id);
 
         IReadOnlyList<Field> GetItemFields(int itemId);
 

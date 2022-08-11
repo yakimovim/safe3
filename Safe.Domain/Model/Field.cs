@@ -1,10 +1,8 @@
-﻿namespace EdlinSoftware.Safe.Storage.Model
+﻿namespace EdlinSoftware.Safe.Domain.Model
 {
     public abstract class Field
     {
-        public int Id { get; set; }
-
-        public int ItemId { get; set; }
+        internal int Id { get; set; }
 
         public string Name { get; set; }
 

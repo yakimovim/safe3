@@ -39,9 +39,11 @@ public class LiteDbItemsRepositoryTests : IDisposable
 
         var restoredItem = _itemsRepository.GetItem(item.Id);
 
+        restoredItem.Should().NotBeNull();
         restoredItem.Title.Should().Be(item.Title);
         restoredItem.Description.Should().Be(item.Description);
         restoredItem.ParentId.Should().BeNull();
+        restoredItem.Tags.Should().HaveCount(2);
     }
 
     [Fact]

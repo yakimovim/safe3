@@ -16,7 +16,7 @@ namespace EdlinSoftware.Safe.Storage
 
         private ILiteCollection<Field> Collection => _dbProvider.GetDatabase().GetCollection<Field>();
 
-        public Field GetField(int id)
+        public Field? GetField(int id)
         {
             return Collection.FindById(id);
         }

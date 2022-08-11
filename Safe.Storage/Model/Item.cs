@@ -12,6 +12,8 @@ namespace EdlinSoftware.Safe.Storage.Model
 
         public string Description { get; set; }
 
+        public List<string> Tags { get; set; } = new List<string>();
+
         public int? IconId { get; set; }
     }
 }

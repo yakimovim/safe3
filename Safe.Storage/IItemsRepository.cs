@@ -6,7 +6,7 @@ namespace EdlinSoftware.Safe.Storage
 {
     public interface IItemsRepository
     {
-        Item GetItem(int id);
+        Item? GetItem(int id);
 
         IReadOnlyList<Item> GetChildItems(int? parentId);
 
