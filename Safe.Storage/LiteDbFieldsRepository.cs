@@ -26,6 +26,7 @@ namespace EdlinSoftware.Safe.Storage
             return Collection
                 .Query()
                 .Where(f => f.ItemId == itemId)
+                .OrderBy(f => f.Order)
                 .ToArray();
         }
 

@@ -12,7 +12,7 @@ namespace EdlinSoftware.Safe.Domain
     {
         private sealed class StorageFieldConverter : Storage.Model.IFieldVisitor<Field>
         {
-            public Field CreateFrom(EdlinSoftware.Safe.Storage.Model.Field field)
+            public Field CreateFrom(Storage.Model.Field field)
             {
                 var result = field.Visit(this);
                 result.Id = field.Id;
@@ -37,7 +37,7 @@ namespace EdlinSoftware.Safe.Domain
             }
         }
 
-        private sealed class DomainFieldConverter : Domain.Model.IFieldVisitor<Storage.Model.Field>
+        private sealed class DomainFieldConverter : IFieldVisitor<Storage.Model.Field>
         {
             private readonly int _itemId;
 
@@ -147,8 +147,10 @@ namespace EdlinSoftware.Safe.Domain
                 })
                 .ToArray();
 
+            var order = 0;
             foreach (var fieldsPair in newFieldsData)
             {
+                fieldsPair.StorageField.Order = order++;
                 if (oldFieldsData.ContainsKey(fieldsPair.StorageField.Id))
                 {
                     oldFieldsData.Remove(fieldsPair.StorageField.Id);

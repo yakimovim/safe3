@@ -7,10 +7,7 @@ namespace EdlinSoftware.Safe.Domain.Model
     {
         public Item(Item? parentItem = null)
         {
-            ParentId = parentItem?.Id;
-
-            if (ParentId == 0)
-                throw new ArgumentException("Save parent item before creation of child items");
+            MoveTo(parentItem);
         }
 
         internal int Id { get; set; }
@@ -24,5 +21,15 @@ namespace EdlinSoftware.Safe.Domain.Model
         public List<string> Tags { get; set; } = new List<string>();
 
         public List<Field> Fields { get; } = new List<Field>();
+
+        public void MoveTo(Item? parentItem)
+        {
+            var parentId = parentItem?.Id;
+
+            if (parentId == 0)
+                throw new ArgumentException("Save parent item before creation of child items");
+
+            ParentId = parentId;
+        }
     }
 }

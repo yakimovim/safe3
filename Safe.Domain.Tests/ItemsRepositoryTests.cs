@@ -138,6 +138,52 @@ public class ItemsRepositoryTests : IDisposable
         restoredItem.Fields[1].Name.Should().Be("C");
     }
 
+    [Fact]
+    public void PreserveFieldsOrder()
+    {
+        var item = CreateItem();
+        item.Fields.Add(new TextField { Name = "A" });
+        item.Fields.Add(new TextField { Name = "B" });
+
+        _itemsRepository.SaveItem(item);
+
+        var fields = item.Fields.ToArray();
+        item.Fields.Clear();
+        item.Fields.AddRange(fields.Reverse());
+
+        _itemsRepository.SaveItem(item);
+
+        var restoredItem = _itemsRepository.GetChildItems(null).Single();
+
+        restoredItem.Fields.Should().HaveCount(2);
+        restoredItem.Fields[0].Name.Should().Be("B");
+        restoredItem.Fields[1].Name.Should().Be("A");
+    }
+
+    [Fact]
+    public void MoveItem()
+    {
+        var rootItem1 = CreateItem();
+        var rootItem2 = CreateItem();
+
+        _itemsRepository.SaveItem(rootItem1);
+        _itemsRepository.SaveItem(rootItem2);
+
+        var item = CreateItem(rootItem1);
+
+        _itemsRepository.SaveItem(item);
+
+        _itemsRepository.GetChildItems(rootItem1).Should().HaveCount(1);
+        _itemsRepository.GetChildItems(rootItem2).Should().HaveCount(0);
+
+        item.MoveTo(rootItem2);
+
+        _itemsRepository.SaveItem(item);
+
+        _itemsRepository.GetChildItems(rootItem1).Should().HaveCount(0);
+        _itemsRepository.GetChildItems(rootItem2).Should().HaveCount(1);
+    }
+
     public void Dispose()
     {
         _databaseProvider.Dispose();
