@@ -1,13 +1,9 @@
-﻿namespace EdlinSoftware.Safe.Storage.Model
+﻿using LiteDB;
+
+namespace EdlinSoftware.Safe.Storage.Model
 {
     public abstract class Field
     {
-        public int Id { get; set; }
-
-        public int ItemId { get; set; }
-
-        public int Order { get; set; }
-
         public string Name { get; set; }
 
         public abstract void Visit(IFieldVisitor visitor);
@@ -17,6 +13,7 @@
 
     public sealed class TextField : Field
     {
+        [BsonField("Value")]
         public string Text { get; set; }
 
         public override void Visit(IFieldVisitor visitor)
@@ -32,6 +29,7 @@
 
     public sealed class PasswordField : Field
     {
+        [BsonField("Value")]
         public string Password { get; set; }
 
         public override void Visit(IFieldVisitor visitor)

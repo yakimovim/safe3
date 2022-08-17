@@ -74,6 +74,7 @@ public class SearchModelBuilderTests
     [InlineData("Description:\"test case\"", Fields.Description)]
     [InlineData("tag:\"Online Shop\"", Fields.Tag)]
     [InlineData("field:\"yandex browser\"", Fields.Field)]
+    [InlineData("field:\"http://www.contoso.com\"", Fields.Field)]
     public void FieldWithSeveralWords(string input, Fields field)
     {
         var parts = input.Split(':');
@@ -84,7 +85,7 @@ public class SearchModelBuilderTests
         elements.Should().HaveCount(1);
 
         elements.Single().Field.Should().Be(field);
-        elements.Single().Text.Should().Be(parts[1].Trim('"'));
+        elements.Single().Text.Should().Be(string.Join(':', parts.Skip(1)).Trim('"'));
     }
 
     [Fact]

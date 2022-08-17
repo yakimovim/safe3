@@ -5,34 +5,33 @@ namespace EdlinSoftware.Safe.Storage.Tests.Infrastructure;
 
 public static class Generators
 {
-    private static readonly Faker _faker = new Faker();
+    private static readonly Faker DataFaker = new Faker();
 
     public static Item CreateItem(int? parentId = null)
     {
         return new Item
         {
-            Title = _faker.Name.JobTitle(),
-            Description = _faker.Name.JobDescriptor(),
+            Title = DataFaker.Name.JobTitle(),
+            Description = DataFaker.Name.JobDescriptor(),
             ParentId = parentId,
-            Tags = new List<string>(_faker.Commerce.Categories(2))
+            Tags = new List<string>(DataFaker.Commerce.Categories(2))
         };
     }
 
-    public static TextField CreateTextField(int itemId)
+    public static TextField CreateTextField()
     {
         return new TextField
         {
-            ItemId = itemId,
             Name = "URL:",
-            Text = _faker.Internet.Url(),
+            Text = DataFaker.Internet.Url(),
         };
     }
 
-    public static IReadOnlyList<Field> CreateSeveralFields(int count, int itemId)
+    public static IReadOnlyList<Field> CreateSeveralFields(int count)
     {
         return Enumerable
             .Range(0, count)
-            .Select(_ => CreateTextField(itemId))
+            .Select(_ => CreateTextField())
             .Cast<Field>()
             .ToArray();
     }

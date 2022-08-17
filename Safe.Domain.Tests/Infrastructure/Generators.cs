@@ -5,15 +5,15 @@ namespace EdlinSoftware.Safe.Domain.Tests.Infrastructure;
 
 public static class Generators
 {
-    private static readonly Faker _faker = new Faker();
+    private static readonly Faker DataFaker = new Faker();
 
     public static Item CreateItem(Item? parentItem = null)
     {
         return new Item(parentItem)
         {
-            Title = _faker.Name.JobTitle(),
-            Description = _faker.Name.JobDescriptor(),
-            Tags = new List<string>(_faker.Commerce.Categories(2))
+            Title = DataFaker.Name.JobTitle(),
+            Description = DataFaker.Name.JobDescriptor(),
+            Tags = new List<string>(DataFaker.Commerce.Categories(2))
         };
     }
 
@@ -22,7 +22,7 @@ public static class Generators
         return new TextField
         {
             Name = "URL:",
-            Text = _faker.Internet.Url(),
+            Text = DataFaker.Internet.Url(),
         };
     }
 

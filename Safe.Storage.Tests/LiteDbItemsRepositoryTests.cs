@@ -8,7 +8,6 @@ public class LiteDbItemsRepositoryTests : IDisposable
 {
     private readonly LiteDbDatabaseProvider _databaseProvider;
     private readonly LiteDbItemsRepository _itemsRepository;
-    private readonly LiteDbFieldsRepository _fieldsRepository;
 
     public LiteDbItemsRepositoryTests()
     {
@@ -17,7 +16,6 @@ public class LiteDbItemsRepositoryTests : IDisposable
         var connectionProvider = new LiteDbConnectionProvider(_databaseProvider.Database);
 
         _itemsRepository = new LiteDbItemsRepository(connectionProvider);
-        _fieldsRepository = new LiteDbFieldsRepository(connectionProvider);
     }
 
     [Fact]
@@ -33,6 +31,8 @@ public class LiteDbItemsRepositoryTests : IDisposable
     {
         var item = CreateItem();
 
+        item.Fields.AddRange(CreateSeveralFields(3));
+
         _itemsRepository.SaveItems(item);
 
         item.Id.Should().NotBe(0);
@@ -40,10 +40,19 @@ public class LiteDbItemsRepositoryTests : IDisposable
         var restoredItem = _itemsRepository.GetItem(item.Id);
 
         restoredItem.Should().NotBeNull();
-        restoredItem.Title.Should().Be(item.Title);
+        restoredItem!.Title.Should().Be(item.Title);
         restoredItem.Description.Should().Be(item.Description);
         restoredItem.ParentId.Should().BeNull();
         restoredItem.Tags.Should().HaveCount(2);
+        restoredItem.Fields.Should().NotBeNull();
+        restoredItem.Fields.Should().HaveCount(3);
+        restoredItem.Fields.Should().AllSatisfy(f =>
+        {
+            f.Should().NotBeNull();
+            f.Should().BeOfType<TextField>()
+                .Which.Text.Should().NotBeNullOrWhiteSpace();
+            f.Name.Should().NotBeNullOrWhiteSpace();
+        });
     }
 
     [Fact]
@@ -71,7 +80,7 @@ public class LiteDbItemsRepositoryTests : IDisposable
 
         var restoredItem = _itemsRepository.GetItem(item.Id);
 
-        restoredItem.Title.Should().Be(item.Title);
+        restoredItem!.Title.Should().Be(item.Title);
         restoredItem.Description.Should().Be(item.Description);
         restoredItem.ParentId.Should().Be(parentItem.Id);
     }
@@ -103,10 +112,6 @@ public class LiteDbItemsRepositoryTests : IDisposable
 
         _itemsRepository.SaveItems(item);
 
-        var fields = CreateSeveralFields(3, item.Id);
-
-        _fieldsRepository.SaveFields(fields);
-
         _itemsRepository.DeleteItems(item);
 
         CheckThatItemDoesNotExist(item.Id);
@@ -116,26 +121,21 @@ public class LiteDbItemsRepositoryTests : IDisposable
     public void DeleteItemWithNestedItems()
     {
         var item = CreateItem();
+        item.Fields.AddRange(CreateSeveralFields(3));
 
         _itemsRepository.SaveItems(item);
 
-        var fields = CreateSeveralFields(3, item.Id);
-
-        _fieldsRepository.SaveFields(fields);
-
         var nestedItems = Enumerable
             .Range(1, 3)
-            .Select(_ => CreateItem(item.Id))
+            .Select(_ =>
+            {
+                var nestedItem = CreateItem(item.Id);
+                nestedItem.Fields.AddRange(CreateSeveralFields(3));
+                return nestedItem;
+            })
             .ToArray();
 
         _itemsRepository.SaveItems(nestedItems);
-
-        foreach (var nestedItem in nestedItems)
-        {
-            var nestedFields = CreateSeveralFields(3, nestedItem.Id);
-
-            _fieldsRepository.SaveFields(nestedFields);
-        }
 
         _itemsRepository.DeleteItems(item);
 
@@ -151,23 +151,24 @@ public class LiteDbItemsRepositoryTests : IDisposable
     public void UpdateItem()
     {
         var item = CreateItem();
+        item.Fields.AddRange(CreateSeveralFields(4));
 
         _itemsRepository.SaveItems(item);
 
         item.Title = "AAA";
+        item.Fields[2].Name = "BBB";
 
         _itemsRepository.SaveItems(item);
 
         var restoredItem = _itemsRepository.GetItem(item.Id);
 
-        restoredItem.Title.Should().Be("AAA");
+        restoredItem!.Title.Should().Be("AAA");
+        restoredItem.Fields[2].Name.Should().Be("BBB");
     }
 
     private void CheckThatItemDoesNotExist(int itemId)
     {
         _itemsRepository.GetItem(itemId).Should().BeNull();
-
-        _fieldsRepository.GetItemFields(itemId).Should().BeEmpty();
     }
 
     public void Dispose()

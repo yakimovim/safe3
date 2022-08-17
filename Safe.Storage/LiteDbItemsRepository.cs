@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EdlinSoftware.Safe.Search;
 using EdlinSoftware.Safe.Storage.Model;
 using LiteDB;
 
@@ -16,12 +17,52 @@ namespace EdlinSoftware.Safe.Storage
 
         private ILiteCollection<Item> Collection => _dbProvider.GetDatabase().GetCollection<Item>();
 
+        public IReadOnlyCollection<Item> Find(IReadOnlyCollection<SearchStringElement> searchDefinition)
+        {
+            var query = Collection.Query();
+
+            foreach (var searchElement in searchDefinition)
+            {
+                var searchPattern = $"%{searchElement.Text}%";
+
+                switch (searchElement.Field)
+                {
+                    case Fields.Title:
+                        query = query
+                            .Where("$.Title LIKE @0", searchPattern);
+                        break;
+                    case Fields.Description:
+                        query = query
+                            .Where("$.Description LIKE @0", searchPattern);
+                        break;
+                    case Fields.Tag:
+                        query = query
+                            .Where("$.Tags ANY LIKE @0", searchPattern);
+                        break;
+                    case Fields.Field:
+                        query = query
+                            .Where("$.Fields[*].Value ANY LIKE @0", searchPattern);
+                        break;
+                    case null:
+                        query = query
+                            .Where("($.Title LIKE @0) OR ($.Description LIKE @0) OR ($.Tags ANY LIKE @0) OR ($.Fields[*].Value ANY LIKE @0)", searchPattern);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return query
+                .Limit(20)
+                .ToArray();
+        }
+
         public Item? GetItem(int id)
         {
             return Collection.FindById(id);
         }
 
-        public IReadOnlyList<Item> GetChildItems(int? parentId)
+        public IReadOnlyCollection<Item> GetChildItems(int? parentId)
         {
             return Collection
                 .Query()
@@ -43,9 +84,7 @@ namespace EdlinSoftware.Safe.Storage
 
                 if(parentId is null) continue;
 
-                if (existingItems.Contains(parentId.Value))
-                    continue;
-                else
+                if (!existingItems.Contains(parentId.Value))
                 {
                     if (collection.Exists(i => i.Id == parentId.Value))
                     {
@@ -64,14 +103,12 @@ namespace EdlinSoftware.Safe.Storage
         public void DeleteItems(IReadOnlyCollection<int> itemIds)
         {
             var itemsCollection = Collection;
-            var fieldsCollection = _dbProvider.GetDatabase().GetCollection<Field>();
 
-            DeleteItems(itemsCollection, fieldsCollection, itemIds);
+            DeleteItems(itemsCollection, itemIds);
         }
 
         private void DeleteItems(
             ILiteCollection<Item> itemsCollection,
-            ILiteCollection<Field> fieldsCollection,
             IReadOnlyCollection<int> itemIds)
         {
             foreach (var itemId in itemIds)
@@ -82,9 +119,7 @@ namespace EdlinSoftware.Safe.Storage
                     .Select(i => i.Id)
                     .ToArray();
 
-                DeleteItems(itemsCollection, fieldsCollection, nestedItemIds);
-
-                fieldsCollection.DeleteMany(f => f.ItemId == itemId);
+                DeleteItems(itemsCollection, nestedItemIds);
 
                 itemsCollection.Delete(itemId);
             }

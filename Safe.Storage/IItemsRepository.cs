@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EdlinSoftware.Safe.Search;
 using EdlinSoftware.Safe.Storage.Model;
 
 namespace EdlinSoftware.Safe.Storage
 {
     public interface IItemsRepository
     {
+        IReadOnlyCollection<Item> Find(IReadOnlyCollection<SearchStringElement> searchDefinition);
+
         Item? GetItem(int id);
 
-        IReadOnlyList<Item> GetChildItems(int? parentId);
+        IReadOnlyCollection<Item> GetChildItems(int? parentId);
 
         void SaveItems(IReadOnlyCollection<Item> items);
 

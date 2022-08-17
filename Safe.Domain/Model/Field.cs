@@ -2,8 +2,6 @@
 {
     public abstract class Field
     {
-        internal int Id { get; set; }
-
         public string Name { get; set; }
 
         public abstract void Visit(IFieldVisitor visitor);

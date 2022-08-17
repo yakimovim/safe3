@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Search;
 using EdlinSoftware.Safe.Storage;
 using IStorageItemsRepository = EdlinSoftware.Safe.Storage.IItemsRepository;
-using IStorageFieldsRepository = EdlinSoftware.Safe.Storage.IFieldsRepository;
 
 namespace EdlinSoftware.Safe.Domain
 {
@@ -15,7 +15,6 @@ namespace EdlinSoftware.Safe.Domain
             public Field CreateFrom(Storage.Model.Field field)
             {
                 var result = field.Visit(this);
-                result.Id = field.Id;
                 result.Name = field.Name;
                 return result;
             }
@@ -39,18 +38,9 @@ namespace EdlinSoftware.Safe.Domain
 
         private sealed class DomainFieldConverter : IFieldVisitor<Storage.Model.Field>
         {
-            private readonly int _itemId;
-
-            public DomainFieldConverter(int itemId)
-            {
-                _itemId = itemId;
-            }
-
             public Storage.Model.Field CreateFrom(Field field)
             {
                 var result = field.Visit(this);
-                result.Id = field.Id;
-                result.ItemId = _itemId;
                 result.Name = field.Name;
                 return result;
             }
@@ -73,21 +63,24 @@ namespace EdlinSoftware.Safe.Domain
         }
 
         private readonly IStorageItemsRepository _itemsRepository;
-        private readonly IStorageFieldsRepository _fieldsRepository;
 
         public ItemsRepository(
-            IStorageItemsRepository itemsRepository,
-            IStorageFieldsRepository fieldsRepository)
+            IStorageItemsRepository itemsRepository
+            )
         {
             _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
-            _fieldsRepository = fieldsRepository ?? throw new ArgumentNullException(nameof(fieldsRepository));
         }
 
-        public IReadOnlyList<Item> GetChildItems(Item? parentItem)
+        public IReadOnlyCollection<Item> Find(IReadOnlyCollection<SearchStringElement> searchDefinition)
         {
-            var parentId = parentItem?.Id;
+            var itemsData = _itemsRepository.Find(searchDefinition);
 
-            var itemsData = _itemsRepository.GetChildItems(parentId);
+            return ConstructItems(itemsData);
+        }
+
+        private IReadOnlyCollection<Item> ConstructItems(IReadOnlyCollection<Storage.Model.Item> itemsData)
+        {
+            var converter = new StorageFieldConverter();
 
             return itemsData
                 .Select(i =>
@@ -100,21 +93,17 @@ namespace EdlinSoftware.Safe.Domain
                         Description = i.Description,
                         Tags = new List<string>(i.Tags)
                     };
-                    FillFields(item);
+                    item.Fields.AddRange(i.Fields.Select(converter.CreateFrom));
                     return item;
                 })
                 .ToArray();
         }
 
-        private void FillFields(Item item)
+        public IReadOnlyCollection<Item> GetChildItems(Item? parentItem)
         {
-            var fieldsData = _fieldsRepository.GetItemFields(item.Id);
+            var itemsData = _itemsRepository.GetChildItems(parentItem?.Id);
 
-            var converter = new StorageFieldConverter();
-
-            item.Fields.Clear();
-
-            item.Fields.AddRange(fieldsData.Select(converter.CreateFrom));
+            return ConstructItems(itemsData);
         }
 
         public void SaveItem(Item item)
@@ -127,44 +116,12 @@ namespace EdlinSoftware.Safe.Domain
                 Description = item.Description,
                 Tags = new List<string>(item.Tags)
             };
+            var converter = new DomainFieldConverter();
+            itemData.Fields.AddRange(item.Fields.Select(converter.CreateFrom));
 
             _itemsRepository.SaveItems(itemData);
 
             item.Id = itemData.Id;
-
-            var oldFieldsData = _fieldsRepository
-                .GetItemFields(item.Id)
-                .ToDictionary(f => f.Id, f => f);
-
-            var converter = new DomainFieldConverter(item.Id);
-
-            var newFieldsData = item
-                .Fields
-                .Select(f => new
-                {
-                    DomainField = f,
-                    StorageField = converter.CreateFrom(f)
-                })
-                .ToArray();
-
-            var order = 0;
-            foreach (var fieldsPair in newFieldsData)
-            {
-                fieldsPair.StorageField.Order = order++;
-                if (oldFieldsData.ContainsKey(fieldsPair.StorageField.Id))
-                {
-                    oldFieldsData.Remove(fieldsPair.StorageField.Id);
-                }
-            }
-
-            _fieldsRepository.DeleteFields(oldFieldsData.Keys);
-
-            _fieldsRepository.SaveFields(newFieldsData.Select(p => p.StorageField).ToArray());
-
-            foreach (var fieldsPair in newFieldsData)
-            {
-                fieldsPair.DomainField.Id = fieldsPair.StorageField.Id;
-            }
         }
 
         public void DeleteItem(Item item)

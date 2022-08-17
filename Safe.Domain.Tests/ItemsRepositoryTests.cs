@@ -14,9 +14,8 @@ public class ItemsRepositoryTests : IDisposable
     {
         _databaseProvider = new LiteDbDatabaseProvider();
         var connectionProvider = new LiteDbConnectionProvider(_databaseProvider.Database);
-        var liteDbFieldsRepository = new LiteDbFieldsRepository(connectionProvider);
         var liteDbItemsRepository = new LiteDbItemsRepository(connectionProvider);
-        _itemsRepository = new ItemsRepository(liteDbItemsRepository, liteDbFieldsRepository);
+        _itemsRepository = new ItemsRepository(liteDbItemsRepository);
     }
 
     [Fact]
@@ -31,7 +30,7 @@ public class ItemsRepositoryTests : IDisposable
 
         rootItems.Should().HaveCount(1);
 
-        var restoredItem = rootItems[0];
+        var restoredItem = rootItems.Single();
 
         restoredItem.Id.Should().NotBe(0);
         restoredItem.ParentId.Should().BeNull();
@@ -41,7 +40,10 @@ public class ItemsRepositoryTests : IDisposable
         restoredItem.Fields.Should().HaveCount(3);
         restoredItem.Fields.Should().AllSatisfy(f =>
         {
-            f.Id.Should().NotBe(0);
+            f.Should().NotBeNull();
+            f.Should().BeOfType<TextField>()
+                .Which.Text.Should().NotBeNullOrWhiteSpace();
+            f.Name.Should().NotBeNullOrWhiteSpace();
         });
     }
 
@@ -65,7 +67,7 @@ public class ItemsRepositoryTests : IDisposable
 
         rootItems.Should().HaveCount(1);
 
-        var restoredItem = rootItems[0];
+        var restoredItem = rootItems.Single();
 
         restoredItem.Id.Should().NotBe(0);
         restoredItem.ParentId.Should().BeNull();
@@ -93,7 +95,7 @@ public class ItemsRepositoryTests : IDisposable
 
         restoredItems.Should().HaveCount(1);
 
-        var restoredItem = restoredItems[0];
+        var restoredItem = restoredItems.Single();
         restoredItem.Description.Should().Be("DDD");
     }
 
