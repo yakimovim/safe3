@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Safe.Views
+namespace EdlinSoftware.Safe.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,13 +1,14 @@
 ﻿using System.Windows;
+using EdlinSoftware.Safe.Views;
 using Prism.Ioc;
-using Safe.Views;
+using Prism.Unity;
 
-namespace Safe
+namespace EdlinSoftware.Safe
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public partial class App : PrismApplication
     {
         protected override Window CreateShell()
         {

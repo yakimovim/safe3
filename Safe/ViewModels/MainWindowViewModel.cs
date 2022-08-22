@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace Safe.ViewModels
+namespace EdlinSoftware.Safe.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
