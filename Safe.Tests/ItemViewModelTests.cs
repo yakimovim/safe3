@@ -83,7 +83,7 @@ public class ItemViewModelTests
     }
 
     [Fact]
-    public void WorkNestedItems()
+    public void WorkWithNestedItems()
     {
         var vmItem1 = new ItemViewModel(_itemsRepository, _owner);
 
@@ -100,7 +100,43 @@ public class ItemViewModelTests
 
         vmItem1.SubItems.Remove(vmItem2);
 
+        // Removing item from a parent does not change anything in the database.
+        // You must add the removed item to a new parent.
         _itemsRepository.GetChildItems(null).Should().HaveCount(1);
         _itemsRepository.GetChildItems(vmItem1.Item).Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void WorkWithFields()
+    {
+        var vmItem = new ItemViewModel(_itemsRepository, _owner)
+        {
+            Fields =
+            {
+                new TextFieldViewModel { Name = "Text" },
+                new PasswordFieldViewModel { Name = "Password" }
+            }
+        };
+
+        var item = _itemsRepository.GetChildItems(null).Single();
+
+        item.Fields.Should().HaveCount(2);
+        item.Fields[0].Name.Should().Be("Text");
+        item.Fields[1].Name.Should().Be("Password");
+
+        vmItem.Fields.Remove(vmItem.Fields[0]);
+
+        item = _itemsRepository.GetChildItems(null).Single();
+
+        item.Fields.Should().HaveCount(1);
+        item.Fields[0].Name.Should().Be("Password");
+
+        vmItem.Fields.Add(new TextFieldViewModel { Name = "URL" });
+
+        item = _itemsRepository.GetChildItems(null).Single();
+
+        item.Fields.Should().HaveCount(2);
+        item.Fields[0].Name.Should().Be("Password");
+        item.Fields[1].Name.Should().Be("URL");
     }
 }

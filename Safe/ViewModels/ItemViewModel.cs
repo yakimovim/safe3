@@ -16,6 +16,7 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
 
     private readonly ObservableCollection<string> _tags;
     private readonly Lazy<ObservableCollection<ItemViewModel>> _subItems;
+    private readonly ObservableCollection<FieldViewModel> _fields;
 
     public ItemViewModel(
         IItemsRepository itemsRepository,
@@ -36,6 +37,10 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
         _tags = new ObservableCollection<string>(Item.Tags);
         _tags.CollectionChanged += OnTagsCollectionChanged;
 
+        var fieldViewModelCreator = new FieldViewModelConstructor();
+        _fields = new ObservableCollection<FieldViewModel>(Item.Fields.Select(fieldViewModelCreator.Create));
+        _fields.CollectionChanged += OnFieldsCollectionChanged;
+
         _subItems = new Lazy<ObservableCollection<ItemViewModel>>(() =>
         {
             var subItems = _itemsRepository.GetChildItems(Item);
@@ -47,6 +52,32 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
             collection.CollectionChanged += OnSubItemsCollectionChanged;
             return collection;
         });
+    }
+
+    private void OnFieldsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                if (e.NewItems != null)
+                {
+                    foreach (FieldViewModel field in e.NewItems)
+                    {
+                        Item.Fields.Add(field.Field);
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                if (e.OldItems != null)
+                {
+                    foreach (FieldViewModel field in e.OldItems)
+                    {
+                        Item.Fields.Remove(field.Field);
+                    }
+                }
+                break;
+        }
+        _itemsRepository.SaveItem(Item);
     }
 
     private void OnSubItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -128,6 +159,8 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
     }
 
     public ObservableCollection<string> Tags => _tags;
+
+    public ObservableCollection<FieldViewModel> Fields => _fields;
 
     public ItemViewModel Owner => this;
 
