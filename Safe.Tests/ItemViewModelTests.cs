@@ -139,4 +139,25 @@ public class ItemViewModelTests
         item.Fields[0].Name.Should().Be("Password");
         item.Fields[1].Name.Should().Be("URL");
     }
+
+    [Fact]
+    public void SubItemsAreCorrect()
+    {
+        var rootItem = new Item { Title = "AAA" };
+        _itemsRepository.SaveItem(rootItem);
+
+        var subItem = new Item(rootItem) { Title = "BBB" };
+        _itemsRepository.SaveItem(subItem);
+
+        var vmItem = new ItemViewModel(
+            _itemsRepository,
+            _owner,
+            _itemsRepository.GetChildItems(null).Single()
+        );
+
+        vmItem.Title.Should().Be("AAA");
+        vmItem.SubItems.Should().HaveCount(1);
+        vmItem.SubItems.Single().Title.Should().Be("BBB");
+        vmItem.SubItems.Single().SubItems.Should().BeEmpty();
+    }
 }

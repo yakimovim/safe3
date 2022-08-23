@@ -11,7 +11,7 @@ namespace EdlinSoftware.Safe.ViewModels;
 public class ItemViewModel : BindableBase, IItemViewModelOwner
 {
     private readonly IItemsRepository _itemsRepository;
-    private IItemViewModelOwner _owner;
+    private IItemViewModelOwner? _owner;
     internal readonly Item Item;
 
     private readonly ObservableCollection<string> _tags;
@@ -20,15 +20,15 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
 
     public ItemViewModel(
         IItemsRepository itemsRepository,
-        IItemViewModelOwner owner,
+        IItemViewModelOwner? owner = null,
         Item? item = null)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
-        _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        _owner = owner;
 
         if (item == null)
         {
-            item = new Item(_owner.Owner?.Item);
+            item = new Item(_owner?.Owner?.Item);
             _itemsRepository.SaveItem(item);
         }
 
@@ -89,7 +89,7 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
                 {
                     foreach (ItemViewModel vmItem in e.NewItems)
                     {
-                        vmItem._owner.SubItems.Remove(vmItem);
+                        vmItem._owner?.SubItems.Remove(vmItem);
                         vmItem._owner = this;
                         vmItem.Item.MoveTo(Item);
                         _itemsRepository.SaveItem(vmItem.Item);
