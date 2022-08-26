@@ -138,6 +138,24 @@ public class ItemViewModelTests
         item.Fields.Should().HaveCount(2);
         item.Fields[0].Name.Should().Be("Password");
         item.Fields[1].Name.Should().Be("URL");
+
+        vmItem.Fields.Insert(1, new TextFieldViewModel { Name = "Login" });
+
+        item = _itemsRepository.GetChildItems(null).Single();
+
+        item.Fields.Should().HaveCount(3);
+        item.Fields[0].Name.Should().Be("Password");
+        item.Fields[1].Name.Should().Be("Login");
+        item.Fields[2].Name.Should().Be("URL");
+
+        vmItem.Fields.Move(1, 0);
+
+        item = _itemsRepository.GetChildItems(null).Single();
+
+        item.Fields.Should().HaveCount(3);
+        item.Fields[0].Name.Should().Be("Login");
+        item.Fields[1].Name.Should().Be("Password");
+        item.Fields[2].Name.Should().Be("URL");
     }
 
     [Fact]

@@ -61,10 +61,12 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
             case NotifyCollectionChangedAction.Add:
                 if (e.NewItems != null)
                 {
-                    foreach (FieldViewModel field in e.NewItems)
-                    {
-                        Item.Fields.Add(field.Field);
-                    }
+                    Item.Fields.InsertRange(
+                        e.NewStartingIndex, 
+                        e.NewItems
+                            .Cast<FieldViewModel>()
+                            .Select(fvm => fvm.Field)
+                            .ToArray());
                 }
                 break;
             case NotifyCollectionChangedAction.Remove:
@@ -75,6 +77,11 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
                         Item.Fields.Remove(field.Field);
                     }
                 }
+                break;
+            case NotifyCollectionChangedAction.Move:
+                var movingField = Item.Fields[e.OldStartingIndex];
+                Item.Fields.RemoveAt(e.OldStartingIndex);
+                Item.Fields.Insert(e.NewStartingIndex, movingField);
                 break;
         }
         _itemsRepository.SaveItem(Item);
