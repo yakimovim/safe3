@@ -178,4 +178,65 @@ public class ItemViewModelTests
         vmItem.SubItems.Single().Title.Should().Be("BBB");
         vmItem.SubItems.Single().SubItems.Should().BeEmpty();
     }
+
+    [Fact]
+    public void Cant_delete_item_without_owner()
+    {
+        var vmItem = new ItemViewModel(_itemsRepository);
+
+        vmItem.DeleteCommand.CanExecute().Should().BeFalse();
+    }
+
+    [Fact]
+    public void Delete_item()
+    {
+        var oldOwner = new ItemViewModel(_itemsRepository, _owner);
+
+        var vmItem = new ItemViewModel(_itemsRepository, oldOwner);
+        oldOwner.SubItems.Add(vmItem);
+
+        vmItem.DeleteCommand.CanExecute().Should().BeTrue();
+        vmItem.DeleteCommand.Execute();
+
+        oldOwner.SubItems.Should().NotContain(vmItem);
+
+        _itemsRepository.GetChildItems(oldOwner.Item).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Cant_move_item_without_owner()
+    {
+        var vmItem = new ItemViewModel(_itemsRepository);
+
+        vmItem.MoveToCommand.CanExecute(_owner).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Cant_move_item_to_no_owner()
+    {
+        var vmItem = new ItemViewModel(_itemsRepository, _owner);
+
+        vmItem.MoveToCommand.CanExecute(null).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Move_item()
+    {
+        var oldOwner = new ItemViewModel(_itemsRepository, _owner);
+        _owner.SubItems.Add(oldOwner);
+
+        _itemsRepository.GetChildItems(null).Should().HaveCount(1);
+
+        var vmItem = new ItemViewModel(_itemsRepository, oldOwner);
+
+        oldOwner.SubItems.Should().HaveCount(1);
+
+        vmItem.MoveToCommand.CanExecute(_owner).Should().BeTrue();
+        vmItem.MoveToCommand.Execute(_owner);
+
+        _owner.SubItems.Should().HaveCount(2);
+        oldOwner.SubItems.Should().BeEmpty();
+
+        _itemsRepository.GetChildItems(null).Should().HaveCount(2);
+    }
 }

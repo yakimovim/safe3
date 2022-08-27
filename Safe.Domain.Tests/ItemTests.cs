@@ -12,4 +12,16 @@ public class ItemTests
 
         act.Should().Throw<ArgumentException>();
     }
+
+    [Theory]
+    [InlineData(1, 1, true)]
+    [InlineData(1, 2, false)]
+    public void Compare_items(int id1, int id2, bool equal)
+    {
+        var item1 = new Item { Id = id1 };
+        var item2 = new Item { Id = id2 };
+
+        item1.Should().NotBeSameAs(item2);
+        item1.Equals(item2).Should().Be(equal);
+    }
 }

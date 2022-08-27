@@ -31,5 +31,19 @@ namespace EdlinSoftware.Safe.Domain.Model
 
             ParentId = parentId;
         }
+
+        public override bool Equals(object obj)
+        {
+            var anotherItem = obj as Item;
+
+            if (anotherItem == null) return false;
+
+            return Id == anotherItem.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

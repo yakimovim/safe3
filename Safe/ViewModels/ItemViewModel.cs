@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -52,7 +53,30 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
             collection.CollectionChanged += OnSubItemsCollectionChanged;
             return collection;
         });
+
+        DeleteCommand = new DelegateCommand(OnDelete, CanDelete);
+        MoveToCommand = new DelegateCommand<IItemViewModelOwner>(OnMoveTo, CanMoveTo);
     }
+
+    private void OnMoveTo(IItemViewModelOwner newOwner)
+    {
+        _owner!.SubItems.Remove(this);
+        newOwner.SubItems.Add(this);
+        _owner = newOwner;
+        Item.MoveTo(newOwner.Owner?.Item);
+        SaveChanges();
+    }
+
+    private bool CanMoveTo(IItemViewModelOwner newOwner) => _owner != null && newOwner != null;
+
+    private void OnDelete()
+    {
+        _owner!.SubItems.Remove(this);
+        _itemsRepository.DeleteItem(Item);
+        _owner = null;
+    }
+
+    private bool CanDelete() => _owner != null;
 
     private void OnFieldsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
@@ -84,7 +108,7 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
                 Item.Fields.Insert(e.NewStartingIndex, movingField);
                 break;
         }
-        _itemsRepository.SaveItem(Item);
+        SaveChanges();
     }
 
     private void OnSubItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -134,7 +158,7 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
                 }
                 break;
         }
-        _itemsRepository.SaveItem(Item);
+        SaveChanges();
     }
 
     public string Title
@@ -145,7 +169,7 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
             if (Item.Title != value)
             {
                 Item.Title = value;
-                _itemsRepository.SaveItem(Item);
+                SaveChanges();
                 RaisePropertyChanged();
             }
         }
@@ -159,7 +183,7 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
             if (Item.Description != value)
             {
                 Item.Description = value;
-                _itemsRepository.SaveItem(Item);
+                SaveChanges();
                 RaisePropertyChanged();
             }
         }
@@ -172,4 +196,27 @@ public class ItemViewModel : BindableBase, IItemViewModelOwner
     public ItemViewModel Owner => this;
 
     public ObservableCollection<ItemViewModel> SubItems => _subItems.Value;
+
+    public DelegateCommand DeleteCommand { get; }
+
+    public DelegateCommand<IItemViewModelOwner> MoveToCommand { get; }
+
+    private void SaveChanges()
+    {
+        _itemsRepository.SaveItem(Item);
+    }
+
+    public override int GetHashCode()
+    {
+        return Item.GetHashCode();
+    }
+
+    public override bool Equals(object? obj)
+    {
+        var anotherViewModel = obj as ItemViewModel;
+
+        if (anotherViewModel == null) return false;
+
+        return Item.Equals(anotherViewModel.Item);
+    }
 }
