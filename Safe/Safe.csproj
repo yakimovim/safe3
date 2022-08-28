@@ -13,4 +13,9 @@
     <ProjectReference Include="..\Safe.Domain\Safe.Domain.csproj" />
     <ProjectReference Include="..\Safe.Storage\Safe.Storage.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

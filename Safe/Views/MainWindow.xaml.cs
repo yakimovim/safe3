@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
+using EdlinSoftware.Safe.Services;
+using Prism.Regions;
 
 namespace EdlinSoftware.Safe.Views
 {
@@ -7,9 +10,42 @@ namespace EdlinSoftware.Safe.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly IConfigurationService _configurationService;
+        private readonly IRegionManager _regionManager;
+
+        internal MainWindow(
+            IConfigurationService configurationService,
+            IRegionManager regionManager)
         {
+            _configurationService = configurationService ?? throw new System.ArgumentNullException(nameof(configurationService));
+            _regionManager = regionManager ?? throw new System.ArgumentNullException(nameof(regionManager));
+
             InitializeComponent();
+
+            Loaded += OnLoaded;
+            
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var configuration = _configurationService.GetConfiguration();
+
+            if(string.IsNullOrWhiteSpace(configuration.LastOpenedStorage))
+            {
+                _regionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+            }
+            else if(!File.Exists(configuration.LastOpenedStorage))
+            {
+                configuration.LastOpenedStorage = null;
+                _configurationService.SaveConfiguration(configuration);
+                _regionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+            }
+            else
+            {
+                var parameters = new NavigationParameters();
+                parameters.Add("StoragePath", configuration.LastOpenedStorage);
+                _regionManager.RequestNavigate("MainContentRegion", "LoginToStorage");
+            }
         }
     }
 }
