@@ -3,7 +3,7 @@ using Prism.Events;
 
 namespace EdlinSoftware.Safe.Events
 {
-    internal class StorageChanged : PubSubEvent<ILiteDbConnectionProvider>
+    internal class StorageChanged : PubSubEvent
     {
     }
 }

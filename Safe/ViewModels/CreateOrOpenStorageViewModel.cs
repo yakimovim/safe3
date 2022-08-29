@@ -31,8 +31,10 @@ namespace EdlinSoftware.Safe.ViewModels
             };
             if (openDialog.ShowDialog() == true)
             {
-                var parameters = new NavigationParameters();
-                parameters.Add("StoragePath", openDialog.FileName);
+                var parameters = new NavigationParameters
+                {
+                    { "StoragePath", openDialog.FileName }
+                };
                 _regionManager.RequestNavigate("MainContentRegion", "CreateStorage", parameters);
             }
         }
@@ -42,8 +44,10 @@ namespace EdlinSoftware.Safe.ViewModels
             var openDialog = new OpenFileDialog();
             if(openDialog.ShowDialog() == true)
             {
-                var parameters = new NavigationParameters();
-                parameters.Add("StoragePath", openDialog.FileName);
+                var parameters = new NavigationParameters
+                {
+                    { "StoragePath", openDialog.FileName }
+                };
                 _regionManager.RequestNavigate("MainContentRegion", "LoginToStorage", parameters);
             }
         }

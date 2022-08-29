@@ -6,13 +6,13 @@ using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
-    internal class CreateStorageViewModel : BindableBase, INavigationAware
+    internal class LoginToStorageViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
         private readonly IStorageService _storageService;
         private string? _storageFilePath;
 
-        public CreateStorageViewModel(
+        public LoginToStorageViewModel(
             IRegionManager regionManager,
             IStorageService storageService
             )
@@ -20,20 +20,20 @@ namespace EdlinSoftware.Safe.ViewModels
             _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
-            CreateCommand = new DelegateCommand(OnCreate, CanCreate)
+            LoginCommand = new DelegateCommand(OnLogin, CanLogin)
                 .ObservesProperty(() => Password);
             CancelCommand = new DelegateCommand(OnCancel);
         }
 
-        private bool CanCreate()
+        private bool CanLogin()
         {
             return !string.IsNullOrWhiteSpace(_storageFilePath)
                 && !string.IsNullOrEmpty(_password);
         }
 
-        private void OnCreate()
+        private void OnLogin()
         {
-            _storageService.CreateStorage(new StorageCreationOptions { 
+            _storageService.OpenStorage(new StorageCreationOptions { 
                 FileName = _storageFilePath!,
                 Password = _password
             });
@@ -59,10 +59,10 @@ namespace EdlinSoftware.Safe.ViewModels
             }
 
             _storageFilePath = storageFilePath;
-            CreateCommand.RaiseCanExecuteChanged();
+            LoginCommand.RaiseCanExecuteChanged();
         }
 
-        public DelegateCommand CreateCommand { get; }
+        public DelegateCommand LoginCommand { get; }
         public DelegateCommand CancelCommand { get; }
 
         private string _password;

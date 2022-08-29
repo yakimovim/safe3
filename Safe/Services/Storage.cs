@@ -1,14 +1,12 @@
 ﻿using System;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.Storage;
+using LiteDB;
 using Prism.Events;
 
 namespace EdlinSoftware.Safe.Services
 {
     internal interface IStorageService
     {
-        ILiteDbConnectionProvider? CurrentStorage { get; }
-
         void CreateStorage(StorageCreationOptions options);
 
         void OpenStorage(StorageOpeningOptions options);
@@ -28,25 +26,27 @@ namespace EdlinSoftware.Safe.Services
     internal class StorageService : IStorageService
     {
         private readonly IEventAggregator _eventAggregator;
-        private ILiteDbConnectionProvider? _currentStorage;
-
-        public ILiteDbConnectionProvider? CurrentStorage => _currentStorage;
+        private readonly LiteDbConnectionProvider _connectionProvider;
 
         public void CreateStorage(StorageCreationOptions options)
         {
-            _currentStorage = new LiteDbConnectionProvider(options.FileName, options.Password);
-            _eventAggregator.GetEvent<StorageChanged>().Publish(_currentStorage);
+            _connectionProvider.Database = new LiteDatabase($"Filename={options.FileName};Password={options.Password}");
+            _eventAggregator.GetEvent<StorageChanged>().Publish();
         }
 
         public void OpenStorage(StorageOpeningOptions options)
         {
-            _currentStorage = new LiteDbConnectionProvider(options.FileName, options.Password);
-            _eventAggregator.GetEvent<StorageChanged>().Publish(_currentStorage);
+            _connectionProvider.Database = new LiteDatabase($"Filename={options.FileName};Password={options.Password}");
+            _eventAggregator.GetEvent<StorageChanged>().Publish();
         }
 
-        public StorageService(IEventAggregator eventAggregator)
+        public StorageService(
+            IEventAggregator eventAggregator,
+            LiteDbConnectionProvider connectionProvider
+            )
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _connectionProvider = connectionProvider ?? throw new ArgumentNullException(nameof(connectionProvider));
         }
     }
 }

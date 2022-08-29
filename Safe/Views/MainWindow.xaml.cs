@@ -42,8 +42,10 @@ namespace EdlinSoftware.Safe.Views
             }
             else
             {
-                var parameters = new NavigationParameters();
-                parameters.Add("StoragePath", configuration.LastOpenedStorage);
+                var parameters = new NavigationParameters
+                {
+                    { "StoragePath", configuration.LastOpenedStorage }
+                };
                 _regionManager.RequestNavigate("MainContentRegion", "LoginToStorage");
             }
         }
