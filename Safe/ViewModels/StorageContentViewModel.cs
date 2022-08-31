@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
@@ -30,6 +29,8 @@ public class StorageContentViewModel : BindableBase, INavigationAware
 
         CreateItemCommand = new DelegateCommand(OnCreateItem, CanCreateItem)
             .ObservesProperty(() => SelectedItem);
+        DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
+            .ObservesProperty(() => SelectedItem);
     }
 
     private bool CanCreateItem()
@@ -41,13 +42,31 @@ public class StorageContentViewModel : BindableBase, INavigationAware
     {
         var item = new Item(SelectedItem!.Item)
         {
-            Title = "T" + DateTime.UtcNow.ToShortTimeString(),
-            Description = "D" + DateTime.UtcNow.ToShortTimeString(),
+            Title = "T" + DateTime.UtcNow.ToLongTimeString(),
+            Description = "D" + DateTime.UtcNow.ToLongTimeString(),
         };
 
         _itemsRepository.SaveItem(item);
 
-        SelectedItem.SubItems.Add(new ItemTreeViewModel(_itemsRepository, item));
+        SelectedItem.SubItems.Add(new ItemTreeViewModel(_itemsRepository, item) { Parent = SelectedItem });
+    }
+
+    private bool CanDeleteItem()
+    {
+        return SelectedItem != null 
+               && SelectedItem.Item != null
+               && SelectedItem.Parent != null;
+    }
+
+    private void OnDeleteItem()
+    {
+        var itemToDelete = SelectedItem!;
+
+        var parentOfItemToDelete = itemToDelete.Parent!;
+
+        parentOfItemToDelete.SubItems.Remove(itemToDelete);
+
+        _itemsRepository.DeleteItem(itemToDelete.Item!);
     }
 
     private void OnStorageChanged()
@@ -80,12 +99,16 @@ public class StorageContentViewModel : BindableBase, INavigationAware
     }
 
     public DelegateCommand CreateItemCommand { get; }
+
+    public DelegateCommand DeleteItemCommand { get; }
 }
 
 public class ItemTreeViewModel : BindableBase
 {
     private readonly IItemsRepository _itemsRepository;
     public readonly Item? Item;
+    
+    public ItemTreeViewModel? Parent { get; set; }
 
     public ItemTreeViewModel(IItemsRepository itemsRepository, Item? item = null)
     {
@@ -101,7 +124,7 @@ public class ItemTreeViewModel : BindableBase
     private ObservableCollection<ItemTreeViewModel> CreateSubItems()
     {
         var subItems = _itemsRepository.GetChildItems(Item)
-            .Select(i => new ItemTreeViewModel(_itemsRepository, i))
+            .Select(i => new ItemTreeViewModel(_itemsRepository, i) { Parent = this })
             .ToArray();
 
         return new ObservableCollection<ItemTreeViewModel>(subItems);
@@ -124,4 +147,19 @@ public class ItemTreeViewModel : BindableBase
     private readonly Lazy<ObservableCollection<ItemTreeViewModel>> _subItems;
 
     public ObservableCollection<ItemTreeViewModel> SubItems => _subItems.Value;
+
+    public void MoveTo(ItemTreeViewModel targetItem)
+    {
+        if(Parent != null)
+            Parent.SubItems.Remove(this);
+
+        targetItem.SubItems.Add(this);
+        Parent = targetItem;
+
+        if (Item != null)
+        {
+            Item.MoveTo(targetItem.Item);
+            _itemsRepository.SaveItem(Item);
+        }
+    }
 }

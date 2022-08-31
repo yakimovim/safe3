@@ -22,15 +22,22 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TreeView Grid.Column="0" ItemsSource="{Binding SubItems}">
+        <TreeView Grid.Column="0" ItemsSource="{Binding SubItems}"
+                  AllowDrop="True"
+                  PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+                  PreviewMouseMove="UIElement_OnPreviewMouseMove"
+                  DragEnter="UIElement_CheckDrag"
+                  DragOver="UIElement_CheckDrag"
+                  DragLeave="UIElement_CheckDrag"
+                  Drop="UIElement_OnDrop">
             <b:Interaction.Behaviors>
                 <be:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
             </b:Interaction.Behaviors>
         </TreeView>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Background="Black" />
         <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
-            <TextBlock Grid.Column="1" Text="Opened..." />
             <Button Content="Create new item" Command="{Binding CreateItemCommand}" />
+            <Button Content="Delete item" Command="{Binding DeleteItemCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>
