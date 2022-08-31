@@ -14,13 +14,16 @@ namespace EdlinSoftware.Safe.ViewModels;
 public class StorageContentViewModel : BindableBase, INavigationAware
 {
     private readonly IEventAggregator _eventAggregator;
+    private readonly IRegionManager _regionManager;
     private readonly IItemsRepository _itemsRepository;
 
     public StorageContentViewModel(
         IEventAggregator eventAggregator,
+        IRegionManager regionManager,
         IItemsRepository itemsRepository)
     {
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+        _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
 
         OnStorageChanged();
@@ -48,7 +51,7 @@ public class StorageContentViewModel : BindableBase, INavigationAware
 
         _itemsRepository.SaveItem(item);
 
-        SelectedItem.SubItems.Add(new ItemTreeViewModel(_itemsRepository, item) { Parent = SelectedItem });
+        SelectedItem.SubItems.Add(new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository, item) { Parent = SelectedItem });
     }
 
     private bool CanDeleteItem()
@@ -71,7 +74,7 @@ public class StorageContentViewModel : BindableBase, INavigationAware
 
     private void OnStorageChanged()
     {
-        SubItems = new ObservableCollection<ItemTreeViewModel>(new []{ new ItemTreeViewModel(_itemsRepository) });
+        SubItems = new ObservableCollection<ItemTreeViewModel>(new []{ new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository) });
     }
 
     public void OnNavigatedTo(NavigationContext navigationContext)
@@ -95,7 +98,15 @@ public class StorageContentViewModel : BindableBase, INavigationAware
     public ItemTreeViewModel? SelectedItem
     {
         get { return _selectedItem; }
-        set { SetProperty(ref _selectedItem, value); }
+        set
+        {
+            if (SetProperty(ref _selectedItem, value) && value != null)
+            {
+                var parameters = new NavigationParameters
+                    { { "Item", value.Item } };
+                _regionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+            }
+        }
     }
 
     public DelegateCommand CreateItemCommand { get; }
@@ -105,26 +116,90 @@ public class StorageContentViewModel : BindableBase, INavigationAware
 
 public class ItemTreeViewModel : BindableBase
 {
+    private readonly IEventAggregator _eventAggregator;
+    private readonly IRegionManager _regionManager;
     private readonly IItemsRepository _itemsRepository;
     public readonly Item? Item;
-    
-    public ItemTreeViewModel? Parent { get; set; }
 
-    public ItemTreeViewModel(IItemsRepository itemsRepository, Item? item = null)
+    private ItemTreeViewModel? _parent;
+
+    public ItemTreeViewModel? Parent
     {
+        get => _parent;
+        set => SetProperty(ref _parent, value);
+    }
+
+    public ItemTreeViewModel(
+        IEventAggregator eventAggregator,
+        IRegionManager regionManager,
+        IItemsRepository itemsRepository, 
+        Item? item = null)
+    {
+        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+        _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         Item = item;
 
         Text = Item?.Title ?? "Root";
         Tooltip = Item?.Description ?? string.Empty;
 
+        _eventAggregator.GetEvent<NewItemCreated>()
+            .Subscribe(OnNewItemCreated, ThreadOption.PublisherThread,
+                false, HandleNewItemCreated);
+
         _subItems = new Lazy<ObservableCollection<ItemTreeViewModel>>(CreateSubItems);
+
+        DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
+            .ObservesProperty(() => Parent);
+
+        CreateItemCommand = new DelegateCommand(OnCreateItem);
+    }
+
+    private void OnNewItemCreated((Item NewItem, Item? parentItem) info)
+    {
+        _itemsRepository.SaveItem(info.NewItem);
+
+        SubItems.Add(
+            new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository, info.NewItem)
+            {
+                Parent = this
+            }
+        );
+
+        var parameters = new NavigationParameters
+            { { "Item", info.NewItem } };
+        _regionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+    }
+
+    private bool HandleNewItemCreated((Item NewItem, Item? ParentItem) info)
+    {
+        return ReferenceEquals(Item, info.ParentItem);
+    }
+
+    private bool CanDeleteItem()
+    {
+        return Item != null
+               && Parent != null;
+    }
+
+    private void OnDeleteItem()
+    {
+        Parent!.SubItems.Remove(this);
+
+        _itemsRepository.DeleteItem(Item!);
+    }
+
+    private void OnCreateItem()
+    {
+        var parameters = new NavigationParameters
+            { { "Parent", Item } };
+        _regionManager.RequestNavigate("DetailsRegion", "CreateItem", parameters);
     }
 
     private ObservableCollection<ItemTreeViewModel> CreateSubItems()
     {
         var subItems = _itemsRepository.GetChildItems(Item)
-            .Select(i => new ItemTreeViewModel(_itemsRepository, i) { Parent = this })
+            .Select(i => new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository, i) { Parent = this })
             .ToArray();
 
         return new ObservableCollection<ItemTreeViewModel>(subItems);
@@ -162,4 +237,8 @@ public class ItemTreeViewModel : BindableBase
             _itemsRepository.SaveItem(Item);
         }
     }
+
+    public DelegateCommand DeleteItemCommand { get; }
+
+    public DelegateCommand CreateItemCommand { get; }
 }

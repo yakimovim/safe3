@@ -114,5 +114,10 @@ namespace EdlinSoftware.Safe.Views
 
             return null;
         }
+
+        private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _itemToDrag = null;
+        }
     }
 }

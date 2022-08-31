@@ -14,7 +14,14 @@
     <UserControl.Resources>
         <HierarchicalDataTemplate DataType="{x:Type vm:ItemTreeViewModel}"
                                   ItemsSource="{Binding SubItems}">
-            <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}" />
+            <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}">
+                <TextBlock.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
+                        <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
         </HierarchicalDataTemplate>
     </UserControl.Resources>
     <Grid>
@@ -29,7 +36,8 @@
                   DragEnter="UIElement_CheckDrag"
                   DragOver="UIElement_CheckDrag"
                   DragLeave="UIElement_CheckDrag"
-                  Drop="UIElement_OnDrop">
+                  Drop="UIElement_OnDrop"
+                  MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
             <b:Interaction.Behaviors>
                 <be:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
             </b:Interaction.Behaviors>
@@ -38,6 +46,7 @@
         <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
             <Button Content="Create new item" Command="{Binding CreateItemCommand}" />
             <Button Content="Delete item" Command="{Binding DeleteItemCommand}" />
+            <ContentControl prism:RegionManager.RegionName="DetailsRegion"></ContentControl>
         </StackPanel>
     </Grid>
 </UserControl>
