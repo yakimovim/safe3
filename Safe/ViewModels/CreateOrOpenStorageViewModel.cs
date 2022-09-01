@@ -6,18 +6,15 @@ using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
-    internal class CreateOrOpenStorageViewModel
+    internal class CreateOrOpenStorageViewModel : ViewModelBase
     {
         private readonly IConfigurationService _configurationService;
-        private readonly IRegionManager _regionManager;
 
         public CreateOrOpenStorageViewModel(
-            IConfigurationService configurationService,
-            IRegionManager regionManager
+            IConfigurationService configurationService
             )
         {
             _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
-            _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
 
             CreateCommand = new DelegateCommand(OnCreateStorage);
             OpenCommand = new DelegateCommand(OnOpenStorage);
@@ -35,7 +32,7 @@ namespace EdlinSoftware.Safe.ViewModels
                 {
                     { "StoragePath", openDialog.FileName }
                 };
-                _regionManager.RequestNavigate("MainContentRegion", "CreateStorage", parameters);
+                RegionManager.RequestNavigate("MainContentRegion", "CreateStorage", parameters);
             }
         }
 
@@ -48,7 +45,7 @@ namespace EdlinSoftware.Safe.ViewModels
                 {
                     { "StoragePath", openDialog.FileName }
                 };
-                _regionManager.RequestNavigate("MainContentRegion", "LoginToStorage", parameters);
+                RegionManager.RequestNavigate("MainContentRegion", "LoginToStorage", parameters);
             }
         }
 

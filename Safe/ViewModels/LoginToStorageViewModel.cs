@@ -1,23 +1,19 @@
 ﻿using System;
 using EdlinSoftware.Safe.Services;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
-    internal class LoginToStorageViewModel : BindableBase, INavigationAware
+    internal class LoginToStorageViewModel : ViewModelBase
     {
-        private readonly IRegionManager _regionManager;
         private readonly IStorageService _storageService;
         private string? _storageFilePath;
 
         public LoginToStorageViewModel(
-            IRegionManager regionManager,
             IStorageService storageService
             )
         {
-            _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
             LoginCommand = new DelegateCommand(OnLogin, CanLogin)
@@ -37,24 +33,19 @@ namespace EdlinSoftware.Safe.ViewModels
                 FileName = _storageFilePath!,
                 Password = _password
             });
-            _regionManager.RequestNavigate("MainContentRegion", "StorageContent");
+            RegionManager.RequestNavigate("MainContentRegion", "StorageContent");
         }
 
         private void OnCancel()
         {
-            _regionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+            RegionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext) => true;
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        { }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             if(!navigationContext.Parameters.TryGetValue("StoragePath", out string storageFilePath))
             {
-                _regionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+                RegionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
                 return;
             }
 

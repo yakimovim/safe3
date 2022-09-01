@@ -11,29 +11,26 @@ using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class StorageContentViewModel : BindableBase, INavigationAware
+public class StorageContentViewModel : ViewModelBase
 {
-    private readonly IEventAggregator _eventAggregator;
-    private readonly IRegionManager _regionManager;
     private readonly IItemsRepository _itemsRepository;
 
     public StorageContentViewModel(
-        IEventAggregator eventAggregator,
-        IRegionManager regionManager,
         IItemsRepository itemsRepository)
     {
-        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-        _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
-
-        OnStorageChanged();
-
-        _eventAggregator.GetEvent<StorageChanged>().Subscribe(OnStorageChanged);
 
         CreateItemCommand = new DelegateCommand(OnCreateItem, CanCreateItem)
             .ObservesProperty(() => SelectedItem);
         DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
             .ObservesProperty(() => SelectedItem);
+    }
+
+    protected override void SubscribeToEvents()
+    {
+        EventAggregator.GetEvent<StorageChanged>().Subscribe(OnStorageChanged);
+
+        OnStorageChanged();
     }
 
     private bool CanCreateItem()
@@ -51,7 +48,7 @@ public class StorageContentViewModel : BindableBase, INavigationAware
 
         _itemsRepository.SaveItem(item);
 
-        SelectedItem.SubItems.Add(new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository, item) { Parent = SelectedItem });
+        SelectedItem.SubItems.Add(new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository, item) { Parent = SelectedItem });
     }
 
     private bool CanDeleteItem()
@@ -74,7 +71,7 @@ public class StorageContentViewModel : BindableBase, INavigationAware
 
     private void OnStorageChanged()
     {
-        SubItems = new ObservableCollection<ItemTreeViewModel>(new []{ new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository) });
+        SubItems = new ObservableCollection<ItemTreeViewModel>(new []{ new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository) });
     }
 
     public void OnNavigatedTo(NavigationContext navigationContext)
@@ -104,7 +101,7 @@ public class StorageContentViewModel : BindableBase, INavigationAware
             {
                 var parameters = new NavigationParameters
                     { { "Item", value.Item } };
-                _regionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+                RegionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
             }
         }
     }
