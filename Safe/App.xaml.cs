@@ -33,6 +33,7 @@ namespace EdlinSoftware.Safe
             containerRegistry.RegisterForNavigation<StorageContentView>("StorageContent");
             containerRegistry.RegisterForNavigation<CreateItemView>("CreateItem");
             containerRegistry.RegisterForNavigation<ItemDetailsView>("ItemDetails");
+            containerRegistry.RegisterForNavigation<EditItemView>("EditItem");
         }
     }
 }

@@ -19,11 +19,6 @@ public class StorageContentViewModel : ViewModelBase
         IItemsRepository itemsRepository)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
-
-        CreateItemCommand = new DelegateCommand(OnCreateItem, CanCreateItem)
-            .ObservesProperty(() => SelectedItem);
-        DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
-            .ObservesProperty(() => SelectedItem);
     }
 
     protected override void SubscribeToEvents()
@@ -33,55 +28,9 @@ public class StorageContentViewModel : ViewModelBase
         OnStorageChanged();
     }
 
-    private bool CanCreateItem()
-    {
-        return SelectedItem != null;
-    }
-
-    private void OnCreateItem()
-    {
-        var item = new Item(SelectedItem!.Item)
-        {
-            Title = "T" + DateTime.UtcNow.ToLongTimeString(),
-            Description = "D" + DateTime.UtcNow.ToLongTimeString(),
-        };
-
-        _itemsRepository.SaveItem(item);
-
-        SelectedItem.SubItems.Add(new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository, item) { Parent = SelectedItem });
-    }
-
-    private bool CanDeleteItem()
-    {
-        return SelectedItem != null 
-               && SelectedItem.Item != null
-               && SelectedItem.Parent != null;
-    }
-
-    private void OnDeleteItem()
-    {
-        var itemToDelete = SelectedItem!;
-
-        var parentOfItemToDelete = itemToDelete.Parent!;
-
-        parentOfItemToDelete.SubItems.Remove(itemToDelete);
-
-        _itemsRepository.DeleteItem(itemToDelete.Item!);
-    }
-
     private void OnStorageChanged()
     {
         SubItems = new ObservableCollection<ItemTreeViewModel>(new []{ new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository) });
-    }
-
-    public void OnNavigatedTo(NavigationContext navigationContext)
-    {
-    }
-
-    public bool IsNavigationTarget(NavigationContext navigationContext) => true;
-
-    public void OnNavigatedFrom(NavigationContext navigationContext)
-    {
     }
 
     private ObservableCollection<ItemTreeViewModel> _subItems;
@@ -105,10 +54,6 @@ public class StorageContentViewModel : ViewModelBase
             }
         }
     }
-
-    public DelegateCommand CreateItemCommand { get; }
-
-    public DelegateCommand DeleteItemCommand { get; }
 }
 
 public class ItemTreeViewModel : BindableBase
@@ -144,12 +89,29 @@ public class ItemTreeViewModel : BindableBase
             .Subscribe(OnNewItemCreated, ThreadOption.PublisherThread,
                 false, HandleNewItemCreated);
 
+        _eventAggregator.GetEvent<ItemChanged>()
+            .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
+                false, HandleItemChanged);
+
         _subItems = new Lazy<ObservableCollection<ItemTreeViewModel>>(CreateSubItems);
 
         DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
             .ObservesProperty(() => Parent);
 
         CreateItemCommand = new DelegateCommand(OnCreateItem);
+
+        EditItemCommand = new DelegateCommand(OnEditItem, CanEditItem);
+    }
+
+    private void OnItemChanged(Item item)
+    {
+        Text = item.Title ?? "Root";
+        Tooltip = item.Description ?? string.Empty;
+    }
+
+    private bool HandleItemChanged(Item item)
+    {
+        return ReferenceEquals(Item, item);
     }
 
     private void OnNewItemCreated((Item NewItem, Item? parentItem) info)
@@ -191,6 +153,18 @@ public class ItemTreeViewModel : BindableBase
         var parameters = new NavigationParameters
             { { "Parent", Item } };
         _regionManager.RequestNavigate("DetailsRegion", "CreateItem", parameters);
+    }
+
+    private bool CanEditItem()
+    {
+        return Item != null;
+    }
+
+    private void OnEditItem()
+    {
+        var parameters = new NavigationParameters
+                    { { "Item", Item } };
+        _regionManager.RequestNavigate("DetailsRegion", "EditItem", parameters);
     }
 
     private ObservableCollection<ItemTreeViewModel> CreateSubItems()
@@ -238,4 +212,6 @@ public class ItemTreeViewModel : BindableBase
     public DelegateCommand DeleteItemCommand { get; }
 
     public DelegateCommand CreateItemCommand { get; }
+
+    public DelegateCommand EditItemCommand { get; }
 }

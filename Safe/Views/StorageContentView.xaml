@@ -19,6 +19,8 @@
                     <ContextMenu>
                         <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
                         <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
+                        <Separator />
+                        <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
                     </ContextMenu>
                 </TextBlock.ContextMenu>
             </TextBlock>
@@ -44,8 +46,6 @@
         </TreeView>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Background="Black" />
         <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
-            <Button Content="Create new item" Command="{Binding CreateItemCommand}" />
-            <Button Content="Delete item" Command="{Binding DeleteItemCommand}" />
             <ContentControl prism:RegionManager.RegionName="DetailsRegion"></ContentControl>
         </StackPanel>
     </Grid>

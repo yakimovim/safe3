@@ -1,26 +1,14 @@
-﻿using System;
-using EdlinSoftware.Safe.Domain.Model;
+﻿using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class CreateItemViewModel : BindableBase, INavigationAware
+public class CreateItemViewModel : ViewModelBase
 {
-    private readonly IRegionManager _regionManager;
-    private readonly IEventAggregator _eventAggregator;
-
-    public CreateItemViewModel(
-        IRegionManager regionManager,
-        IEventAggregator eventAggregator
-        )
+    public CreateItemViewModel()
     {
-        _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
-        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-
         CancelCommand = new DelegateCommand(OnCancel);
         CreateItemCommand = new DelegateCommand(OnCreate, CanCreate)
             .ObservesProperty(() => Title);
@@ -34,13 +22,15 @@ public class CreateItemViewModel : BindableBase, INavigationAware
             Description = Description
         };
 
-        _eventAggregator.GetEvent<NewItemCreated>().Publish((item, _parent));
+        EventAggregator.GetEvent<NewItemCreated>().Publish((item, _parent));
     }
 
     private bool CanCreate() => !string.IsNullOrWhiteSpace(Title);
 
     private void OnCancel()
     {
+        var parameters = new NavigationParameters { { "Item", _parent } };
+        RegionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
     }
 
     private string _title;
@@ -63,14 +53,10 @@ public class CreateItemViewModel : BindableBase, INavigationAware
     public DelegateCommand CreateItemCommand { get; }
     public DelegateCommand CancelCommand { get; }
 
-    public void OnNavigatedTo(NavigationContext navigationContext)
+    public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         _parent = navigationContext.Parameters.GetValue<Item?>("Parent");
     }
 
-    public bool IsNavigationTarget(NavigationContext navigationContext) => false;
-
-    public void OnNavigatedFrom(NavigationContext navigationContext)
-    {
-    }
+    public override bool IsNavigationTarget(NavigationContext navigationContext) => false;
 }
