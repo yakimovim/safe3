@@ -1,5 +1,6 @@
 ﻿using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Views;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -30,7 +31,7 @@ public class CreateItemViewModel : ViewModelBase
     private void OnCancel()
     {
         var parameters = new NavigationParameters { { "Item", _parent } };
-        RegionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+        RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
     }
 
     private string _title;

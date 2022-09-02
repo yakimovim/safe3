@@ -4,6 +4,7 @@ using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.ViewModels.Helpers;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -50,7 +51,7 @@ public class StorageContentViewModel : ViewModelBase
             {
                 var parameters = new NavigationParameters
                     { { "Item", value.Item } };
-                RegionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+                RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
             }
         }
     }
@@ -127,7 +128,7 @@ public class ItemTreeViewModel : BindableBase
 
         var parameters = new NavigationParameters
             { { "Item", info.NewItem } };
-        _regionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+        _regionManager.RequestNavigationToDetails("ItemDetails", parameters);
     }
 
     private bool HandleNewItemCreated((Item NewItem, Item? ParentItem) info)
@@ -152,7 +153,7 @@ public class ItemTreeViewModel : BindableBase
     {
         var parameters = new NavigationParameters
             { { "Parent", Item } };
-        _regionManager.RequestNavigate("DetailsRegion", "CreateItem", parameters);
+        _regionManager.RequestNavigationToDetails("CreateItem", parameters);
     }
 
     private bool CanEditItem()
@@ -164,7 +165,7 @@ public class ItemTreeViewModel : BindableBase
     {
         var parameters = new NavigationParameters
                     { { "Item", Item } };
-        _regionManager.RequestNavigate("DetailsRegion", "EditItem", parameters);
+        _regionManager.RequestNavigationToDetails("EditItem", parameters);
     }
 
     private ObservableCollection<ItemTreeViewModel> CreateSubItems()

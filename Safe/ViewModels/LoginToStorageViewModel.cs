@@ -33,19 +33,19 @@ namespace EdlinSoftware.Safe.ViewModels
                 FileName = _storageFilePath!,
                 Password = _password
             });
-            RegionManager.RequestNavigate("MainContentRegion", "StorageContent");
+            RegionManager.RequestNavigationToMainContent("StorageContent");
         }
 
         private void OnCancel()
         {
-            RegionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+            RegionManager.RequestNavigationToMainContent("CreateOrOpenStorage");
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             if(!navigationContext.Parameters.TryGetValue("StoragePath", out string storageFilePath))
             {
-                RegionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+                RegionManager.RequestNavigationToMainContent("CreateOrOpenStorage");
                 return;
             }
 

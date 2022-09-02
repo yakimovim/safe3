@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using EdlinSoftware.Safe.Services;
 using EdlinSoftware.Safe.Views;
 using Prism.Ioc;
@@ -27,13 +29,24 @@ namespace EdlinSoftware.Safe
             containerRegistry.Register<Domain.IItemsRepository, Domain.ItemsRepository>();
             containerRegistry.Register<Storage.IItemsRepository, Storage.LiteDbItemsRepository>();
 
-            containerRegistry.RegisterForNavigation<CreateOrOpenStorageView>("CreateOrOpenStorage");
-            containerRegistry.RegisterForNavigation<CreateStorageView>("CreateStorage");
-            containerRegistry.RegisterForNavigation<LoginToStorageView>("LoginToStorage");
-            containerRegistry.RegisterForNavigation<StorageContentView>("StorageContent");
-            containerRegistry.RegisterForNavigation<CreateItemView>("CreateItem");
-            containerRegistry.RegisterForNavigation<ItemDetailsView>("ItemDetails");
-            containerRegistry.RegisterForNavigation<EditItemView>("EditItem");
+            RegisterViewsForNavigation(containerRegistry);
+        }
+
+        private void RegisterViewsForNavigation(IContainerRegistry containerRegistry)
+        {
+            var assembly = typeof(App).Assembly;
+
+            var viewTypes = assembly.GetTypes()
+                .Where(t => t.BaseType == typeof(UserControl));
+
+            foreach (var viewType in viewTypes)
+            {
+                var name = viewType.Name;
+                if (name.EndsWith("View"))
+                    name = name.Substring(0, name.Length - "View".Length);
+
+                containerRegistry.RegisterForNavigation(viewType, name);
+            }
         }
     }
 }

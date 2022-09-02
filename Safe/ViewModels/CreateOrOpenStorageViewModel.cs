@@ -1,5 +1,6 @@
 ﻿using System;
 using EdlinSoftware.Safe.Services;
+using EdlinSoftware.Safe.ViewModels.Helpers;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;
@@ -32,7 +33,7 @@ namespace EdlinSoftware.Safe.ViewModels
                 {
                     { "StoragePath", openDialog.FileName }
                 };
-                RegionManager.RequestNavigate("MainContentRegion", "CreateStorage", parameters);
+                RegionManager.RequestNavigationToMainContent("CreateStorage", parameters);
             }
         }
 
@@ -45,7 +46,7 @@ namespace EdlinSoftware.Safe.ViewModels
                 {
                     { "StoragePath", openDialog.FileName }
                 };
-                RegionManager.RequestNavigate("MainContentRegion", "LoginToStorage", parameters);
+                RegionManager.RequestNavigationToMainContent("LoginToStorage", parameters);
             }
         }
 

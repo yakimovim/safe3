@@ -2,6 +2,7 @@
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.ViewModels.Helpers;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -30,7 +31,7 @@ namespace EdlinSoftware.Safe.ViewModels
             _itemsRepository.SaveItem(_item);
 
             var parameters = new NavigationParameters { { "Item", _item } };
-            RegionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+            RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
 
             EventAggregator.GetEvent<ItemChanged>().Publish(_item);
         }
@@ -40,7 +41,7 @@ namespace EdlinSoftware.Safe.ViewModels
         private void OnCancel()
         {
             var parameters = new NavigationParameters { { "Item", _item } };
-            RegionManager.RequestNavigate("DetailsRegion", "ItemDetails", parameters);
+            RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
         }
 
         private string _title;
