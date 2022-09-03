@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using EdlinSoftware.Safe.Domain.Model;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -13,6 +14,12 @@ public abstract class FieldViewModel : BindableBase
     protected FieldViewModel(Field field)
     {
         Field = field ?? throw new ArgumentNullException(nameof(field));
+        DeleteCommand = new DelegateCommand(OnDelete);
+    }
+
+    private void OnDelete()
+    {
+        Deleted?.Invoke(this, this);
     }
 
     public string Name
@@ -27,6 +34,10 @@ public abstract class FieldViewModel : BindableBase
             }
         }
     }
+
+    public event EventHandler<FieldViewModel> Deleted;
+
+    public DelegateCommand DeleteCommand { get; }
 }
 
 public sealed class TextFieldViewModel : FieldViewModel

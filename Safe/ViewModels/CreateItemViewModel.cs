@@ -1,6 +1,8 @@
-﻿using EdlinSoftware.Safe.Domain.Model;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.Views;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -13,6 +15,28 @@ public class CreateItemViewModel : ViewModelBase
         CancelCommand = new DelegateCommand(OnCancel);
         CreateItemCommand = new DelegateCommand(OnCreate, CanCreate)
             .ObservesProperty(() => Title);
+        AddTextFieldCommand = new DelegateCommand(OnAddTextField);
+        AddPasswordFieldCommand = new DelegateCommand(OnAddPasswordField);
+    }
+
+    private void OnAddTextField()
+    {
+        var field = new TextFieldViewModel();
+        field.Deleted += OnFieldDeleted;
+        Fields.Add(field);
+    }
+
+    private void OnAddPasswordField()
+    {
+        var field = new PasswordFieldViewModel();
+        field.Deleted += OnFieldDeleted;
+        Fields.Add(field);
+    }
+
+    private void OnFieldDeleted(object? sender, FieldViewModel field)
+    {
+        field.Deleted -= OnFieldDeleted;
+        Fields.Remove(field);
     }
 
     private void OnCreate()
@@ -20,8 +44,13 @@ public class CreateItemViewModel : ViewModelBase
         var item = new Item(_parent)
         {
             Title = Title,
-            Description = Description
+            Description = Description,
         };
+
+        if(Fields.Any())
+        {
+            item.Fields.AddRange(Fields.Select(f => f.Field));
+        }
 
         EventAggregator.GetEvent<NewItemCreated>().Publish((item, _parent));
     }
@@ -53,6 +82,8 @@ public class CreateItemViewModel : ViewModelBase
 
     public DelegateCommand CreateItemCommand { get; }
     public DelegateCommand CancelCommand { get; }
+    public DelegateCommand AddTextFieldCommand { get; }
+    public DelegateCommand AddPasswordFieldCommand { get; }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
@@ -60,4 +91,14 @@ public class CreateItemViewModel : ViewModelBase
     }
 
     public override bool IsNavigationTarget(NavigationContext navigationContext) => false;
+
+    public override void OnNavigatedFrom(NavigationContext navigationContext)
+    {
+        foreach (var field in Fields)
+        {
+            field.Deleted -= OnFieldDeleted;
+        }
+    }
+
+    public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
 }

@@ -13,6 +13,21 @@
         <TextBox Text="{Binding Title}"></TextBox>
         <TextBlock Text="Description:"/>
         <TextBox Text="{Binding Description}"></TextBox>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Add text field" Command="{Binding AddTextFieldCommand}"/>
+            <Button Content="Add password field" Command="{Binding AddPasswordFieldCommand}"/>
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Fields}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Name:" />
+                        <TextBox Text="{Binding Name}" />
+                        <Button Content="Delete" Command="{Binding DeleteCommand}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <Button Content="Ok" Command="{Binding SaveChangesCommand}" />
         <Button Content="Cancel" Command="{Binding CancelCommand}" />
     </StackPanel>
