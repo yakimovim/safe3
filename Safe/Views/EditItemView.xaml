@@ -10,9 +10,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <TextBlock Text="Title:"/>
-        <TextBox Text="{Binding Title}"></TextBox>
+        <TextBox Text="{Binding Title}" />
         <TextBlock Text="Description:"/>
-        <TextBox Text="{Binding Description}"></TextBox>
+        <TextBox Text="{Binding Description}" />
+        <TextBlock Text="Tags:"/>
+        <TextBox Text="{Binding Tags}" />
         <StackPanel Orientation="Horizontal">
             <Button Content="Add text field" Command="{Binding AddTextFieldCommand}"/>
             <Button Content="Add password field" Command="{Binding AddPasswordFieldCommand}"/>

@@ -10,6 +10,8 @@ namespace EdlinSoftware.Safe.ViewModels;
 
 public class CreateItemViewModel : ViewModelBase
 {
+    private Item? _parent;
+
     public CreateItemViewModel()
     {
         CancelCommand = new DelegateCommand(OnCancel);
@@ -47,6 +49,11 @@ public class CreateItemViewModel : ViewModelBase
             Description = Description,
         };
 
+        if(!string.IsNullOrEmpty(Tags))
+        {
+            item.Tags.AddRange(Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()));
+        }
+
         if(Fields.Any())
         {
             item.Fields.AddRange(Fields.Select(f => f.Field));
@@ -71,13 +78,19 @@ public class CreateItemViewModel : ViewModelBase
     }
 
     private string _description;
-    
-    private Item? _parent;
 
     public string Description
     {
         get { return _description; }
         set { SetProperty(ref _description, value); }
+    }
+
+    private string _tags;
+
+    public string Tags
+    {
+        get { return _tags; }
+        set { SetProperty(ref _tags, value); }
     }
 
     public DelegateCommand CreateItemCommand { get; }

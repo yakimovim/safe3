@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -15,7 +16,7 @@ public class ItemDetailsViewModel : ViewModelBase
 
     public ItemDetailsViewModel(IItemsRepository itemsRepository)
     {
-        _itemsRepository = itemsRepository ?? throw new System.ArgumentNullException(nameof(itemsRepository));
+        _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
     }
 
     private string _title;
@@ -27,11 +28,18 @@ public class ItemDetailsViewModel : ViewModelBase
 
     private string _description;
 
-
     public string Description
     {
         get { return _description; }
         set { SetProperty(ref _description, value); }
+    }
+
+    private string _tags;
+
+    public string Tags
+    {
+        get { return _tags; }
+        set { SetProperty(ref _tags, value); }
     }
 
     public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
@@ -42,6 +50,7 @@ public class ItemDetailsViewModel : ViewModelBase
 
         Title = _item?.Title;
         Description = _item?.Description;
+        Tags = string.Join(", ", _item?.Tags ?? new List<string>());
 
         Fields.Clear();
 

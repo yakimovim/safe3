@@ -14,6 +14,8 @@
         <TextBlock Text="{Binding Title}" />
         <TextBlock Text="Description:" />
         <TextBlock Text="{Binding Description}" />
+        <TextBlock Text="Tags:" />
+        <TextBlock Text="{Binding Tags}" />
         <ItemsControl ItemsSource="{Binding Fields}">
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:TextFieldViewModel}">

@@ -4,7 +4,6 @@ using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.ViewModels.Helpers;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;

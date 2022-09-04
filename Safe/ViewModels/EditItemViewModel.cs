@@ -4,7 +4,6 @@ using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.ViewModels.Helpers;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -34,6 +33,12 @@ namespace EdlinSoftware.Safe.ViewModels
 
             _item.Fields.Clear();
             _item.Fields.AddRange(Fields.Select(f => f.Field));
+
+            _item.Tags.Clear();
+            if (!string.IsNullOrEmpty(Tags))
+            {
+                _item.Tags.AddRange(Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()));
+            }
 
             _itemsRepository.SaveItem(_item);
 
@@ -66,6 +71,13 @@ namespace EdlinSoftware.Safe.ViewModels
             set { SetProperty(ref _description, value); }
         }
 
+        private string _tags;
+
+        public string Tags
+        {
+            get { return _tags; }
+            set { SetProperty(ref _tags, value); }
+        }
         public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -74,6 +86,7 @@ namespace EdlinSoftware.Safe.ViewModels
 
             Title = _item.Title;
             Description = _item.Description;
+            Tags = string.Join(", ", _item.Tags);
 
             Fields.Clear();
 
