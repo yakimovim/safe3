@@ -3,50 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EdlinSoftware.Safe.Views"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:vm="clr-namespace:EdlinSoftware.Safe.ViewModels"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <HierarchicalDataTemplate DataType="{x:Type vm:ItemTreeViewModel}"
-                                  ItemsSource="{Binding SubItems}">
-            <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}">
-                <TextBlock.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
-                        <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
-                        <Separator />
-                        <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
-                    </ContextMenu>
-                </TextBlock.ContextMenu>
-            </TextBlock>
-        </HierarchicalDataTemplate>
-    </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <TreeView Grid.Column="0" ItemsSource="{Binding SubItems}"
-                  AllowDrop="True"
-                  PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
-                  PreviewMouseMove="UIElement_OnPreviewMouseMove"
-                  DragEnter="UIElement_CheckDrag"
-                  DragOver="UIElement_CheckDrag"
-                  DragLeave="UIElement_CheckDrag"
-                  Drop="UIElement_OnDrop"
-                  MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
-            <b:Interaction.Behaviors>
-                <be:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
-            </b:Interaction.Behaviors>
-        </TreeView>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Background="Black" />
-        <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
-            <ContentControl prism:RegionManager.RegionName="DetailsRegion"></ContentControl>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ContentControl Grid.Column="0" prism:RegionManager.RegionName="StorageContentRegion" />
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Background="Black" />
+            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
+                <ContentControl prism:RegionManager.RegionName="DetailsRegion" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

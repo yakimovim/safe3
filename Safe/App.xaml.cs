@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using EdlinSoftware.Safe.Services;
 using EdlinSoftware.Safe.Views;
 using Prism.Ioc;
+using Prism.Regions;
 using Prism.Unity;
 
 namespace EdlinSoftware.Safe
@@ -47,6 +48,15 @@ namespace EdlinSoftware.Safe
 
                 containerRegistry.RegisterForNavigation(viewType, name);
             }
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            var regionManager = Container.Resolve<IRegionManager>();
+
+            regionManager.RegisterViewWithRegion<StorageTreeView>("StorageContentRegion");
         }
     }
 }

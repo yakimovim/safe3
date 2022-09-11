@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Prism.Regions;
+﻿using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels.Helpers
 {
@@ -19,6 +18,14 @@ namespace EdlinSoftware.Safe.ViewModels.Helpers
             NavigationParameters? parameters = null)
         {
             regionManager.RequestNavigate("DetailsRegion", source, parameters ?? new NavigationParameters());
+        }
+
+        public static void RequestNavigationToStorageContent(
+            this IRegionManager regionManager,
+            string source,
+            NavigationParameters? parameters = null)
+        {
+            regionManager.RequestNavigate("StorageContentRegion", source, parameters ?? new NavigationParameters());
         }
     }
 }

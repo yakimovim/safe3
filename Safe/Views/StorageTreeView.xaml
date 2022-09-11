@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="EdlinSoftware.Safe.Views.StorageTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EdlinSoftware.Safe.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:vm="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <TreeView ItemsSource="{Binding SubItems}"
+                  AllowDrop="True"
+                  PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+                  PreviewMouseMove="UIElement_OnPreviewMouseMove"
+                  DragEnter="UIElement_CheckDrag"
+                  DragOver="UIElement_CheckDrag"
+                  DragLeave="UIElement_CheckDrag"
+                  Drop="UIElement_OnDrop"
+                  MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
+        <TreeView.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type vm:ItemTreeViewModel}"
+                                  ItemsSource="{Binding SubItems}">
+                <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
+                            <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
+                            <Separator />
+                            <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+            </HierarchicalDataTemplate>
+
+        </TreeView.Resources>
+        <b:Interaction.Behaviors>
+            <be:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
+        </b:Interaction.Behaviors>
+    </TreeView>
+</UserControl>
