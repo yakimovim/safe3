@@ -20,9 +20,7 @@
             </Grid.ColumnDefinitions>
             <ContentControl Grid.Column="0" prism:RegionManager.RegionName="StorageContentRegion" />
             <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Background="Black" />
-            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
-                <ContentControl prism:RegionManager.RegionName="DetailsRegion" />
-            </StackPanel>
+            <ContentControl Grid.Column="1" Margin="5" prism:RegionManager.RegionName="DetailsRegion" />
         </Grid>
     </Grid>
 </UserControl>

@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Windows;
+using System.Windows.Threading;
+using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
@@ -11,19 +13,28 @@ public class StorageContentViewModel : ViewModelBase
 
     public StorageContentViewModel()
     {
-        _searchTextChanged.Throttle(TimeSpan.FromSeconds(2)).Subscribe(OnSearchTextChanged);
+        _searchTextChanged.Throttle(TimeSpan.FromSeconds(2))
+            .SubscribeOn(new DispatcherSynchronizationContext())
+            .Subscribe(OnSearchTextChanged);
     }
 
     private void OnSearchTextChanged(string searchText)
     {
-        if(string.IsNullOrWhiteSpace(searchText))
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            RegionManager.RequestNavigationToStorageContent("StorageTree");
-        }
-        else
-        {
-            Debug.WriteLine(searchText);
-        }
+            if(string.IsNullOrWhiteSpace(searchText))
+            {
+                RegionManager.RequestNavigationToStorageContent("StorageTree");
+            }
+            else
+            {
+                var p = new NavigationParameters
+                {
+                    { "SearchText", searchText }
+                };
+                RegionManager.RequestNavigationToStorageContent("StorageList", p);
+            }
+        });
     }
 
     private string _searchText = string.Empty;
