@@ -11,7 +11,15 @@
               SelectionMode="Single">
         <ListView.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}" />
+                <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
+                            <Separator />
+                            <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

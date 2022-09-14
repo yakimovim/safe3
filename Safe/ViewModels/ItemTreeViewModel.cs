@@ -48,6 +48,10 @@ public class ItemTreeViewModel : BindableBase
             .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
                 false, HandleItemChanged);
 
+        _eventAggregator.GetEvent<ItemDeleted>()
+            .Subscribe(OnItemDeleted, ThreadOption.PublisherThread,
+                false, HandleItemDeleted);
+
         _subItems = new Lazy<ObservableCollection<ItemTreeViewModel>>(CreateSubItems);
 
         DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
@@ -58,15 +62,25 @@ public class ItemTreeViewModel : BindableBase
         EditItemCommand = new DelegateCommand(OnEditItem, CanEditItem);
     }
 
+    private void OnItemDeleted(Item item)
+    {
+        Parent!.SubItems.Remove(this);
+    }
+
+    private bool HandleItemDeleted(Item item)
+    {
+        return item.Equals(Item);
+    }
+
     private void OnItemChanged(Item item)
     {
-        Text = item.Title ?? "Root";
+        Text = item.Title;
         Tooltip = item.Description ?? string.Empty;
     }
 
     private bool HandleItemChanged(Item item)
     {
-        return ReferenceEquals(Item, item);
+        return item.Equals(Item);
     }
 
     private void OnNewItemCreated((Item NewItem, Item? parentItem) info)
@@ -131,14 +145,14 @@ public class ItemTreeViewModel : BindableBase
         return new ObservableCollection<ItemTreeViewModel>(subItems);
     }
 
-    private string _text;
+    private string _text = string.Empty;
     public string Text
     {
         get { return _text; }
         set { SetProperty(ref _text, value); }
     }
 
-    private string _tooltip;
+    private string _tooltip = string.Empty;
     public string Tooltip
     {
         get { return _tooltip; }

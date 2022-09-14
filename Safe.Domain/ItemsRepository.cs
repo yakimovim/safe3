@@ -91,6 +91,7 @@ namespace EdlinSoftware.Safe.Domain
                         ParentId = i.ParentId,
                         Title = i.Title,
                         Description = i.Description,
+                        IconId = i.IconId,
                         Tags = new List<string>(i.Tags)
                     };
                     item.Fields.AddRange(i.Fields.Select(converter.CreateFrom));
@@ -114,6 +115,7 @@ namespace EdlinSoftware.Safe.Domain
                 ParentId = item.ParentId,
                 Title = item.Title,
                 Description = item.Description,
+                IconId = item.IconId,
                 Tags = new List<string>(item.Tags)
             };
             var converter = new DomainFieldConverter();

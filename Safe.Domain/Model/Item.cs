@@ -14,9 +14,11 @@ namespace EdlinSoftware.Safe.Domain.Model
 
         internal int? ParentId { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
+
+        public string? IconId { get; set; }
 
         public List<string> Tags { get; set; } = new List<string>();
 
@@ -32,7 +34,7 @@ namespace EdlinSoftware.Safe.Domain.Model
             ParentId = parentId;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var anotherItem = obj as Item;
 

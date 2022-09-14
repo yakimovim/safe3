@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using EdlinSoftware.Safe.Domain;
+using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Search;
 using Prism.Regions;
 
@@ -17,16 +19,35 @@ public class StorageListViewModel : ViewModelBase
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
     }
 
-    private ObservableCollection<ItemTreeViewModel> _items;
-    public ObservableCollection<ItemTreeViewModel> Items
+    protected override void SubscribeToEvents()
+    {
+        EventAggregator.GetEvent<ItemDeleted>()
+            .Subscribe(OnItemDeleted);
+    }
+
+    private void OnItemDeleted(Item item)
+    {
+        if (_items == null) return;
+
+        var itemViewModel = _items
+            .FirstOrDefault(i => i.Item.Equals(item));
+
+        if (itemViewModel != null)
+        {
+            _items.Remove(itemViewModel);
+        }
+    }
+
+    private ObservableCollection<ItemListViewModel> _items;
+    public ObservableCollection<ItemListViewModel> Items
     {
         get { return _items; }
         set { SetProperty(ref _items, value); }
     }
 
-    private ItemTreeViewModel? _selectedItem;
+    private ItemListViewModel? _selectedItem;
 
-    public ItemTreeViewModel? SelectedItem
+    public ItemListViewModel? SelectedItem
     {
         get { return _selectedItem; }
         set
@@ -50,8 +71,8 @@ public class StorageListViewModel : ViewModelBase
 
         var foundItems = _itemsRepository.Find(searchModel);
 
-        Items = new ObservableCollection<ItemTreeViewModel>(foundItems.Select(i =>
-            new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository, i)));
+        Items = new ObservableCollection<ItemListViewModel>(foundItems.Select(i =>
+            new ItemListViewModel(EventAggregator, RegionManager, _itemsRepository, i)));
 
         if (Items.Any())
         {

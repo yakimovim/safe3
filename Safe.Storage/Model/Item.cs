@@ -10,11 +10,11 @@ namespace EdlinSoftware.Safe.Storage.Model
 
         public string Title { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public List<string> Tags { get; set; } = new List<string>();
 
-        public int? IconId { get; set; }
+        public string? IconId { get; set; }
 
         public List<Field> Fields { get; set; } = new List<Field>();
     }
