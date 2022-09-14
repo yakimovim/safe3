@@ -29,6 +29,8 @@ namespace EdlinSoftware.Safe
             containerRegistry.RegisterSingleton<LiteDbConnectionProvider>(() => connectionProvider);
             containerRegistry.Register<Domain.IItemsRepository, Domain.ItemsRepository>();
             containerRegistry.Register<Storage.IItemsRepository, Storage.LiteDbItemsRepository>();
+            containerRegistry.Register<Domain.IIconsRepository, Domain.IconsRepository>();
+            containerRegistry.Register<Storage.IIconsRepository, Storage.LiteDbIconsRepository>();
 
             RegisterViewsForNavigation(containerRegistry);
         }
