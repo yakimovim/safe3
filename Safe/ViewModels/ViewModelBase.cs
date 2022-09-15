@@ -1,6 +1,7 @@
 ﻿using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using Unity;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -27,6 +28,9 @@ public abstract class ViewModelBase : BindableBase, INavigationAware
     }
 
     protected virtual void SubscribeToEvents() { }
+
+    [Dependency]
+    public IDialogService DialogService { get; set; }
 
     public virtual void OnNavigatedTo(NavigationContext navigationContext) { }
 

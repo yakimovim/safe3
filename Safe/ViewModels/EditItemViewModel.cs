@@ -9,6 +9,7 @@ using EdlinSoftware.Safe.Images;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
@@ -37,20 +38,17 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnSelectIcon()
         {
-            var openDialog = new OpenFileDialog
+            DialogService.ShowDialog("IconsDialog", new DialogParameters(), result =>
             {
-                CheckFileExists = true,
-                CheckPathExists = true
-            };
+                if (result.Result == ButtonResult.OK)
+                {
+                    var iconId = result.Parameters.GetValue<string>("IconId");
 
-            if (openDialog.ShowDialog() == true)
-            {
-                var fileStream = openDialog.OpenFile();
+                    _iconId = iconId;
 
-                _iconId = _iconsRepository.CreateNewIcon(fileStream);
-
-                Icon = _iconsRepository.GetIcon(_iconId);
-            }
+                    Icon = _iconsRepository.GetIcon(_iconId);
+                }
+            });
         }
 
         private void OnClearIcon()

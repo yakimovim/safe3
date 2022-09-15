@@ -2,7 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using EdlinSoftware.Safe.Services;
+using EdlinSoftware.Safe.ViewModels.Dialogs;
 using EdlinSoftware.Safe.Views;
+using EdlinSoftware.Safe.Views.Dialogs;
 using Prism.Ioc;
 using Prism.Regions;
 using Prism.Unity;
@@ -31,6 +33,8 @@ namespace EdlinSoftware.Safe
             containerRegistry.Register<Storage.IItemsRepository, Storage.LiteDbItemsRepository>();
             containerRegistry.Register<Domain.IIconsRepository, Domain.IconsRepository>();
             containerRegistry.Register<Storage.IIconsRepository, Storage.LiteDbIconsRepository>();
+
+            containerRegistry.RegisterDialog<IconsDialog, IconsDialogViewModel>();
 
             RegisterViewsForNavigation(containerRegistry);
         }

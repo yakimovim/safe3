@@ -1,24 +1,54 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media;
+using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Images;
 using Prism.Commands;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
 public class CreateItemViewModel : ViewModelBase
 {
+    private readonly IIconsRepository _iconsRepository;
     private Item? _parent;
 
-    public CreateItemViewModel()
+    public CreateItemViewModel(IIconsRepository iconsRepository)
     {
+        _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+
         CancelCommand = new DelegateCommand(OnCancel);
         CreateItemCommand = new DelegateCommand(OnCreate, CanCreate)
             .ObservesProperty(() => Title);
         AddTextFieldCommand = new DelegateCommand(OnAddTextField);
         AddPasswordFieldCommand = new DelegateCommand(OnAddPasswordField);
+        ClearIconCommand = new DelegateCommand(OnClearIcon);
+        SelectIconCommand = new DelegateCommand(OnSelectIcon);
+    }
+
+    private void OnSelectIcon()
+    {
+        DialogService.ShowDialog("IconsDialog", new DialogParameters(), result =>
+        {
+            if (result.Result == ButtonResult.OK)
+            {
+                var iconId = result.Parameters.GetValue<string>("IconId");
+
+                _iconId = iconId;
+
+                Icon = _iconsRepository.GetIcon(_iconId);
+            }
+        });
+    }
+
+    private void OnClearIcon()
+    {
+        _iconId = null;
+        Icon = Icons.DefaultItemIcon;
     }
 
     private void OnAddTextField()
@@ -70,14 +100,14 @@ public class CreateItemViewModel : ViewModelBase
         RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
     }
 
-    private string _title;
+    private string _title = string.Empty;
     public string Title
     {
         get { return _title; }
         set { SetProperty(ref _title, value); }
     }
 
-    private string _description;
+    private string _description = string.Empty;
 
     public string Description
     {
@@ -85,7 +115,7 @@ public class CreateItemViewModel : ViewModelBase
         set { SetProperty(ref _description, value); }
     }
 
-    private string _tags;
+    private string _tags = string.Empty;
 
     public string Tags
     {
@@ -93,10 +123,20 @@ public class CreateItemViewModel : ViewModelBase
         set { SetProperty(ref _tags, value); }
     }
 
+    private string? _iconId;
+    private ImageSource _icon = Icons.DefaultItemIcon;
+    public ImageSource Icon
+    {
+        get { return _icon; }
+        set { SetProperty(ref _icon, value); }
+    }
+
     public DelegateCommand CreateItemCommand { get; }
     public DelegateCommand CancelCommand { get; }
     public DelegateCommand AddTextFieldCommand { get; }
     public DelegateCommand AddPasswordFieldCommand { get; }
+    public DelegateCommand ClearIconCommand { get; }
+    public DelegateCommand SelectIconCommand { get; }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {

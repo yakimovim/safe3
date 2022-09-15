@@ -9,6 +9,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="{Binding Icon}" Width="16" Height="16" />
+            <Button Content="Clear icon" Command="{Binding ClearIconCommand}"/>
+            <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
+        </StackPanel>
         <TextBlock Text="Title:"/>
         <TextBox Text="{Binding Title}" />
         <TextBlock Text="Description:"/>
