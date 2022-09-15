@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using Prism.Regions;
@@ -40,6 +43,19 @@ public class ItemDetailsViewModel : ViewModelBase
     {
         get { return _tags; }
         set { SetProperty(ref _tags, value); }
+    }
+
+    public ImageSource Icon
+    {
+        get
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("EdlinSoftware.Safe.Images.globe16.png");
+            image.EndInit();
+            return image;
+        }
     }
 
     public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();

@@ -9,11 +9,14 @@ namespace EdlinSoftware.Safe.ViewModels
     internal class StorageTreeViewModel : ViewModelBase
     {
         private readonly IItemsRepository _itemsRepository;
+        private readonly IIconsRepository _iconsRepository;
 
         public StorageTreeViewModel(
-            IItemsRepository itemsRepository)
+            IItemsRepository itemsRepository,
+            IIconsRepository iconsRepository)
         {
             _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
+            _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
         }
 
         protected override void SubscribeToEvents()
@@ -25,7 +28,10 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnStorageChanged()
         {
-            SubItems = new ObservableCollection<ItemTreeViewModel>(new[] { new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository) });
+            SubItems = new ObservableCollection<ItemTreeViewModel>(new[]
+            {
+                new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository, _iconsRepository)
+            });
         }
 
         private ObservableCollection<ItemTreeViewModel> _subItems;

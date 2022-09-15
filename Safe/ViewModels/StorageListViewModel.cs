@@ -12,11 +12,14 @@ namespace EdlinSoftware.Safe.ViewModels;
 public class StorageListViewModel : ViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
+    private readonly IIconsRepository _iconsRepository;
 
     public StorageListViewModel(
-        IItemsRepository itemsRepository)
+        IItemsRepository itemsRepository,
+        IIconsRepository iconsRepository)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
+        _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
     }
 
     protected override void SubscribeToEvents()
@@ -72,7 +75,7 @@ public class StorageListViewModel : ViewModelBase
         var foundItems = _itemsRepository.Find(searchModel);
 
         Items = new ObservableCollection<ItemListViewModel>(foundItems.Select(i =>
-            new ItemListViewModel(EventAggregator, RegionManager, _itemsRepository, i)));
+            new ItemListViewModel(EventAggregator, RegionManager, _itemsRepository, _iconsRepository, i)));
 
         if (Items.Any())
         {

@@ -23,16 +23,22 @@
         <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type vm:ItemTreeViewModel}"
                                   ItemsSource="{Binding SubItems}">
-                <TextBlock Text="{Binding Text}" ToolTip="{Binding Tooltip}">
-                    <TextBlock.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
-                            <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
-                            <Separator />
-                            <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
-                        </ContextMenu>
-                    </TextBlock.ContextMenu>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding Icon}"
+                           Width="16" Height="16" Margin="0,2,5,2"/>
+                    <TextBlock Text="{Binding Text}" 
+                               ToolTip="{Binding Tooltip}"
+                               VerticalAlignment="Center">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
+                                <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
+                                <Separator />
+                                <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </StackPanel>
             </HierarchicalDataTemplate>
 
         </TreeView.Resources>

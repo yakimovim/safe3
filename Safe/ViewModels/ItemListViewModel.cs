@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Reflection;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
@@ -14,17 +17,20 @@ public class ItemListViewModel : BindableBase
     private readonly IEventAggregator _eventAggregator;
     private readonly IRegionManager _regionManager;
     private readonly IItemsRepository _itemsRepository;
+    private readonly IIconsRepository _iconsRepository;
     public readonly Item Item;
 
     public ItemListViewModel(
         IEventAggregator eventAggregator,
         IRegionManager regionManager,
-        IItemsRepository itemsRepository, 
+        IItemsRepository itemsRepository,
+        IIconsRepository iconsRepository,
         Item item)
     {
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
+        _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
         Item = item;
 
         Text = Item.Title;
@@ -76,6 +82,19 @@ public class ItemListViewModel : BindableBase
     {
         get => _tooltip;
         set => SetProperty(ref _tooltip, value);
+    }
+
+    public ImageSource Icon
+    {
+        get
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("EdlinSoftware.Safe.Images.globe16.png");
+            image.EndInit();
+            return image;
+        }
     }
 
     public DelegateCommand DeleteItemCommand { get; }

@@ -7,6 +7,16 @@
     <RootNamespace>EdlinSoftware.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\globe16.png" />
+    <None Remove="Images\globe24.png" />
+    <None Remove="Images\globe32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\globe16.png" />
+    <EmbeddedResource Include="Images\globe24.png" />
+    <EmbeddedResource Include="Images\globe32.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>

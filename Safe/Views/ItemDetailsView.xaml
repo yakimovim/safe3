@@ -10,6 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Vertical">
+        <Image Source="{Binding Icon}" Width="16" Height="16" />
         <TextBlock Text="Title:" />
         <TextBlock Text="{Binding Title}" />
         <TextBlock Text="Description:" />
