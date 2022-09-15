@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Images;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -15,11 +14,15 @@ namespace EdlinSoftware.Safe.ViewModels;
 public class ItemDetailsViewModel : ViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
+    private readonly IIconsRepository _iconsRepository;
     private Item? _item;
 
-    public ItemDetailsViewModel(IItemsRepository itemsRepository)
+    public ItemDetailsViewModel(
+        IItemsRepository itemsRepository,
+        IIconsRepository iconsRepository)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
+        _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
     }
 
     private string _title;
@@ -45,17 +48,11 @@ public class ItemDetailsViewModel : ViewModelBase
         set { SetProperty(ref _tags, value); }
     }
 
+    private ImageSource _icon;
     public ImageSource Icon
     {
-        get
-        {
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("EdlinSoftware.Safe.Images.globe16.png");
-            image.EndInit();
-            return image;
-        }
+        get { return _icon; }
+        set { SetProperty(ref _icon, value); }
     }
 
     public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
@@ -64,9 +61,10 @@ public class ItemDetailsViewModel : ViewModelBase
     {
         _item = navigationContext.Parameters.GetValue<Item?>("Item");
 
-        Title = _item?.Title;
-        Description = _item?.Description;
+        Title = _item?.Title ?? string.Empty;
+        Description = _item?.Description ?? string.Empty;
         Tags = string.Join(", ", _item?.Tags ?? new List<string>());
+        Icon = _iconsRepository.GetIcon(_item?.IconId);
 
         Fields.Clear();
 

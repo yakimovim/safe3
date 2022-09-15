@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Images;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -12,18 +15,48 @@ namespace EdlinSoftware.Safe.ViewModels
     internal class EditItemViewModel : ViewModelBase
     {
         private readonly IItemsRepository _itemsRepository;
+        private readonly IIconsRepository _iconsRepository;
 
         private Item _item;
 
-        public EditItemViewModel(IItemsRepository itemsRepository)
+        public EditItemViewModel(
+            IItemsRepository itemsRepository,
+            IIconsRepository iconsRepository)
         {
             _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
+            _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
 
             SaveChangesCommand = new DelegateCommand(OnSaveChanges, CanSaveChanges)
                 .ObservesProperty(() => Title);
             CancelCommand = new DelegateCommand(OnCancel);
             AddTextFieldCommand = new DelegateCommand(OnAddTextField);
             AddPasswordFieldCommand = new DelegateCommand(OnAddPasswordField);
+            ClearIconCommand = new DelegateCommand(OnClearIcon);
+            SelectIconCommand = new DelegateCommand(OnSelectIcon);
+        }
+
+        private void OnSelectIcon()
+        {
+            var openDialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                CheckPathExists = true
+            };
+
+            if (openDialog.ShowDialog() == true)
+            {
+                var fileStream = openDialog.OpenFile();
+
+                _iconId = _iconsRepository.CreateNewIcon(fileStream);
+
+                Icon = _iconsRepository.GetIcon(_iconId);
+            }
+        }
+
+        private void OnClearIcon()
+        {
+            _iconId = null;
+            Icon = Icons.DefaultItemIcon;
         }
 
         private void OnSaveChanges()
@@ -39,6 +72,8 @@ namespace EdlinSoftware.Safe.ViewModels
             {
                 _item.Tags.AddRange(Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()));
             }
+
+            _item.IconId = _iconId;
 
             _itemsRepository.SaveItem(_item);
 
@@ -78,6 +113,15 @@ namespace EdlinSoftware.Safe.ViewModels
             get { return _tags; }
             set { SetProperty(ref _tags, value); }
         }
+
+        private string? _iconId;
+        private ImageSource _icon;
+        public ImageSource Icon
+        {
+            get { return _icon; }
+            set { SetProperty(ref _icon, value); }
+        }
+
         public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -87,6 +131,8 @@ namespace EdlinSoftware.Safe.ViewModels
             Title = _item.Title;
             Description = _item.Description;
             Tags = string.Join(", ", _item.Tags);
+            Icon = _iconsRepository.GetIcon(_item.IconId);
+            _iconId = _item.IconId;
 
             Fields.Clear();
 
@@ -134,5 +180,9 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand AddTextFieldCommand { get; }
 
         public DelegateCommand AddPasswordFieldCommand { get; }
+
+        public DelegateCommand ClearIconCommand { get; }
+
+        public DelegateCommand SelectIconCommand { get; }
     }
 }

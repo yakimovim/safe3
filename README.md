@@ -4,4 +4,4 @@ This is an application for storage of passwords and other information in an encr
 
 # Credits
 
-Icons are from [www.flaticon.com](www.flaticon.com).
+Icons are taken from [www.flaticon.com](www.flaticon.com).

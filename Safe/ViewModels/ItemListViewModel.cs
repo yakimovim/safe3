@@ -5,6 +5,7 @@ using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Images;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -35,6 +36,7 @@ public class ItemListViewModel : BindableBase
 
         Text = Item.Title;
         Tooltip = Item.Description ?? string.Empty;
+        Icon = _iconsRepository.GetIcon(Item.IconId);
 
         _eventAggregator.GetEvent<ItemChanged>()
             .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
@@ -49,6 +51,7 @@ public class ItemListViewModel : BindableBase
     {
         Text = item.Title;
         Tooltip = item.Description ?? string.Empty;
+        Icon = _iconsRepository.GetIcon(item.IconId);
     }
 
     private bool HandleItemChanged(Item item)
@@ -84,17 +87,11 @@ public class ItemListViewModel : BindableBase
         set => SetProperty(ref _tooltip, value);
     }
 
+    private ImageSource _icon;
     public ImageSource Icon
     {
-        get
-        {
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("EdlinSoftware.Safe.Images.globe16.png");
-            image.EndInit();
-            return image;
-        }
+        get { return _icon; }
+        set { SetProperty(ref _icon, value); }
     }
 
     public DelegateCommand DeleteItemCommand { get; }

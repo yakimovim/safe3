@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Images;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -47,6 +48,7 @@ public class ItemTreeViewModel : BindableBase
 
         Text = Item?.Title ?? "Root";
         Tooltip = Item?.Description ?? string.Empty;
+        Icon = _iconsRepository.GetIcon(Item?.IconId);
 
         _eventAggregator.GetEvent<NewItemCreated>()
             .Subscribe(OnNewItemCreated, ThreadOption.PublisherThread,
@@ -84,6 +86,7 @@ public class ItemTreeViewModel : BindableBase
     {
         Text = item.Title;
         Tooltip = item.Description ?? string.Empty;
+        Icon = _iconsRepository.GetIcon(item.IconId);
     }
 
     private bool HandleItemChanged(Item item)
@@ -167,17 +170,11 @@ public class ItemTreeViewModel : BindableBase
         set { SetProperty(ref _tooltip, value); }
     }
 
+    private ImageSource _icon;
     public ImageSource Icon
     {
-        get
-        {
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("EdlinSoftware.Safe.Images.globe16.png");
-            image.EndInit();
-            return image;
-        }
+        get { return _icon; }
+        set { SetProperty(ref _icon, value); }
     }
 
     private readonly Lazy<ObservableCollection<ItemTreeViewModel>> _subItems;
