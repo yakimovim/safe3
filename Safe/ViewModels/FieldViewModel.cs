@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using EdlinSoftware.Safe.Domain.Model;
 using Prism.Commands;
@@ -15,6 +17,84 @@ public abstract class FieldViewModel : BindableBase
     {
         Field = field ?? throw new ArgumentNullException(nameof(field));
         DeleteCommand = new DelegateCommand(OnDelete);
+        MoveUpCommand = new DelegateCommand(OnMoveUp, CanMoveUp)
+            .ObservesProperty(() => ContainingCollection);
+        MoveDownCommand = new DelegateCommand(OnMoveDown, CanMoveDown)
+            .ObservesProperty(() => ContainingCollection);
+    }
+
+    private bool CanMoveDown()
+    {
+        if (ContainingCollection == null) return false;
+
+        var index = ContainingCollection.IndexOf(this);
+
+        return index < ContainingCollection.Count - 1;
+    }
+
+    private void OnMoveDown()
+    {
+        var index = ContainingCollection.IndexOf(this);
+
+        ContainingCollection.Move(index, index + 1);
+
+        MoveUpCommand.RaiseCanExecuteChanged();
+        MoveDownCommand.RaiseCanExecuteChanged();
+
+        var anotherMovedItem = ContainingCollection[index];
+
+        anotherMovedItem.MoveUpCommand.RaiseCanExecuteChanged();
+        anotherMovedItem.MoveDownCommand.RaiseCanExecuteChanged();
+    }
+
+    private bool CanMoveUp()
+    {
+        if (ContainingCollection == null) return false;
+
+        var index = ContainingCollection.IndexOf(this);
+
+        return index > 0;
+    }
+
+    private void OnMoveUp()
+    {
+        var index = ContainingCollection.IndexOf(this);
+
+        ContainingCollection.Move(index, index - 1);
+
+        MoveUpCommand.RaiseCanExecuteChanged();
+        MoveDownCommand.RaiseCanExecuteChanged();
+
+        var anotherMovedItem = ContainingCollection[index];
+
+        anotherMovedItem.MoveUpCommand.RaiseCanExecuteChanged();
+        anotherMovedItem.MoveDownCommand.RaiseCanExecuteChanged();
+    }
+
+    private ObservableCollection<FieldViewModel> _containingCollection;
+    public ObservableCollection<FieldViewModel> ContainingCollection
+    {
+        get { return _containingCollection; }
+        set
+        {
+            if (_containingCollection != null)
+            {
+                _containingCollection.CollectionChanged -= OnContainingCollectionChanged;
+            }
+
+            SetProperty(ref _containingCollection, value);
+
+            if (_containingCollection != null)
+            {
+                _containingCollection.CollectionChanged += OnContainingCollectionChanged;
+            }
+        }
+    }
+
+    private void OnContainingCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        MoveDownCommand.RaiseCanExecuteChanged();
+        MoveUpCommand.RaiseCanExecuteChanged();
     }
 
     private void OnDelete()
@@ -38,6 +118,8 @@ public abstract class FieldViewModel : BindableBase
     public event EventHandler<FieldViewModel> Deleted;
 
     public DelegateCommand DeleteCommand { get; }
+    public DelegateCommand MoveUpCommand { get; }
+    public DelegateCommand MoveDownCommand { get; }
 }
 
 public sealed class TextFieldViewModel : FieldViewModel

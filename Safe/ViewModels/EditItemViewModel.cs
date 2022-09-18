@@ -120,7 +120,7 @@ namespace EdlinSoftware.Safe.ViewModels
             set { SetProperty(ref _icon, value); }
         }
 
-        public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
+        public ObservableCollection<FieldViewModel> Fields { get; } = new();
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -138,6 +138,7 @@ namespace EdlinSoftware.Safe.ViewModels
             Fields.AddRange(_item.Fields.Select(f =>
             {
                 var field = fieldConstructor.Create(f);
+                field.ContainingCollection = Fields;
                 field.Deleted += OnFieldDeleted;
                 return field;
             }));
@@ -153,14 +154,20 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnAddTextField()
         {
-            var field = new TextFieldViewModel();
+            var field = new TextFieldViewModel
+            {
+                ContainingCollection = Fields
+            };
             field.Deleted += OnFieldDeleted;
             Fields.Add(field);
         }
 
         private void OnAddPasswordField()
         {
-            var field = new PasswordFieldViewModel();
+            var field = new PasswordFieldViewModel
+            {
+                ContainingCollection = Fields
+            };
             field.Deleted += OnFieldDeleted;
             Fields.Add(field);
         }

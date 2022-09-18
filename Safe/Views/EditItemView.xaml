@@ -31,6 +31,8 @@
                         <TextBlock Text="Name:" />
                         <TextBox Text="{Binding Name}" />
                         <Button Content="Delete" Command="{Binding DeleteCommand}" />
+                        <Button Content="Move up" Command="{Binding MoveUpCommand}" />
+                        <Button Content="Move down" Command="{Binding MoveDownCommand}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
