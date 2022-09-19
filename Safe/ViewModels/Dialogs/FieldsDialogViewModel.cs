@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Views.Dialogs;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 
@@ -8,17 +11,19 @@ namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
 public class FieldsDialogViewModel : ViewModelBase, IDialogAware
 {
+    public const string FieldsPropertyName = "Fields";
+
     public FieldsDialogViewModel()
     {
         CancelCommand = new DelegateCommand(OnCancel);
         SelectFieldsCommand = new DelegateCommand(OnSelectFields, CanSelectFields);
-        AddSelectedFieldCommand = new DelegateCommand(OnAddSelectedField, CanAddSelectedField)
-            .ObservesProperty(() => CurrentAvailableField);
-        RemoveSelectedFieldCommand = new DelegateCommand(OnRemoveSelectedField, CanRemoveSelectedField)
-            .ObservesProperty(() => CurrentSelectedField);
+        AddSelectedFieldCommand = new DelegateCommand(OnAddSelectedFields, CanAddSelectedFields)
+            .ObservesProperty(() => CurrentAvailableFields);
+        RemoveSelectedFieldCommand = new DelegateCommand(OnRemoveSelectedFields, CanRemoveSelectedFields)
+            .ObservesProperty(() => CurrentSelectedFields);
         ClearSelectedFieldsCommand = new DelegateCommand(OnClearSelectedFields, CanClearSelectedFields);
 
-        SelectedFields.CollectionChanged += (sender, args) =>
+        SelectedFields.CollectionChanged += (_, _) =>
         {
             SelectFieldsCommand.RaiseCanExecuteChanged();
             ClearSelectedFieldsCommand.RaiseCanExecuteChanged();
@@ -36,21 +41,27 @@ public class FieldsDialogViewModel : ViewModelBase, IDialogAware
         SelectedFields.Clear();
     }
 
-    private bool CanRemoveSelectedField() => CurrentSelectedField != null;
+    private bool CanRemoveSelectedFields() => CurrentSelectedFields.Count > 0;
 
-    private void OnRemoveSelectedField()
+    private void OnRemoveSelectedFields()
     {
-        CurrentSelectedField!.ContainingCollection = null;
-        SelectedFields.Remove(CurrentSelectedField);
+        foreach (var field in CurrentSelectedFields.OfType<FieldViewModel>())
+        {
+            field.ContainingCollection = null;
+            SelectedFields.Remove(field);
+        }
     }
 
-    private bool CanAddSelectedField() => CurrentAvailableField != null;
+    private bool CanAddSelectedFields() => CurrentAvailableFields.Count > 0;
 
-    private void OnAddSelectedField()
+    private void OnAddSelectedFields()
     {
-        var field = CurrentAvailableField!.MakeCopy();
-        field.ContainingCollection = SelectedFields;
-        SelectedFields.Add(field);
+        foreach (var availableField in CurrentAvailableFields.OfType<FieldViewModel>())
+        {
+            var field = availableField.MakeCopy();
+            field.ContainingCollection = SelectedFields;
+            SelectedFields.Add(field);
+        }
     }
 
     private bool CanSelectFields() => SelectedFields.Count > 0;
@@ -59,7 +70,7 @@ public class FieldsDialogViewModel : ViewModelBase, IDialogAware
     {
         var p = new DialogParameters
         {
-            { "Fields", SelectedFields }
+            { FieldsPropertyName, SelectedFields }
         };
 
         RequestClose?.Invoke(new DialogResult(ButtonResult.OK, p));
@@ -97,18 +108,18 @@ public class FieldsDialogViewModel : ViewModelBase, IDialogAware
 
     public ObservableCollection<FieldViewModel> SelectedFields { get; } = new();
 
-    private FieldViewModel? _currentAvailableField;
-    public FieldViewModel? CurrentAvailableField
+    private IReadOnlyList<object> _currentAvailableFields = new List<object>();
+    public IReadOnlyList<object> CurrentAvailableFields
     {
-        get => _currentAvailableField;
-        set => SetProperty(ref _currentAvailableField, value);
+        get => _currentAvailableFields;
+        set => SetProperty(ref _currentAvailableFields, value ?? new List<object>());
     }
 
-    private FieldViewModel? _currentSelectedField;
-    public FieldViewModel? CurrentSelectedField
+    private IReadOnlyList<object> _currentSelectedFields = new List<object>();
+    public IReadOnlyList<object> CurrentSelectedFields
     {
-        get => _currentSelectedField;
-        set => SetProperty(ref _currentSelectedField, value);
+        get => _currentSelectedFields;
+        set => SetProperty(ref _currentSelectedFields, value ?? new List<object>());
     }
 
     public DelegateCommand SelectFieldsCommand { get; }
@@ -116,4 +127,29 @@ public class FieldsDialogViewModel : ViewModelBase, IDialogAware
     public DelegateCommand AddSelectedFieldCommand { get; }
     public DelegateCommand RemoveSelectedFieldCommand { get; }
     public DelegateCommand ClearSelectedFieldsCommand { get; }
+}
+
+public static class FieldsDialogExtensions
+{
+    public static void ShowAddFieldsDialog(this IDialogService dialogService, 
+        ObservableCollection<FieldViewModel> fields,
+        EventHandler<FieldViewModel> fieldDeleteHandler)
+    {
+        dialogService.ShowDialog(nameof(FieldsDialog), new DialogParameters(), result =>
+        {
+            if (result.Result == ButtonResult.OK)
+            {
+                var fieldsToAdd = result.Parameters.GetValue<IReadOnlyCollection<FieldViewModel>>(FieldsDialogViewModel.FieldsPropertyName);
+
+                foreach (var field in fieldsToAdd)
+                {
+                    field.ContainingCollection = fields;
+                    field.Deleted += fieldDeleteHandler;
+                }
+
+                fields.AddRange(fieldsToAdd);
+            }
+        });
+
+    }
 }

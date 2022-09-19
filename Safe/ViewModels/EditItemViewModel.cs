@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
+using EdlinSoftware.Safe.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -30,8 +30,6 @@ namespace EdlinSoftware.Safe.ViewModels
             SaveChangesCommand = new DelegateCommand(OnSaveChanges, CanSaveChanges)
                 .ObservesProperty(() => Title);
             CancelCommand = new DelegateCommand(OnCancel);
-            AddTextFieldCommand = new DelegateCommand(OnAddTextField);
-            AddPasswordFieldCommand = new DelegateCommand(OnAddPasswordField);
             AddFieldsCommand = new DelegateCommand(OnAddFields);
             ClearIconCommand = new DelegateCommand(OnClearIcon);
             SelectIconCommand = new DelegateCommand(OnSelectIcon);
@@ -39,22 +37,9 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnAddFields()
         {
-            DialogService.ShowDialog("FieldsDialog", new DialogParameters(), result =>
-            {
-                if (result.Result == ButtonResult.OK)
-                {
-                    var fields = result.Parameters.GetValue<IReadOnlyCollection<FieldViewModel>>("Fields");
-
-                    foreach (var field in fields)
-                    {
-                        field.ContainingCollection = Fields;
-                        field.Deleted += OnFieldDeleted;
-                    }
-
-                    Fields.AddRange(fields);
-                }
-            });
+            DialogService.ShowAddFieldsDialog(Fields, OnFieldDeleted);
         }
+
         private void OnSelectIcon()
         {
             DialogService.ShowDialog("IconsDialog", new DialogParameters(), result =>
@@ -138,26 +123,6 @@ namespace EdlinSoftware.Safe.ViewModels
             }
         }
 
-        private void OnAddTextField()
-        {
-            var field = new TextFieldViewModel
-            {
-                ContainingCollection = Fields
-            };
-            field.Deleted += OnFieldDeleted;
-            Fields.Add(field);
-        }
-
-        private void OnAddPasswordField()
-        {
-            var field = new PasswordFieldViewModel
-            {
-                ContainingCollection = Fields
-            };
-            field.Deleted += OnFieldDeleted;
-            Fields.Add(field);
-        }
-
         private void OnFieldDeleted(object? sender, FieldViewModel field)
         {
             field.Deleted -= OnFieldDeleted;
@@ -167,10 +132,6 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand SaveChangesCommand { get; }
 
         public DelegateCommand CancelCommand { get; }
-
-        public DelegateCommand AddTextFieldCommand { get; }
-
-        public DelegateCommand AddPasswordFieldCommand { get; }
 
         public DelegateCommand AddFieldsCommand { get; }
 

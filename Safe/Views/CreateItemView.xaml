@@ -15,14 +15,12 @@
             <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
         </StackPanel>
         <TextBlock Text="Title:"/>
-        <TextBox Text="{Binding Title}" />
+        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="Description:"/>
-        <TextBox Text="{Binding Description}"/>
+        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Tags:"/>
-        <TextBox Text="{Binding Tags}"/>
+        <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Add text field" Command="{Binding AddTextFieldCommand}"/>
-            <Button Content="Add password field" Command="{Binding AddPasswordFieldCommand}"/>
             <Button Content="Add fields..." Command="{Binding AddFieldsCommand}"/>
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Fields}">

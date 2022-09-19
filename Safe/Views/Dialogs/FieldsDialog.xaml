@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -20,12 +22,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <ListView Grid.Column="0" ItemsSource="{Binding AvailableFields}"
-                          SelectedItem="{Binding CurrentAvailableField}">
+                      SelectionMode="Extended">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
                         <TextBlock Text="{Binding Name}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <b:Interaction.Behaviors>
+                    <be:BindableSelectedItemsBehavior SelectedItems="{Binding CurrentAvailableFields, Mode=OneWayToSource}" />
+                </b:Interaction.Behaviors>
             </ListView>
             <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                 <Button Content=">" Command="{Binding AddSelectedFieldCommand}" />
@@ -33,12 +38,15 @@
                 <Button Content="&lt;&lt;" Command="{Binding ClearSelectedFieldsCommand}" />
             </StackPanel>
             <ListView Grid.Column="2" ItemsSource="{Binding SelectedFields}"
-                      SelectedItem="{Binding CurrentSelectedField}">
+                      SelectionMode="Extended">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
                         <TextBlock Text="{Binding Name}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <b:Interaction.Behaviors>
+                    <be:BindableSelectedItemsBehavior SelectedItems="{Binding CurrentSelectedFields, Mode=OneWayToSource}" />
+                </b:Interaction.Behaviors>
             </ListView>
         </Grid>
     </DockPanel>
