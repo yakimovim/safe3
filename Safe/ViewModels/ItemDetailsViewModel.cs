@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Images;
@@ -11,10 +10,11 @@ using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class ItemDetailsViewModel : ViewModelBase
+public class ItemDetailsViewModel : ItemViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
+
     private Item? _item;
 
     public ItemDetailsViewModel(
@@ -24,38 +24,6 @@ public class ItemDetailsViewModel : ViewModelBase
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
     }
-
-    private string _title;
-    public string Title
-    {
-        get { return _title; }
-        set { SetProperty(ref _title, value); }
-    }
-
-    private string _description;
-
-    public string Description
-    {
-        get { return _description; }
-        set { SetProperty(ref _description, value); }
-    }
-
-    private string _tags;
-
-    public string Tags
-    {
-        get { return _tags; }
-        set { SetProperty(ref _tags, value); }
-    }
-
-    private ImageSource _icon;
-    public ImageSource Icon
-    {
-        get { return _icon; }
-        set { SetProperty(ref _icon, value); }
-    }
-
-    public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {

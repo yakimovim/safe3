@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EdlinSoftware.Safe.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:EdlinSoftware.Safe.ViewModels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
@@ -26,8 +25,8 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{Binding Icon}"
                            Width="16" Height="16" Margin="0,2,5,2"/>
-                    <TextBlock Text="{Binding Text}" 
-                               ToolTip="{Binding Tooltip}"
+                    <TextBlock Text="{Binding Title}" 
+                               ToolTip="{Binding Description}"
                                VerticalAlignment="Center">
                         <TextBlock.ContextMenu>
                             <ContextMenu>

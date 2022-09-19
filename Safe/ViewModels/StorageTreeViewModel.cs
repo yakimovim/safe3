@@ -30,11 +30,15 @@ namespace EdlinSoftware.Safe.ViewModels
         {
             SubItems = new ObservableCollection<ItemTreeViewModel>(new[]
             {
-                new ItemTreeViewModel(EventAggregator, RegionManager, _itemsRepository, _iconsRepository)
+                new ItemTreeViewModel(_itemsRepository, _iconsRepository)
+                {
+                    EventAggregator = EventAggregator,
+                    RegionManager = RegionManager
+                }
             });
         }
 
-        private ObservableCollection<ItemTreeViewModel> _subItems;
+        private ObservableCollection<ItemTreeViewModel> _subItems = new();
         public ObservableCollection<ItemTreeViewModel> SubItems
         {
             get { return _subItems; }

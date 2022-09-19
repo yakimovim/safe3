@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EdlinSoftware.Safe.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -26,11 +26,13 @@
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Fields}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Name:" />
                         <TextBox Text="{Binding Name}" />
                         <Button Content="Delete" Command="{Binding DeleteCommand}" />
+                        <Button Content="Move up" Command="{Binding MoveUpCommand}" />
+                        <Button Content="Move down" Command="{Binding MoveDownCommand}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

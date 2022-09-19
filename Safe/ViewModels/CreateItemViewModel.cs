@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
@@ -12,10 +10,12 @@ using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class CreateItemViewModel : ViewModelBase
+public class CreateItemViewModel : ItemViewModelBase
 {
     private readonly IIconsRepository _iconsRepository;
+
     private Item? _parent;
+    private string? _iconId;
 
     public CreateItemViewModel(IIconsRepository iconsRepository)
     {
@@ -53,14 +53,20 @@ public class CreateItemViewModel : ViewModelBase
 
     private void OnAddTextField()
     {
-        var field = new TextFieldViewModel();
+        var field = new TextFieldViewModel
+        {
+            ContainingCollection = Fields
+        };
         field.Deleted += OnFieldDeleted;
         Fields.Add(field);
     }
 
     private void OnAddPasswordField()
     {
-        var field = new PasswordFieldViewModel();
+        var field = new PasswordFieldViewModel
+        {
+            ContainingCollection = Fields
+        };
         field.Deleted += OnFieldDeleted;
         Fields.Add(field);
     }
@@ -77,6 +83,7 @@ public class CreateItemViewModel : ViewModelBase
         {
             Title = Title,
             Description = Description,
+            IconId = _iconId
         };
 
         if(!string.IsNullOrEmpty(Tags))
@@ -100,37 +107,6 @@ public class CreateItemViewModel : ViewModelBase
         RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
     }
 
-    private string _title = string.Empty;
-    public string Title
-    {
-        get { return _title; }
-        set { SetProperty(ref _title, value); }
-    }
-
-    private string _description = string.Empty;
-
-    public string Description
-    {
-        get { return _description; }
-        set { SetProperty(ref _description, value); }
-    }
-
-    private string _tags = string.Empty;
-
-    public string Tags
-    {
-        get { return _tags; }
-        set { SetProperty(ref _tags, value); }
-    }
-
-    private string? _iconId;
-    private ImageSource _icon = Icons.DefaultItemIcon;
-    public ImageSource Icon
-    {
-        get { return _icon; }
-        set { SetProperty(ref _icon, value); }
-    }
-
     public DelegateCommand CreateItemCommand { get; }
     public DelegateCommand CancelCommand { get; }
     public DelegateCommand AddTextFieldCommand { get; }
@@ -152,6 +128,4 @@ public class CreateItemViewModel : ViewModelBase
             field.Deleted -= OnFieldDeleted;
         }
     }
-
-    public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
 }

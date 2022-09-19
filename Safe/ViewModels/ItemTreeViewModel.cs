@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class ItemTreeViewModel : BindableBase
+public class ItemTreeViewModel : ItemViewModelBase
 {
-    private readonly IEventAggregator _eventAggregator;
-    private readonly IRegionManager _regionManager;
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
     public readonly Item? Item;
@@ -33,34 +26,18 @@ public class ItemTreeViewModel : BindableBase
     }
 
     public ItemTreeViewModel(
-        IEventAggregator eventAggregator,
-        IRegionManager regionManager,
         IItemsRepository itemsRepository,
         IIconsRepository iconsRepository,
         Item? item = null)
     {
-        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-        _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
         
         Item = item;
 
-        Text = Item?.Title ?? "Root";
-        Tooltip = Item?.Description ?? string.Empty;
+        Title = Item?.Title ?? "Root";
+        Description = Item?.Description ?? string.Empty;
         Icon = _iconsRepository.GetIcon(Item?.IconId);
-
-        _eventAggregator.GetEvent<NewItemCreated>()
-            .Subscribe(OnNewItemCreated, ThreadOption.PublisherThread,
-                false, HandleNewItemCreated);
-
-        _eventAggregator.GetEvent<ItemChanged>()
-            .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
-                false, HandleItemChanged);
-
-        _eventAggregator.GetEvent<ItemDeleted>()
-            .Subscribe(OnItemDeleted, ThreadOption.PublisherThread,
-                false, HandleItemDeleted);
 
         _subItems = new Lazy<ObservableCollection<ItemTreeViewModel>>(CreateSubItems);
 
@@ -70,6 +47,21 @@ public class ItemTreeViewModel : BindableBase
         CreateItemCommand = new DelegateCommand(OnCreateItem);
 
         EditItemCommand = new DelegateCommand(OnEditItem, CanEditItem);
+    }
+
+    protected override void SubscribeToEvents()
+    {
+        EventAggregator.GetEvent<NewItemCreated>()
+            .Subscribe(OnNewItemCreated, ThreadOption.PublisherThread,
+                false, HandleNewItemCreated);
+
+        EventAggregator.GetEvent<ItemChanged>()
+            .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
+                false, HandleItemChanged);
+
+        EventAggregator.GetEvent<ItemDeleted>()
+            .Subscribe(OnItemDeleted, ThreadOption.PublisherThread,
+                false, HandleItemDeleted);
     }
 
     private void OnItemDeleted(Item item)
@@ -84,8 +76,8 @@ public class ItemTreeViewModel : BindableBase
 
     private void OnItemChanged(Item item)
     {
-        Text = item.Title;
-        Tooltip = item.Description ?? string.Empty;
+        Title = item.Title;
+        Description = item.Description ?? string.Empty;
         Icon = _iconsRepository.GetIcon(item.IconId);
     }
 
@@ -99,15 +91,17 @@ public class ItemTreeViewModel : BindableBase
         _itemsRepository.SaveItem(info.NewItem);
 
         SubItems.Add(
-            new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository, _iconsRepository, info.NewItem)
+            new ItemTreeViewModel(_itemsRepository, _iconsRepository, info.NewItem)
             {
-                Parent = this
+                Parent = this,
+                EventAggregator = EventAggregator,
+                RegionManager = RegionManager
             }
         );
 
         var parameters = new NavigationParameters
             { { "Item", info.NewItem } };
-        _regionManager.RequestNavigationToDetails("ItemDetails", parameters);
+        RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
     }
 
     private bool HandleNewItemCreated((Item NewItem, Item? ParentItem) info)
@@ -132,7 +126,7 @@ public class ItemTreeViewModel : BindableBase
     {
         var parameters = new NavigationParameters
             { { "Parent", Item } };
-        _regionManager.RequestNavigationToDetails("CreateItem", parameters);
+        RegionManager.RequestNavigationToDetails("CreateItem", parameters);
     }
 
     private bool CanEditItem()
@@ -144,37 +138,21 @@ public class ItemTreeViewModel : BindableBase
     {
         var parameters = new NavigationParameters
                     { { "Item", Item } };
-        _regionManager.RequestNavigationToDetails("EditItem", parameters);
+        RegionManager.RequestNavigationToDetails("EditItem", parameters);
     }
 
     private ObservableCollection<ItemTreeViewModel> CreateSubItems()
     {
         var subItems = _itemsRepository.GetChildItems(Item)
-            .Select(i => new ItemTreeViewModel(_eventAggregator, _regionManager, _itemsRepository, _iconsRepository, i) { Parent = this })
+            .Select(i => new ItemTreeViewModel(_itemsRepository, _iconsRepository, i)
+            {
+                Parent = this,
+                EventAggregator = EventAggregator,
+                RegionManager = RegionManager
+            })
             .ToArray();
 
         return new ObservableCollection<ItemTreeViewModel>(subItems);
-    }
-
-    private string _text = string.Empty;
-    public string Text
-    {
-        get { return _text; }
-        set { SetProperty(ref _text, value); }
-    }
-
-    private string _tooltip = string.Empty;
-    public string Tooltip
-    {
-        get { return _tooltip; }
-        set { SetProperty(ref _tooltip, value); }
-    }
-
-    private ImageSource _icon;
-    public ImageSource Icon
-    {
-        get { return _icon; }
-        set { SetProperty(ref _icon, value); }
     }
 
     private readonly Lazy<ObservableCollection<ItemTreeViewModel>> _subItems;

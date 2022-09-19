@@ -30,8 +30,6 @@ public class StorageListViewModel : ViewModelBase
 
     private void OnItemDeleted(Item item)
     {
-        if (_items == null) return;
-
         var itemViewModel = _items
             .FirstOrDefault(i => i.Item.Equals(item));
 
@@ -41,11 +39,11 @@ public class StorageListViewModel : ViewModelBase
         }
     }
 
-    private ObservableCollection<ItemListViewModel> _items;
+    private ObservableCollection<ItemListViewModel> _items = new();
     public ObservableCollection<ItemListViewModel> Items
     {
-        get { return _items; }
-        set { SetProperty(ref _items, value); }
+        get => _items;
+        set => SetProperty(ref _items, value);
     }
 
     private ItemListViewModel? _selectedItem;
@@ -75,7 +73,11 @@ public class StorageListViewModel : ViewModelBase
         var foundItems = _itemsRepository.Find(searchModel);
 
         Items = new ObservableCollection<ItemListViewModel>(foundItems.Select(i =>
-            new ItemListViewModel(EventAggregator, RegionManager, _itemsRepository, _iconsRepository, i)));
+            new ItemListViewModel(_itemsRepository, _iconsRepository, i)
+            {
+                EventAggregator = EventAggregator,
+                RegionManager = RegionManager
+            }));
 
         if (Items.Any())
         {

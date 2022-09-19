@@ -14,8 +14,8 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{Binding Icon}"
                            Width="16" Height="16" Margin="0,2,5,2"/>
-                    <TextBlock Text="{Binding Text}" 
-                               ToolTip="{Binding Tooltip}"
+                    <TextBlock Text="{Binding Title}" 
+                               ToolTip="{Binding Description}"
                                VerticalAlignment="Center">
                         <TextBlock.ContextMenu>
                             <ContextMenu>
