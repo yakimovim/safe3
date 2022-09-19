@@ -56,15 +56,12 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand CreateCommand { get; }
         public DelegateCommand CancelCommand { get; }
 
-        private string _password;
+        private string _password = string.Empty;
 
         public string Password 
         {
             get => _password;
-            set
-            {
-                SetProperty(ref _password, value);
-            }
+            set => SetProperty(ref _password, value);
         }
     }
 }

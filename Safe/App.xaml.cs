@@ -35,6 +35,7 @@ namespace EdlinSoftware.Safe
             containerRegistry.Register<Storage.IIconsRepository, Storage.LiteDbIconsRepository>();
 
             containerRegistry.RegisterDialog<IconsDialog, IconsDialogViewModel>();
+            containerRegistry.RegisterDialog<FieldsDialog, FieldsDialogViewModel>();
 
             RegisterViewsForNavigation(containerRegistry);
         }

@@ -50,7 +50,7 @@ public class StorageListViewModel : ViewModelBase
 
     public ItemListViewModel? SelectedItem
     {
-        get { return _selectedItem; }
+        get => _selectedItem;
         set
         {
             if (SetProperty(ref _selectedItem, value) && value != null)

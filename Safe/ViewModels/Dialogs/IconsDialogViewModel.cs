@@ -73,18 +73,18 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
     public void OnDialogOpened(IDialogParameters parameters)
     { }
 
-    private ObservableCollection<IconViewModel> _icons;
+    private ObservableCollection<IconViewModel> _icons = new();
     public ObservableCollection<IconViewModel> Icons
     {
-        get { return _icons; }
-        set { SetProperty(ref _icons, value); }
+        get => _icons;
+        set => SetProperty(ref _icons, value);
     }
 
     private IconViewModel? _selectedIcon;
     public IconViewModel? SelectedIcon
     {
-        get { return _selectedIcon; }
-        set { SetProperty(ref _selectedIcon, value); }
+        get => _selectedIcon;
+        set => SetProperty(ref _selectedIcon, value);
     }
 
     public string Title { get; } = "Select an icon";

@@ -10,17 +10,16 @@ namespace EdlinSoftware.Safe.Views.Behaviors
 
         public object SelectedItem
         {
-            get { return (object)GetValue(SelectedItemProperty); }
-            set { SetValue(SelectedItemProperty, value); }
+            get => GetValue(SelectedItemProperty);
+            set => SetValue(SelectedItemProperty, value);
         }
 
         public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register("SelectedItem", typeof(object), typeof(BindableSelectedItemBehavior), new UIPropertyMetadata(null, OnSelectedItemChanged));
+            DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(BindableSelectedItemBehavior), new UIPropertyMetadata(null, OnSelectedItemChanged));
 
         private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var item = e.NewValue as TreeViewItem;
-            if (item != null)
+            if (e.NewValue is TreeViewItem item)
             {
                 item.SetValue(TreeViewItem.IsSelectedProperty, true);
             }
@@ -32,22 +31,22 @@ namespace EdlinSoftware.Safe.Views.Behaviors
         {
             base.OnAttached();
 
-            this.AssociatedObject.SelectedItemChanged += OnTreeViewSelectedItemChanged;
+            AssociatedObject.SelectedItemChanged += OnTreeViewSelectedItemChanged;
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
-            if (this.AssociatedObject != null)
+            if (AssociatedObject != null)
             {
-                this.AssociatedObject.SelectedItemChanged -= OnTreeViewSelectedItemChanged;
+                AssociatedObject.SelectedItemChanged -= OnTreeViewSelectedItemChanged;
             }
         }
 
         private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.SelectedItem = e.NewValue;
+            SelectedItem = e.NewValue;
         }
     }
 }

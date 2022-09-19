@@ -4,7 +4,13 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="Safe" Height="350" Width="525" >
-    <Grid>
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <Separator />
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
+            </MenuItem>
+        </Menu>
         <ContentControl prism:RegionManager.RegionName="MainContentRegion" />
-    </Grid>
+    </DockPanel>
 </Window>

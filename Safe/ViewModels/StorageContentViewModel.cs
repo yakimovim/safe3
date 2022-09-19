@@ -41,7 +41,7 @@ public class StorageContentViewModel : ViewModelBase
     
     public string SearchText
     {
-        get { return _searchText; }
+        get => _searchText;
         set
         {
             if (SetProperty(ref _searchText, value))

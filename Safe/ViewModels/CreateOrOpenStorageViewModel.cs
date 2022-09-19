@@ -1,6 +1,5 @@
 ﻿using System;
 using EdlinSoftware.Safe.Services;
-using EdlinSoftware.Safe.ViewModels.Helpers;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;

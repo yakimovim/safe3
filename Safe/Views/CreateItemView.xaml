@@ -23,6 +23,7 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="Add text field" Command="{Binding AddTextFieldCommand}"/>
             <Button Content="Add password field" Command="{Binding AddPasswordFieldCommand}"/>
+            <Button Content="Add fields..." Command="{Binding AddFieldsCommand}"/>
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Fields}">
             <ItemsControl.ItemTemplate>

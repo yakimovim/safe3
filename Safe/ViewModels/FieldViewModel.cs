@@ -34,7 +34,7 @@ public abstract class FieldViewModel : BindableBase
 
     private void OnMoveDown()
     {
-        var index = ContainingCollection.IndexOf(this);
+        var index = ContainingCollection!.IndexOf(this);
 
         ContainingCollection.Move(index, index + 1);
 
@@ -58,7 +58,7 @@ public abstract class FieldViewModel : BindableBase
 
     private void OnMoveUp()
     {
-        var index = ContainingCollection.IndexOf(this);
+        var index = ContainingCollection!.IndexOf(this);
 
         ContainingCollection.Move(index, index - 1);
 
@@ -71,10 +71,10 @@ public abstract class FieldViewModel : BindableBase
         anotherMovedItem.MoveDownCommand.RaiseCanExecuteChanged();
     }
 
-    private ObservableCollection<FieldViewModel> _containingCollection;
-    public ObservableCollection<FieldViewModel> ContainingCollection
+    private ObservableCollection<FieldViewModel>? _containingCollection;
+    public ObservableCollection<FieldViewModel>? ContainingCollection
     {
-        get { return _containingCollection; }
+        get => _containingCollection;
         set
         {
             if (_containingCollection != null)
@@ -117,6 +117,8 @@ public abstract class FieldViewModel : BindableBase
 
     public event EventHandler<FieldViewModel> Deleted;
 
+    public abstract FieldViewModel MakeCopy();
+
     public DelegateCommand DeleteCommand { get; }
     public DelegateCommand MoveUpCommand { get; }
     public DelegateCommand MoveDownCommand { get; }
@@ -145,6 +147,11 @@ public sealed class TextFieldViewModel : FieldViewModel
             }
         }
     }
+
+    public override FieldViewModel MakeCopy()
+    {
+        return new TextFieldViewModel(new TextField { Name = Name });
+    }
 }
 
 public sealed class PasswordFieldViewModel : FieldViewModel
@@ -169,6 +176,11 @@ public sealed class PasswordFieldViewModel : FieldViewModel
                 RaisePropertyChanged();
             }
         }
+    }
+
+    public override FieldViewModel MakeCopy()
+    {
+        return new PasswordFieldViewModel(new PasswordField { Name = Name });
     }
 }
 
