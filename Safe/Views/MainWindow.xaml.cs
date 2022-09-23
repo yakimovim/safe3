@@ -32,13 +32,13 @@ namespace EdlinSoftware.Safe.Views
 
             if(string.IsNullOrWhiteSpace(configuration.LastOpenedStorage))
             {
-                _regionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+                _regionManager.RequestNavigationToMainContent( "CreateOrOpenStorage");
             }
             else if(!File.Exists(configuration.LastOpenedStorage))
             {
                 configuration.LastOpenedStorage = null;
                 _configurationService.SaveConfiguration(configuration);
-                _regionManager.RequestNavigate("MainContentRegion", "CreateOrOpenStorage");
+                _regionManager.RequestNavigationToMainContent("CreateOrOpenStorage");
             }
             else
             {
@@ -46,7 +46,7 @@ namespace EdlinSoftware.Safe.Views
                 {
                     { "StoragePath", configuration.LastOpenedStorage }
                 };
-                _regionManager.RequestNavigate("MainContentRegion", "LoginToStorage");
+                _regionManager.RequestNavigationToMainContent("LoginToStorage", parameters);
             }
         }
     }

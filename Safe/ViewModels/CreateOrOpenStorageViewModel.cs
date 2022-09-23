@@ -1,6 +1,4 @@
-﻿using System;
-using EdlinSoftware.Safe.Services;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;
 

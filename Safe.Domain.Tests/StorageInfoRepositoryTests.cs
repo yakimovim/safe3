@@ -26,7 +26,8 @@ namespace EdlinSoftware.Safe.Domain.Tests
             var storageInfo = new StorageInfo
             {
                 Title = "AAA",
-                Description = "BBB"
+                Description = "BBB",
+                IconId = "CCC"
             };
 
             // Act
@@ -40,6 +41,7 @@ namespace EdlinSoftware.Safe.Domain.Tests
             restoredStorageInfo.Should().NotBeNull();
             restoredStorageInfo.Title.Should().Be("AAA");
             restoredStorageInfo.Description.Should().Be("BBB");
+            restoredStorageInfo.IconId.Should().Be("CCC");
         }
 
         [Fact]
@@ -54,6 +56,7 @@ namespace EdlinSoftware.Safe.Domain.Tests
             restoredStorageInfo.Should().NotBeNull();
             restoredStorageInfo.Title.Should().Be("Safe Storage");
             restoredStorageInfo.Description.Should().BeNull();
+            restoredStorageInfo.IconId.Should().BeNull();
         }
     }
 }

@@ -7,10 +7,14 @@ namespace EdlinSoftware.Safe.ViewModels;
 
 internal class MainWindowViewModel : ViewModelBase
 {
+    private readonly IConfigurationService _configurationService;
     private readonly IStorageService _storageService;
 
-    public MainWindowViewModel(IStorageService storageService)
+    public MainWindowViewModel(
+        IConfigurationService configurationService,
+        IStorageService storageService)
     {
+        _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
         ExitCommand = new DelegateCommand(OnExit);
@@ -20,6 +24,10 @@ internal class MainWindowViewModel : ViewModelBase
     private void OnCloseStorage()
     {
         _storageService.CloseStorage();
+
+        var configuration = _configurationService.GetConfiguration();
+        configuration.LastOpenedStorage = null;
+        _configurationService.SaveConfiguration(configuration);
 
         RegionManager.RequestNavigationToMainContent("CreateOrOpenStorage");
     }

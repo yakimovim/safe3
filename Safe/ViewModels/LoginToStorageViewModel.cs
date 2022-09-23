@@ -39,6 +39,10 @@ namespace EdlinSoftware.Safe.ViewModels
 
             if (_storageService.StorageIsOpened)
             {
+                var configuration = _configurationService.GetConfiguration();
+                configuration.LastOpenedStorage = _storageFilePath;
+                _configurationService.SaveConfiguration(configuration);
+
                 RegionManager.RequestNavigationToMainContent("StorageContent");
             }
         }

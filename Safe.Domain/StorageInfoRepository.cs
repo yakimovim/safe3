@@ -23,7 +23,8 @@ namespace EdlinSoftware.Safe.Domain
             return new StorageInfo
             {
                 Title = info.Title,
-                Description = info.Description
+                Description = info.Description,
+                IconId = info.IconId
             };
         }
 
@@ -33,7 +34,8 @@ namespace EdlinSoftware.Safe.Domain
                 new StorageStorageInfo
                 {
                     Title = storageInfo.Title,
-                    Description = storageInfo.Description
+                    Description = storageInfo.Description,
+                    IconId = storageInfo.IconId
                 }
             );
         }

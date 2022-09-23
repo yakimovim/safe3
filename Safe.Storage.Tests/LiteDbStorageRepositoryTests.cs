@@ -25,7 +25,8 @@ public class LiteDbStorageRepositoryTests
         var storageInfo = new StorageInfo
         {
             Title = "AAA",
-            Description = "BBB"
+            Description = "BBB",
+            IconId = "CCC"
         };
 
         // Act
@@ -39,6 +40,7 @@ public class LiteDbStorageRepositoryTests
         restoredStorageInfo.Should().NotBeNull();
         restoredStorageInfo.Title.Should().Be("AAA");
         restoredStorageInfo.Description.Should().Be("BBB");
+        restoredStorageInfo.IconId.Should().Be("CCC");
     }
 
     [Fact]
@@ -53,5 +55,6 @@ public class LiteDbStorageRepositoryTests
         restoredStorageInfo.Should().NotBeNull();
         restoredStorageInfo.Title.Should().Be("Safe Storage");
         restoredStorageInfo.Description.Should().BeNull();
+        restoredStorageInfo.IconId.Should().BeNull();
     }
 }

@@ -7,13 +7,16 @@ namespace EdlinSoftware.Safe.ViewModels
 {
     internal class CreateStorageViewModel : ViewModelBase
     {
+        private readonly IConfigurationService _configurationService;
         private readonly IStorageService _storageService;
         private string? _storageFilePath;
 
         public CreateStorageViewModel(
+            IConfigurationService configurationService,
             IStorageService storageService
             )
         {
+            _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
             CreateCommand = new DelegateCommand(OnCreate, CanCreate)
@@ -42,6 +45,10 @@ namespace EdlinSoftware.Safe.ViewModels
 
             if (_storageService.StorageIsOpened)
             {
+                var configuration = _configurationService.GetConfiguration();
+                configuration.LastOpenedStorage = _storageFilePath;
+                _configurationService.SaveConfiguration(configuration);
+
                 RegionManager.RequestNavigationToMainContent("StorageContent");
             }
         }

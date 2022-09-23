@@ -15,6 +15,7 @@ public class ItemTreeViewModel : ItemViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
+    private readonly IStorageInfoRepository _storageInfoRepository;
     public readonly Item? Item;
 
     private ItemTreeViewModel? _parent;
@@ -28,11 +29,13 @@ public class ItemTreeViewModel : ItemViewModelBase
     public ItemTreeViewModel(
         IItemsRepository itemsRepository,
         IIconsRepository iconsRepository,
+        IStorageInfoRepository storageInfoRepository,
         Item? item = null)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
-        
+        _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
+
         Item = item;
 
         Title = Item?.Title ?? "Root";
@@ -46,7 +49,7 @@ public class ItemTreeViewModel : ItemViewModelBase
 
         CreateItemCommand = new DelegateCommand(OnCreateItem);
 
-        EditItemCommand = new DelegateCommand(OnEditItem, CanEditItem);
+        EditItemCommand = new DelegateCommand(OnEditItem);
     }
 
     protected override void SubscribeToEvents()
@@ -55,9 +58,17 @@ public class ItemTreeViewModel : ItemViewModelBase
             .Subscribe(OnNewItemCreated, ThreadOption.PublisherThread,
                 false, HandleNewItemCreated);
 
-        EventAggregator.GetEvent<ItemChanged>()
-            .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
-                false, HandleItemChanged);
+        if (Item != null)
+        {
+            EventAggregator.GetEvent<ItemChanged>()
+                .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
+                    false, HandleItemChanged);
+        }
+        else
+        {
+            EventAggregator.GetEvent<StorageDetailsChanged>()
+                .Subscribe(OnStorageDetailsChanged);
+        }
 
         EventAggregator.GetEvent<ItemDeleted>()
             .Subscribe(OnItemDeleted, ThreadOption.PublisherThread,
@@ -81,6 +92,15 @@ public class ItemTreeViewModel : ItemViewModelBase
         Icon = _iconsRepository.GetIcon(item.IconId);
     }
 
+    private void OnStorageDetailsChanged()
+    {
+        var storageInfo = _storageInfoRepository.GetStorageInfo();
+
+        Title = storageInfo.Title;
+        Description = storageInfo.Description ?? string.Empty;
+        Icon = _iconsRepository.GetIcon(storageInfo.IconId);
+    }
+
     private bool HandleItemChanged(Item item)
     {
         return item.Equals(Item);
@@ -91,7 +111,7 @@ public class ItemTreeViewModel : ItemViewModelBase
         _itemsRepository.SaveItem(info.NewItem);
 
         SubItems.Add(
-            new ItemTreeViewModel(_itemsRepository, _iconsRepository, info.NewItem)
+            new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository, info.NewItem)
             {
                 Parent = this,
                 EventAggregator = EventAggregator,
@@ -129,22 +149,24 @@ public class ItemTreeViewModel : ItemViewModelBase
         RegionManager.RequestNavigationToDetails("CreateItem", parameters);
     }
 
-    private bool CanEditItem()
-    {
-        return Item != null;
-    }
-
     private void OnEditItem()
     {
-        var parameters = new NavigationParameters
-                    { { "Item", Item } };
-        RegionManager.RequestNavigationToDetails("EditItem", parameters);
+        if (Item != null)
+        {
+            var parameters = new NavigationParameters
+                { { "Item", Item } };
+            RegionManager.RequestNavigationToDetails("EditItem", parameters);
+        }
+        else
+        {
+            RegionManager.RequestNavigationToDetails("EditStorageDetails");
+        }
     }
 
     private ObservableCollection<ItemTreeViewModel> CreateSubItems()
     {
         var subItems = _itemsRepository.GetChildItems(Item)
-            .Select(i => new ItemTreeViewModel(_itemsRepository, _iconsRepository, i)
+            .Select(i => new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository, i)
             {
                 Parent = this,
                 EventAggregator = EventAggregator,

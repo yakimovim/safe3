@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.Services;
 using Prism.Regions;
 
@@ -45,12 +46,13 @@ namespace EdlinSoftware.Safe.ViewModels
 
             SubItems = new ObservableCollection<ItemTreeViewModel>(new[]
             {
-                new ItemTreeViewModel(_itemsRepository, _iconsRepository)
+                new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository)
                 {
                     EventAggregator = EventAggregator,
                     RegionManager = RegionManager,
                     Title = storageInfo.Title,
-                    Description = storageInfo.Description ?? string.Empty
+                    Description = storageInfo.Description ?? string.Empty,
+                    Icon = _iconsRepository.GetIcon(storageInfo.IconId)
                 }
             });
         }
