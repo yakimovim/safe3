@@ -8,14 +8,8 @@ namespace EdlinSoftware.Safe.ViewModels
 {
     internal class CreateOrOpenStorageViewModel : ViewModelBase
     {
-        private readonly IConfigurationService _configurationService;
-
-        public CreateOrOpenStorageViewModel(
-            IConfigurationService configurationService
-            )
+        public CreateOrOpenStorageViewModel()
         {
-            _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
-
             CreateCommand = new DelegateCommand(OnCreateStorage);
             OpenCommand = new DelegateCommand(OnOpenStorage);
         }
@@ -24,7 +18,10 @@ namespace EdlinSoftware.Safe.ViewModels
         {
             var openDialog = new OpenFileDialog
             {
-                CheckFileExists = false
+                AddExtension = true,
+                DefaultExt = ".safe",
+                CheckFileExists = false,
+                Filter = "Safe storage|*.safe"
             };
             if (openDialog.ShowDialog() == true)
             {
@@ -38,7 +35,12 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnOpenStorage()
         {
-            var openDialog = new OpenFileDialog();
+            var openDialog = new OpenFileDialog
+            {
+                DefaultExt = ".safe",
+                CheckFileExists = true,
+                Filter = "Safe storage|*.safe"
+            };
             if(openDialog.ShowDialog() == true)
             {
                 var parameters = new NavigationParameters

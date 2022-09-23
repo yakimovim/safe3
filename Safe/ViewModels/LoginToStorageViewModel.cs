@@ -8,13 +8,16 @@ namespace EdlinSoftware.Safe.ViewModels
     internal class LoginToStorageViewModel : ViewModelBase
     {
         private readonly IStorageService _storageService;
+        private readonly IConfigurationService _configurationService;
         private string? _storageFilePath;
 
         public LoginToStorageViewModel(
-            IStorageService storageService
+            IStorageService storageService,
+            IConfigurationService configurationService
             )
         {
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
+            _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
 
             LoginCommand = new DelegateCommand(OnLogin, CanLogin)
                 .ObservesProperty(() => Password);
@@ -61,10 +64,7 @@ namespace EdlinSoftware.Safe.ViewModels
         public string Password 
         {
             get => _password;
-            set
-            {
-                SetProperty(ref _password, value);
-            }
+            set => SetProperty(ref _password, value);
         }
     }
 }
