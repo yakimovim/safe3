@@ -36,7 +36,11 @@ namespace EdlinSoftware.Safe.ViewModels
                 FileName = _storageFilePath!,
                 Password = _password
             });
-            RegionManager.RequestNavigationToMainContent("StorageContent");
+
+            if (_storageService.StorageIsOpened)
+            {
+                RegionManager.RequestNavigationToMainContent("StorageContent");
+            }
         }
 
         private void OnCancel()
@@ -52,7 +56,10 @@ namespace EdlinSoftware.Safe.ViewModels
                 return;
             }
 
+            Password = string.Empty;
+
             _storageFilePath = storageFilePath;
+
             LoginCommand.RaiseCanExecuteChanged();
         }
 

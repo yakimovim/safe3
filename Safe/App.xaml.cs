@@ -33,6 +33,8 @@ namespace EdlinSoftware.Safe
             containerRegistry.Register<Storage.IItemsRepository, Storage.LiteDbItemsRepository>();
             containerRegistry.Register<Domain.IIconsRepository, Domain.IconsRepository>();
             containerRegistry.Register<Storage.IIconsRepository, Storage.LiteDbIconsRepository>();
+            containerRegistry.Register<Domain.IStorageInfoRepository, Domain.StorageInfoRepository>();
+            containerRegistry.Register<Storage.IStorageInfoRepository, Storage.LiteDbStorageInfoRepository>();
 
             containerRegistry.RegisterDialog<IconsDialog, IconsDialogViewModel>();
             containerRegistry.RegisterDialog<FieldsDialog, FieldsDialogViewModel>();

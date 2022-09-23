@@ -5,8 +5,8 @@ namespace EdlinSoftware.Safe.Services
 {
     internal class LiteDbConnectionProvider : ILiteDbConnectionProvider
     {
-        public ILiteDatabase Database { get; set; }
+        public ILiteDatabase? Database { get; set; }
 
-        public ILiteDatabase GetDatabase() => Database;
+        public ILiteDatabase GetDatabase() => Database!;
     }
 }

@@ -17,23 +17,33 @@ namespace EdlinSoftware.Safe.ViewModels
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
             CreateCommand = new DelegateCommand(OnCreate, CanCreate)
-                .ObservesProperty(() => Password);
+                .ObservesProperty(() => Title)
+                .ObservesProperty(() => Password)
+                .ObservesProperty(() => ConfirmPassword);
             CancelCommand = new DelegateCommand(OnCancel);
         }
 
         private bool CanCreate()
         {
             return !string.IsNullOrWhiteSpace(_storageFilePath)
-                && !string.IsNullOrEmpty(_password);
+                && !string.IsNullOrEmpty(_title)
+                && !string.IsNullOrEmpty(_password)
+                && string.Equals(_password, _confirmPassword);
         }
 
         private void OnCreate()
         {
             _storageService.CreateStorage(new StorageCreationOptions { 
+                Title = Title,
+                Description = Description ?? string.Empty,
                 FileName = _storageFilePath!,
                 Password = _password
             });
-            RegionManager.RequestNavigationToMainContent("StorageContent");
+
+            if (_storageService.StorageIsOpened)
+            {
+                RegionManager.RequestNavigationToMainContent("StorageContent");
+            }
         }
 
         private void OnCancel()
@@ -56,12 +66,32 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand CreateCommand { get; }
         public DelegateCommand CancelCommand { get; }
 
-        private string _password = string.Empty;
+        private string _title = string.Empty;
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
 
+        private string? _description;
+        public string? Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value);
+        }
+
+        private string _password = string.Empty;
         public string Password 
         {
             get => _password;
             set => SetProperty(ref _password, value);
+        }
+
+        private string _confirmPassword = string.Empty;
+        public string ConfirmPassword 
+        {
+            get => _confirmPassword;
+            set => SetProperty(ref _confirmPassword, value);
         }
     }
 }

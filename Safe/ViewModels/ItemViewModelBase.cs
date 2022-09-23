@@ -6,9 +6,7 @@ namespace EdlinSoftware.Safe.ViewModels;
 
 public abstract class ItemViewModelBase : ViewModelBase
 {
-    
     private string _title = string.Empty;
-
     public string Title
     {
         get => _title;
@@ -16,7 +14,6 @@ public abstract class ItemViewModelBase : ViewModelBase
     }
 
     private string _description = string.Empty;
-
     public string Description
     {
         get => _description;

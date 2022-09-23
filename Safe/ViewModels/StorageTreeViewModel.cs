@@ -2,21 +2,28 @@
 using System.Collections.ObjectModel;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Services;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
     internal class StorageTreeViewModel : ViewModelBase
     {
+        private readonly IStorageService _storageService;
         private readonly IItemsRepository _itemsRepository;
         private readonly IIconsRepository _iconsRepository;
+        private readonly IStorageInfoRepository _storageInfoRepository;
 
         public StorageTreeViewModel(
+            IStorageService storageService,
             IItemsRepository itemsRepository,
-            IIconsRepository iconsRepository)
+            IIconsRepository iconsRepository,
+            IStorageInfoRepository storageInfoRepository)
         {
+            _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
             _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
             _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+            _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
         }
 
         protected override void SubscribeToEvents()
@@ -28,12 +35,22 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnStorageChanged()
         {
+            if (!_storageService.StorageIsOpened)
+            {
+                SubItems = new ObservableCollection<ItemTreeViewModel>();
+                return;
+            }
+
+            var storageInfo = _storageInfoRepository.GetStorageInfo();
+
             SubItems = new ObservableCollection<ItemTreeViewModel>(new[]
             {
                 new ItemTreeViewModel(_itemsRepository, _iconsRepository)
                 {
                     EventAggregator = EventAggregator,
-                    RegionManager = RegionManager
+                    RegionManager = RegionManager,
+                    Title = storageInfo.Title,
+                    Description = storageInfo.Description ?? string.Empty
                 }
             });
         }
@@ -41,22 +58,30 @@ namespace EdlinSoftware.Safe.ViewModels
         private ObservableCollection<ItemTreeViewModel> _subItems = new();
         public ObservableCollection<ItemTreeViewModel> SubItems
         {
-            get { return _subItems; }
-            set { SetProperty(ref _subItems, value); }
+            get => _subItems;
+            set => SetProperty(ref _subItems, value);
         }
 
         private ItemTreeViewModel? _selectedItem;
 
         public ItemTreeViewModel? SelectedItem
         {
-            get { return _selectedItem; }
+            get => _selectedItem;
             set
             {
                 if (SetProperty(ref _selectedItem, value) && value != null)
                 {
-                    var parameters = new NavigationParameters
-                    { { "Item", value.Item } };
-                    RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
+                    if (value.Parent == null)
+                    {
+                        RegionManager.RequestNavigationToDetails("StorageDetails");
+                    }
+                    else
+                    {
+                        var parameters = new NavigationParameters
+                            { { "Item", value.Item } };
+                        RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
+                    }
+
                 }
             }
         }
