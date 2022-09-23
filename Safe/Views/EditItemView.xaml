@@ -23,10 +23,18 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="Add fields" Command="{Binding AddFieldsCommand}"/>
         </StackPanel>
-        <ItemsControl ItemsSource="{Binding Fields}">
+        <ItemsControl ItemsSource="{Binding Fields}" 
+                      AllowDrop="True"
+                      PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+                      PreviewMouseMove="UIElement_OnPreviewMouseMove"
+                      DragEnter="UIElement_CheckDrag"
+                      DragOver="UIElement_CheckDrag"
+                      DragLeave="UIElement_CheckDrag"
+                      Drop="UIElement_OnDrop"
+                      MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical" Margin="10">
                         <TextBlock Text="Name:" />
                         <TextBox Text="{Binding Name}" />
                         <Button Content="Delete" Command="{Binding DeleteCommand}" />

@@ -49,7 +49,9 @@ namespace EdlinSoftware.Safe.Views
         {
             e.Handled = true;
 
-            var element = InputHitTest(e.GetPosition((IInputElement)sender));
+            var uiElement = (UIElement)sender;
+
+            var element = uiElement.InputHitTest(e.GetPosition(uiElement));
 
             var itemUnderMouse = GetItemViewModel(element);
 
@@ -72,7 +74,9 @@ namespace EdlinSoftware.Safe.Views
         {
             e.Handled = true;
 
-            var element = InputHitTest(e.GetPosition((IInputElement)sender));
+            var uiElement = (UIElement)sender;
+
+            var element = uiElement.InputHitTest(e.GetPosition(uiElement));
 
             var itemUnderMouse = GetItemViewModel(element);
 
@@ -80,7 +84,7 @@ namespace EdlinSoftware.Safe.Views
 
             if (IsChild(itemUnderMouse)) return;
 
-            _itemToDrag.MoveTo(itemUnderMouse);
+            _itemToDrag!.MoveTo(itemUnderMouse);
         }
 
         private bool IsChild(ItemTreeViewModel? item)
