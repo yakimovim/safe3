@@ -14,7 +14,7 @@
             <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
         </StackPanel>
         <TextBlock Text="Title:"/>
-        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Description:"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
         <Button Content="Ok" Command="{Binding SaveChangesCommand}" />

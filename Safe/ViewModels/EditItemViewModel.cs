@@ -28,7 +28,8 @@ namespace EdlinSoftware.Safe.ViewModels
             _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
 
             SaveChangesCommand = new DelegateCommand(OnSaveChanges, CanSaveChanges)
-                .ObservesProperty(() => Title);
+                .ObservesProperty(() => Title)
+                .ObservesProperty(() => Fields);
             CancelCommand = new DelegateCommand(OnCancel);
             AddFieldsCommand = new DelegateCommand(OnAddFields);
             ClearIconCommand = new DelegateCommand(OnClearIcon);
@@ -85,7 +86,15 @@ namespace EdlinSoftware.Safe.ViewModels
             EventAggregator.GetEvent<ItemChanged>().Publish(_item);
         }
 
-        private bool CanSaveChanges() => !string.IsNullOrWhiteSpace(Title);
+        private bool CanSaveChanges()
+        {
+            if (Fields.Count > 0 && Fields.Any(f => string.IsNullOrWhiteSpace(f.Name)))
+            {
+                return false;
+            }
+
+            return !string.IsNullOrWhiteSpace(Title);
+        }
 
         private void OnCancel()
         {

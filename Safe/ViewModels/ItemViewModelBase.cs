@@ -1,17 +1,16 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Media;
 using EdlinSoftware.Safe.Images;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public abstract class ItemViewModelBase : ViewModelBase, IDataErrorInfo
+public abstract class ItemViewModelBase : ViewModelBase
 {
     private string _title = string.Empty;
     public string Title
     {
         get => _title;
-        set => SetProperty(ref _title, value);
+        set => SetProperty(ref _title, value, Validate);
     }
 
     private string _description = string.Empty;
@@ -37,29 +36,10 @@ public abstract class ItemViewModelBase : ViewModelBase, IDataErrorInfo
         set => SetProperty(ref _icon, value);
     }
 
-    public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
+    public ObservableCollection<FieldViewModel> Fields { get; } = new();
 
-    public string? Error => null;
-
-    public string? this[string columnName]
+    protected virtual void Validate()
     {
-        get
-        {
-            string? error = null;
-
-            switch(columnName)
-            {
-                case nameof(Title):
-                    {
-                        if(string.IsNullOrWhiteSpace(Title))
-                        {
-                            error = "Title can't be null";
-                        }
-                        break;
-                    }
-            }
-
-            return error;
-        }
+        CheckNullOrWhiteSpace(Title, nameof(Title));
     }
 }

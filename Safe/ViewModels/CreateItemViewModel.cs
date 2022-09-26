@@ -24,7 +24,8 @@ public class CreateItemViewModel : ItemViewModelBase
 
         CancelCommand = new DelegateCommand(OnCancel);
         CreateItemCommand = new DelegateCommand(OnCreate, CanCreate)
-            .ObservesProperty(() => Title);
+            .ObservesProperty(() => Title)
+            .ObservesProperty(() => Fields);
         AddFieldsCommand = new DelegateCommand(OnAddFields);
         ClearIconCommand = new DelegateCommand(OnClearIcon);
         SelectIconCommand = new DelegateCommand(OnSelectIcon);
@@ -84,7 +85,15 @@ public class CreateItemViewModel : ItemViewModelBase
         EventAggregator.GetEvent<NewItemCreated>().Publish((item, _parent));
     }
 
-    private bool CanCreate() => !string.IsNullOrWhiteSpace(Title);
+    private bool CanCreate()
+    {
+        if (Fields.Count > 0 && Fields.Any(f => string.IsNullOrWhiteSpace(f.Name)))
+        {
+            return false;
+        }
+
+        return !string.IsNullOrWhiteSpace(Title);
+    }
 
     private void OnCancel()
     {

@@ -15,7 +15,7 @@
             <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
         </StackPanel>
         <TextBlock Text="Title:"/>
-        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Description:"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="Tags:"/>
@@ -36,7 +36,7 @@
                 <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
                     <StackPanel Orientation="Vertical" Margin="10">
                         <TextBlock Text="Name:" />
-                        <TextBox Text="{Binding Name}" />
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                         <Button Content="Delete" Command="{Binding DeleteCommand}" />
                         <Button Content="Move up" Command="{Binding MoveUpCommand}" />
                         <Button Content="Move down" Command="{Binding MoveDownCommand}" />

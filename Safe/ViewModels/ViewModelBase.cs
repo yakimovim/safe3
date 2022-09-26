@@ -1,12 +1,11 @@
 ﻿using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Unity;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public abstract class ViewModelBase : BindableBase, INavigationAware
+public abstract class ViewModelBase : BindableBaseWithErrorNotification, INavigationAware
 {
     [Dependency]
     public IRegionManager RegionManager { get; set; }

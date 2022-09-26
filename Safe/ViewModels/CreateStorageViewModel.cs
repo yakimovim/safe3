@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using EdlinSoftware.Safe.Services;
 using Prism.Commands;
 using Prism.Regions;
@@ -66,6 +67,11 @@ namespace EdlinSoftware.Safe.ViewModels
                 return;
             }
 
+            Title = string.Empty;
+            Description = string.Empty;
+            Password = string.Empty;
+            ConfirmPassword = string.Empty;
+
             _storageFilePath = storageFilePath;
             CreateCommand.RaiseCanExecuteChanged();
         }
@@ -77,7 +83,7 @@ namespace EdlinSoftware.Safe.ViewModels
         public string Title
         {
             get => _title;
-            set => SetProperty(ref _title, value);
+            set => SetProperty(ref _title, value, Validate);
         }
 
         private string? _description;
@@ -91,14 +97,30 @@ namespace EdlinSoftware.Safe.ViewModels
         public string Password 
         {
             get => _password;
-            set => SetProperty(ref _password, value);
+            set => SetProperty(ref _password, value, Validate);
         }
 
         private string _confirmPassword = string.Empty;
         public string ConfirmPassword 
         {
             get => _confirmPassword;
-            set => SetProperty(ref _confirmPassword, value);
+            set => SetProperty(ref _confirmPassword, value, Validate);
+        }
+
+        private void Validate()
+        {
+            CheckNullOrWhiteSpace(Title, nameof(Title));
+            CheckNullOrEmpty(Password, nameof(Password));
+
+            if (ConfirmPassword != Password)
+            {
+                ValidationErrors[nameof(ConfirmPassword)] = "Passwords are different";
+            }
+            else
+            {
+                ValidationErrors.Remove(nameof(ConfirmPassword));
+            }
+            RaiseErrorsChanged(nameof(ConfirmPassword));
         }
     }
 }

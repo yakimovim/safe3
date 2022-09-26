@@ -77,7 +77,7 @@ public class EditStorageDetailsViewModel : ViewModelBase
     public string Title
     {
         get => _title;
-        set => SetProperty(ref _title, value);
+        set => SetProperty(ref _title, value, Validate);
     }
 
     private string _description = string.Empty;
@@ -110,4 +110,8 @@ public class EditStorageDetailsViewModel : ViewModelBase
 
     public DelegateCommand SelectIconCommand { get; }
 
+    private void Validate()
+    {
+        CheckNullOrWhiteSpace(Title, nameof(Title));
+    }
 }

@@ -4,11 +4,10 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using EdlinSoftware.Safe.Domain.Model;
 using Prism.Commands;
-using Prism.Mvvm;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public abstract class FieldViewModel : BindableBase
+public abstract class FieldViewModel : BindableBaseWithErrorNotification
 {
     internal Field Field { get; }
 
@@ -16,11 +15,29 @@ public abstract class FieldViewModel : BindableBase
     protected FieldViewModel(Field field)
     {
         Field = field ?? throw new ArgumentNullException(nameof(field));
+
+
         DeleteCommand = new DelegateCommand(OnDelete);
         MoveUpCommand = new DelegateCommand(OnMoveUp, CanMoveUp)
             .ObservesProperty(() => ContainingCollection);
         MoveDownCommand = new DelegateCommand(OnMoveDown, CanMoveDown)
             .ObservesProperty(() => ContainingCollection);
+
+        Validate();
+    }
+
+    private void Validate()
+    {
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            ValidationErrors[nameof(Name)] = "Name can't be empty";
+        }
+        else
+        {
+            ValidationErrors.Remove(nameof(Name));
+        }
+
+        RaiseErrorsChanged(nameof(Name));
     }
 
     private bool CanMoveDown()
@@ -111,11 +128,12 @@ public abstract class FieldViewModel : BindableBase
             {
                 Field.Name = value;
                 RaisePropertyChanged();
+                Validate();
             }
         }
     }
 
-    public event EventHandler<FieldViewModel> Deleted;
+    public event EventHandler<FieldViewModel>? Deleted;
 
     public abstract FieldViewModel MakeCopy();
 
