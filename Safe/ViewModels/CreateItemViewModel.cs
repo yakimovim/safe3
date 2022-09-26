@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
@@ -29,6 +31,42 @@ public class CreateItemViewModel : ItemViewModelBase
         AddFieldsCommand = new DelegateCommand(OnAddFields);
         ClearIconCommand = new DelegateCommand(OnClearIcon);
         SelectIconCommand = new DelegateCommand(OnSelectIcon);
+
+        Fields.CollectionChanged += FieldsCollectionChanged;
+    }
+
+    private void FieldsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (var field in e.NewItems.OfType<FieldViewModel>())
+                    {
+                        field.PropertyChanged += FieldPropertyChanged;
+                    }
+                }
+                break;
+            }
+            case NotifyCollectionChangedAction.Remove:
+            {
+                if (e.OldItems != null)
+                {
+                    foreach (var field in e.OldItems.OfType<FieldViewModel>())
+                    {
+                        field.PropertyChanged -= FieldPropertyChanged;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void FieldPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CreateItemCommand.RaiseCanExecuteChanged();
     }
 
     private void OnAddFields()
@@ -61,6 +99,7 @@ public class CreateItemViewModel : ItemViewModelBase
     {
         field.Deleted -= OnFieldDeleted;
         Fields.Remove(field);
+        CreateItemCommand.RaiseCanExecuteChanged();
     }
 
     private void OnCreate()
@@ -87,7 +126,7 @@ public class CreateItemViewModel : ItemViewModelBase
 
     private bool CanCreate()
     {
-        if (Fields.Count > 0 && Fields.Any(f => string.IsNullOrWhiteSpace(f.Name)))
+        if (Fields.Count > 0 && Fields.Any(f => f.HasErrors))
         {
             return false;
         }
@@ -119,6 +158,7 @@ public class CreateItemViewModel : ItemViewModelBase
         foreach (var field in Fields)
         {
             field.Deleted -= OnFieldDeleted;
+            field.PropertyChanged -= FieldPropertyChanged;
         }
     }
 }

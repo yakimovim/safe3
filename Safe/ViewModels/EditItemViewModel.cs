@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
@@ -34,6 +36,42 @@ namespace EdlinSoftware.Safe.ViewModels
             AddFieldsCommand = new DelegateCommand(OnAddFields);
             ClearIconCommand = new DelegateCommand(OnClearIcon);
             SelectIconCommand = new DelegateCommand(OnSelectIcon);
+
+            Fields.CollectionChanged += FieldsCollectionChanged;
+        }
+
+        private void FieldsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                {
+                    if (e.NewItems != null)
+                    {
+                        foreach (var field in e.NewItems.OfType<FieldViewModel>())
+                        {
+                            field.PropertyChanged += FieldPropertyChanged;
+                        }
+                    }
+                    break;
+                }
+                case NotifyCollectionChangedAction.Remove:
+                {
+                    if (e.OldItems != null)
+                    {
+                        foreach (var field in e.OldItems.OfType<FieldViewModel>())
+                        {
+                            field.PropertyChanged -= FieldPropertyChanged;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        private void FieldPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            SaveChangesCommand.RaiseCanExecuteChanged();
         }
 
         private void OnAddFields()
@@ -88,7 +126,7 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private bool CanSaveChanges()
         {
-            if (Fields.Count > 0 && Fields.Any(f => string.IsNullOrWhiteSpace(f.Name)))
+            if (Fields.Count > 0 && Fields.Any(f => f.HasErrors))
             {
                 return false;
             }
@@ -129,6 +167,7 @@ namespace EdlinSoftware.Safe.ViewModels
             foreach (var field in Fields)
             {
                 field.Deleted -= OnFieldDeleted;
+                field.PropertyChanged -= FieldPropertyChanged;
             }
         }
 
@@ -136,6 +175,7 @@ namespace EdlinSoftware.Safe.ViewModels
         {
             field.Deleted -= OnFieldDeleted;
             Fields.Remove(field);
+            SaveChangesCommand.RaiseCanExecuteChanged();
         }
 
         public DelegateCommand SaveChangesCommand { get; }

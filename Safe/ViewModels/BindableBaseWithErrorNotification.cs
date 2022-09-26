@@ -29,6 +29,7 @@ public abstract class BindableBaseWithErrorNotification
         if(string.IsNullOrWhiteSpace(propertyName)) return;
 
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        RaisePropertyChanged(nameof(HasErrors));
     }
 
     protected void CheckNullOrWhiteSpace(string propertyValue, string propertyName, string? message = null)
