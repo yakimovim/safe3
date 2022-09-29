@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <RootNamespace>EdlinSoftware.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\globe16.png" />
@@ -31,5 +32,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Resources\Texts.ru-ru.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 </Project>

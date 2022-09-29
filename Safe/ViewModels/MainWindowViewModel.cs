@@ -19,6 +19,12 @@ internal class MainWindowViewModel : ViewModelBase
 
         ExitCommand = new DelegateCommand(OnExit);
         CloseStorageCommand = new DelegateCommand(OnCloseStorage);
+        SettingsCommand = new DelegateCommand(OnSettings);
+    }
+
+    private void OnSettings()
+    {
+        RegionManager.RequestNavigationToMainContent("Settings");
     }
 
     private void OnCloseStorage()
@@ -39,5 +45,7 @@ internal class MainWindowViewModel : ViewModelBase
 
     public DelegateCommand ExitCommand { get; }
 
+    public DelegateCommand SettingsCommand { get; }
+    
     public DelegateCommand CloseStorageCommand { get; }
 }

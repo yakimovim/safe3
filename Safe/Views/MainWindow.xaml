@@ -9,6 +9,8 @@
             <MenuItem Header="File">
                 <MenuItem Header="Close" Command="{Binding CloseStorageCommand}" />
                 <Separator />
+                <MenuItem Header="Settings" Command="{Binding SettingsCommand}" />
+                <Separator />
                 <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
             </MenuItem>
         </Menu>

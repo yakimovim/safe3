@@ -7,10 +7,9 @@ namespace EdlinSoftware.Safe.ViewModels;
 
 public abstract class ViewModelBase : BindableBaseWithErrorNotification, INavigationAware
 {
-    [Dependency]
-    public IRegionManager RegionManager { get; set; }
+    [Dependency] public IRegionManager RegionManager { get; set; } = null!;
 
-    private IEventAggregator _eventAggregator;
+    private IEventAggregator _eventAggregator = null!;
 
     [Dependency]
     public IEventAggregator EventAggregator
@@ -28,8 +27,7 @@ public abstract class ViewModelBase : BindableBaseWithErrorNotification, INaviga
 
     protected virtual void SubscribeToEvents() { }
 
-    [Dependency]
-    public IDialogService DialogService { get; set; }
+    [Dependency] public IDialogService DialogService { get; set; } = null!;
 
     public virtual void OnNavigatedTo(NavigationContext navigationContext) { }
 

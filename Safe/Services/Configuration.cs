@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace EdlinSoftware.Safe.Services
 {
     internal class Configuration
     {
         public string? LastOpenedStorage {  get; set; }
+
+        public string Language { get; set; } = "en-US";
     }
 
     internal interface IConfigurationService

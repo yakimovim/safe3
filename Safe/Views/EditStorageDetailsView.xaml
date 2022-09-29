@@ -13,9 +13,9 @@
             <Button Content="Clear icon" Command="{Binding ClearIconCommand}"/>
             <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
         </StackPanel>
-        <TextBlock Text="Title:"/>
+        <TextBlock Text="{DynamicResource TitleWithColon}"/>
         <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Description:"/>
+        <TextBlock Text="{DynamicResource DescriptionWithColon}"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
         <Button Content="Ok" Command="{Binding SaveChangesCommand}" />
         <Button Content="Cancel" Command="{Binding CancelCommand}" />

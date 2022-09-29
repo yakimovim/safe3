@@ -25,6 +25,7 @@ namespace EdlinSoftware.Safe
         {
             containerRegistry.RegisterSingleton<IConfigurationService, ConfigurationService>();
             containerRegistry.RegisterSingleton<IStorageService, StorageService>();
+            containerRegistry.RegisterSingleton<ILanguagesService, LanguagesService>();
 
             var connectionProvider = new LiteDbConnectionProvider();
             containerRegistry.RegisterSingleton<Storage.ILiteDbConnectionProvider>(() => connectionProvider);
@@ -62,6 +63,14 @@ namespace EdlinSoftware.Safe
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            var configurationService = Container.Resolve<IConfigurationService>();
+
+            var configuration = configurationService.GetConfiguration();
+
+            var languagesService = Container.Resolve<ILanguagesService>();
+
+            languagesService.LoadLanguage(configuration.Language);
 
             var regionManager = Container.Resolve<IRegionManager>();
 
