@@ -30,10 +30,10 @@
                                VerticalAlignment="Center">
                         <TextBlock.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Delete" Command="{Binding DeleteItemCommand}" />
+                                <MenuItem Header="{DynamicResource Delete}" Command="{Binding DeleteItemCommand}" />
                                 <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
                                 <Separator />
-                                <MenuItem Header="Properties" Command="{Binding EditItemCommand}" />
+                                <MenuItem Header="{DynamicResource Properties}" Command="{Binding EditItemCommand}" />
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>

@@ -3,4 +3,14 @@
                     xmlns:v="clr-namespace:System;assembly=mscorlib">
     <v:String x:Key="TitleWithColon">Заголовок:</v:String>
     <v:String x:Key="DescriptionWithColon">Описание:</v:String>
+    <v:String x:Key="TagsWithColon">Теги:</v:String>
+    <v:String x:Key="Cancel">Отмена</v:String>
+    <v:String x:Key="Ok">ОК</v:String>
+    <v:String x:Key="Create">Создать</v:String>
+    <v:String x:Key="Open">Открыть</v:String>
+    <v:String x:Key="Delete">Удалить</v:String>
+    <v:String x:Key="Properties">Свойства</v:String>
+    <v:String x:Key="Settings">Настройки</v:String>
+    <v:String x:Key="Exit">Выход</v:String>
+    <v:String x:Key="Close">Закрыть</v:String>
 </ResourceDictionary>

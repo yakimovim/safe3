@@ -16,7 +16,7 @@
         <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="Enter the password once more"/>
         <TextBox Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}" />
-        <Button Content="Create" Command="{Binding CreateCommand}" />
-        <Button Content="Cancel" Command="{Binding CancelCommand}" />
+        <Button Content="{DynamicResource Create}" Command="{Binding CreateCommand}" />
+        <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
     </StackPanel>
 </UserControl>

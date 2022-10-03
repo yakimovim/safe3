@@ -24,8 +24,8 @@
         </ListView>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Content="Add new..." Command="{Binding AddNewIconCommand}"/>
-            <Button Content="Ok" Command="{Binding SelectIconCommand}"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}"/>
+            <Button Content="{DynamicResource Ok}" Command="{Binding SelectIconCommand}"/>
+            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

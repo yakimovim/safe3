@@ -18,7 +18,7 @@
         <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="{DynamicResource DescriptionWithColon}"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Tags:"/>
+        <TextBlock Text="{DynamicResource TagsWithColon}"/>
         <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel Orientation="Horizontal">
             <Button Content="Add fields..." Command="{Binding AddFieldsCommand}"/>
@@ -37,14 +37,14 @@
                     <StackPanel Orientation="Vertical" Margin="10">
                         <TextBlock Text="Name:" />
                         <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Content="Delete" Command="{Binding DeleteCommand}" />
+                        <Button Content="{DynamicResource Delete}" Command="{Binding DeleteCommand}" />
                         <Button Content="Move up" Command="{Binding MoveUpCommand}" />
                         <Button Content="Move down" Command="{Binding MoveDownCommand}" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Content="Create" Command="{Binding CreateItemCommand}" />
-        <Button Content="Cancel" Command="{Binding CancelCommand}" />
+        <Button Content="{DynamicResource Create}" Command="{Binding CreateItemCommand}" />
+        <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
     </StackPanel>
 </UserControl>

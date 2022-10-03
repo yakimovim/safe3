@@ -11,6 +11,6 @@
             <TextBlock Text="Login:" />
             <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Login" Command="{Binding LoginCommand}" />
-            <Button Content="Cancel" Command="{Binding CancelCommand}" />
+            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
     </StackPanel>
 </UserControl>

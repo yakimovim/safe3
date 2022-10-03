@@ -11,8 +11,8 @@
         <StackPanel DockPanel.Dock="Bottom" 
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <Button Content="Ok" Command="{Binding OkCommand}"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}" />
+            <Button Content="{DynamicResource Ok}" Command="{Binding OkCommand}"/>
+            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
         <StackPanel Orientation="Vertical">
             <TextBlock Text="Languages:" />

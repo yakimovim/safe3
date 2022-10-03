@@ -7,11 +7,11 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Close" Command="{Binding CloseStorageCommand}" />
+                <MenuItem Header="{DynamicResource Close}" Command="{Binding CloseStorageCommand}" />
                 <Separator />
-                <MenuItem Header="Settings" Command="{Binding SettingsCommand}" />
+                <MenuItem Header="{DynamicResource Settings}" Command="{Binding SettingsCommand}" />
                 <Separator />
-                <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
+                <MenuItem Header="{DynamicResource Exit}" Command="{Binding ExitCommand}" />
             </MenuItem>
         </Menu>
         <ContentControl prism:RegionManager.RegionName="MainContentRegion" />

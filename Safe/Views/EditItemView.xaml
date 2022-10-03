@@ -8,43 +8,49 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Icon}" Width="16" Height="16" />
-            <Button Content="Clear icon" Command="{Binding ClearIconCommand}"/>
-            <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding Icon}" Width="16" Height="16" />
+                <Button Content="Clear icon" Command="{Binding ClearIconCommand}"/>
+                <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
+            </StackPanel>
+            <TextBlock Text="{DynamicResource TitleWithColon}"/>
+            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{DynamicResource DescriptionWithColon}"/>
+            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="{DynamicResource TagsWithColon}"/>
+            <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Add fields" Command="{Binding AddFieldsCommand}"/>
+            </StackPanel>
         </StackPanel>
-        <TextBlock Text="{DynamicResource TitleWithColon}"/>
-        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="{DynamicResource DescriptionWithColon}"/>
-        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Text="Tags:"/>
-        <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}" />
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Add fields" Command="{Binding AddFieldsCommand}"/>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="{DynamicResource Ok}" Command="{Binding SaveChangesCommand}" />
+            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
-        <ItemsControl ItemsSource="{Binding Fields}" 
-                      AllowDrop="True"
-                      PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
-                      PreviewMouseMove="UIElement_OnPreviewMouseMove"
-                      DragEnter="UIElement_CheckDrag"
-                      DragOver="UIElement_CheckDrag"
-                      DragLeave="UIElement_CheckDrag"
-                      Drop="UIElement_OnDrop"
-                      MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
-                    <StackPanel Orientation="Vertical" Margin="10">
-                        <TextBlock Text="Name:" />
-                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Content="Delete" Command="{Binding DeleteCommand}" />
-                        <Button Content="Move up" Command="{Binding MoveUpCommand}" />
-                        <Button Content="Move down" Command="{Binding MoveDownCommand}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <Button Content="Ok" Command="{Binding SaveChangesCommand}" />
-        <Button Content="Cancel" Command="{Binding CancelCommand}" />
-    </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Fields}" 
+                          AllowDrop="True"
+                          PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+                          PreviewMouseMove="UIElement_OnPreviewMouseMove"
+                          DragEnter="UIElement_CheckDrag"
+                          DragOver="UIElement_CheckDrag"
+                          DragLeave="UIElement_CheckDrag"
+                          Drop="UIElement_OnDrop"
+                          MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
+                        <StackPanel Orientation="Vertical" Margin="10">
+                            <TextBlock Text="Name:" />
+                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="{DynamicResource Delete}" Command="{Binding DeleteCommand}" />
+                            <Button Content="Move up" Command="{Binding MoveUpCommand}" />
+                            <Button Content="Move down" Command="{Binding MoveDownCommand}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>
