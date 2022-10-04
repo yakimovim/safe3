@@ -10,13 +10,13 @@
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Image Source="{Binding Icon}" Width="16" Height="16" />
-            <Button Content="Clear icon" Command="{Binding ClearIconCommand}"/>
-            <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
+            <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
+            <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
         </StackPanel>
-        <TextBlock Text="{DynamicResource TitleWithColon}"/>
-        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="{DynamicResource DescriptionWithColon}"/>
-        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
+        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
+        <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}"/>
+        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
         <Button Content="{DynamicResource Ok}" Command="{Binding SaveChangesCommand}" />
         <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
     </StackPanel>

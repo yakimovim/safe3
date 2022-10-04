@@ -15,7 +15,7 @@
             <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="Languages:" />
+            <TextBlock Text="{DynamicResource LanguagesWithColon}" />
             <ComboBox ItemsSource="{Binding Languages}" 
                       DisplayMemberPath="DisplayName" 
                       SelectedItem="{Binding SelectedLanguage}"/>

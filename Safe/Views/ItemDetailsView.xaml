@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EdlinSoftware.Safe.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:EdlinSoftware.Safe.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -12,26 +11,26 @@
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <Image Source="{Binding Icon}" Width="16" Height="16" />
-            <TextBlock Text="{DynamicResource TitleWithColon}" />
-            <TextBlock Text="{Binding Title}" />
-            <TextBlock Text="{DynamicResource DescriptionWithColon}" />
-            <TextBlock Text="{Binding Description}" />
-            <TextBlock Text="{DynamicResource TagsWithColon}" />
-            <TextBlock Text="{Binding Tags}" />
+            <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
+            <TextBlock Text="{Binding Title}" Style="{StaticResource ValueTextBox}"/>
+            <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}" />
+            <TextBlock Text="{Binding Description}" Style="{StaticResource ValueTextBox}" />
+            <TextBlock Text="{DynamicResource TagsWithColon}" Style="{StaticResource TextBoxLabel}" />
+            <TextBlock Text="{Binding Tags}" Style="{StaticResource ValueTextBox}" />
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Fields}">
                 <ItemsControl.Resources>
                     <DataTemplate DataType="{x:Type vm:TextFieldViewModel}">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Name}"/>
-                            <TextBox Text="{Binding Text}"/>
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource TextBoxLabel}"/>
+                            <TextBox Text="{Binding Text}" Style="{StaticResource InputTextBox}"/>
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:PasswordFieldViewModel}">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Name}"/>
-                            <TextBox Text="{Binding Password}"/>
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource TextBoxLabel}"/>
+                            <TextBox Text="{Binding Password}" Style="{StaticResource InputTextBox}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.Resources>

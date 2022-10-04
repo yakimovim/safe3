@@ -6,7 +6,7 @@
         Title="Safe" Height="350" Width="525" >
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
+            <MenuItem Header="{DynamicResource File}">
                 <MenuItem Header="{DynamicResource Close}" Command="{Binding CloseStorageCommand}" />
                 <Separator />
                 <MenuItem Header="{DynamicResource Settings}" Command="{Binding SettingsCommand}" />
@@ -14,6 +14,8 @@
                 <MenuItem Header="{DynamicResource Exit}" Command="{Binding ExitCommand}" />
             </MenuItem>
         </Menu>
-        <ContentControl prism:RegionManager.RegionName="MainContentRegion" />
+        <ContentControl 
+            Margin="7"
+            prism:RegionManager.RegionName="MainContentRegion" />
     </DockPanel>
 </Window>

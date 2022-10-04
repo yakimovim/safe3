@@ -31,7 +31,7 @@
                         <TextBlock.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="{DynamicResource Delete}" Command="{Binding DeleteItemCommand}" />
-                                <MenuItem Header="Create subitem" Command="{Binding CreateItemCommand}" />
+                                <MenuItem Header="{DynamicResource CreateSubItem}" Command="{Binding CreateItemCommand}" />
                                 <Separator />
                                 <MenuItem Header="{DynamicResource Properties}" Command="{Binding EditItemCommand}" />
                             </ContextMenu>

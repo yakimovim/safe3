@@ -4,10 +4,25 @@
              xmlns:local="clr-namespace:EdlinSoftware.Safe"
              xmlns:prism="http://prismlibrary.com/" >
     <Application.Resources>
-         <ResourceDictionary>
-             <ResourceDictionary.MergedDictionaries>
-                 <ResourceDictionary Source="Resources/Texts.xaml" />
-             </ResourceDictionary.MergedDictionaries>
-         </ResourceDictionary>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Texts.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxLabel">
+                <Setter Property="Margin" Value="0,0,0,3"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}" x:Key="ValueTextBox">
+                <Setter Property="Margin" Value="0,0,0,10"/>
+                <Setter Property="FontWeight" Value="DemiBold"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}" x:Key="InputTextBox">
+                <Setter Property="Margin" Value="0,0,0,10"/>
+            </Style>
+            <Style TargetType="{x:Type Button}" x:Key="ActionButton">
+                <Setter Property="Width" Value="80"/>
+                <Setter Property="Padding" Value="10,3,10,3"/>
+                <Setter Property="Margin" Value="4,0,4,0"/>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

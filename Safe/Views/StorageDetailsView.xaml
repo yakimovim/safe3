@@ -9,9 +9,9 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Vertical">
         <Image Source="{Binding Icon}" Width="16" Height="16" />
-        <TextBlock Text="{DynamicResource TitleWithColon}" />
-        <TextBlock Text="{Binding Title}" />
-        <TextBlock Text="{DynamicResource DescriptionWithColon}" />
-        <TextBlock Text="{Binding Description}" />
+        <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}" />
+        <TextBlock Text="{Binding Title}" Style="{StaticResource ValueTextBox}"/>
+        <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}" />
+        <TextBlock Text="{Binding Description}" Style="{StaticResource ValueTextBox}"/>
     </StackPanel>
 </UserControl>

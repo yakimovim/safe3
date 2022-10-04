@@ -11,8 +11,8 @@
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <Image Source="{Binding Icon}" Width="16" Height="16" />
-            <Button Content="Clear icon" Command="{Binding ClearIconCommand}"/>
-            <Button Content="Select icon" Command="{Binding SelectIconCommand}"/>
+            <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
+            <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
         </StackPanel>
         <TextBlock Text="{DynamicResource TitleWithColon}"/>
         <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
@@ -21,7 +21,7 @@
         <TextBlock Text="{DynamicResource TagsWithColon}"/>
         <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Add fields..." Command="{Binding AddFieldsCommand}"/>
+            <Button Content="{DynamicResource AddFields}" Command="{Binding AddFieldsCommand}"/>
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Fields}"
                       AllowDrop="True"

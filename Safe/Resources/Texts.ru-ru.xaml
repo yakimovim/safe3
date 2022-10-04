@@ -13,4 +13,17 @@
     <v:String x:Key="Settings">Настройки</v:String>
     <v:String x:Key="Exit">Выход</v:String>
     <v:String x:Key="Close">Закрыть</v:String>
+    <v:String x:Key="Login">Войти</v:String>
+    <v:String x:Key="PasswordWithColon">Пароль:</v:String>
+    <v:String x:Key="File">Файл</v:String>
+    <v:String x:Key="ClearIcon">Очистить иконку</v:String>
+    <v:String x:Key="SelectIcon">Выбрать иконку</v:String>
+    <v:String x:Key="AddFields">Добавить поля</v:String>
+    <v:String x:Key="AddNewIcon">Добавить новую ...</v:String>
+    <v:String x:Key="EnterStorageTitle">Введите заголовок хранилища:</v:String>
+    <v:String x:Key="EnterStorageDescription">Введите описание хранилища:</v:String>
+    <v:String x:Key="EnterPassword">Введите пароль для нового хранилища:</v:String>
+    <v:String x:Key="EnterPasswordAgain">Введите пароль ещё раз:</v:String>
+    <v:String x:Key="NameWithColon">Имя:</v:String>
+    <v:String x:Key="CreateSubItem">Создать подэлемент</v:String>
 </ResourceDictionary>

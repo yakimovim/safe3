@@ -8,13 +8,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <TextBlock Text="Enter the storage title"/>
+        <TextBlock Text="{DynamicResource EnterStorageTitle}"/>
         <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Enter the storage description"/>
+        <TextBlock Text="{DynamicResource EnterStorageDescription}"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Text="Enter password for the new storage"/>
+        <TextBlock Text="{DynamicResource EnterPassword}"/>
         <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Text="Enter the password once more"/>
+        <TextBlock Text="{DynamicResource EnterPasswordAgain}"/>
         <TextBox Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}" />
         <Button Content="{DynamicResource Create}" Command="{Binding CreateCommand}" />
         <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
