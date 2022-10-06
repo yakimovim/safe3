@@ -7,17 +7,23 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Icon}" Width="16" Height="16" />
-            <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
-            <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ActionButtonsStackPanel}">
+            <Button Style="{StaticResource ActionButton}" IsDefault="True"
+                    Content="{DynamicResource Ok}" Command="{Binding SaveChangesCommand}" />
+            <Button Style="{StaticResource ActionButton}" IsCancel="True"
+                    Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
-        <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
-        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
-        <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}"/>
-        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
-        <Button Content="{DynamicResource Ok}" Command="{Binding SaveChangesCommand}" />
-        <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
-    </StackPanel>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding Icon}" Width="16" Height="16" />
+                <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
+                <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
+            </StackPanel>
+            <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
+            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
+            <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}"/>
+            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
+        </StackPanel>
+    </DockPanel>
 </UserControl>

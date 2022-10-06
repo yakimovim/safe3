@@ -8,20 +8,29 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Icon}" Width="16" Height="16" />
-            <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
-            <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding Icon}" Width="16" Height="16" />
+                <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
+                <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
+            </StackPanel>
+            <TextBlock Style="{StaticResource TextBoxLabel}" Text="{DynamicResource TitleWithColon}"/>
+            <TextBox Style="{StaticResource InputElement}" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Style="{StaticResource TextBoxLabel}" Text="{DynamicResource DescriptionWithColon}"/>
+            <TextBox Style="{StaticResource InputElement}" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Style="{StaticResource TextBoxLabel}" Text="{DynamicResource TagsWithColon}"/>
+            <TextBox Style="{StaticResource InputElement}" Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Style="{StaticResource ActionButtonsStackPanel}">
+                <Button Style="{StaticResource ActionButton}"
+                        Content="{DynamicResource AddFields}" Command="{Binding AddFieldsCommand}"/>
+            </StackPanel>
         </StackPanel>
-        <TextBlock Text="{DynamicResource TitleWithColon}"/>
-        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="{DynamicResource DescriptionWithColon}"/>
-        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="{DynamicResource TagsWithColon}"/>
-        <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"/>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="{DynamicResource AddFields}" Command="{Binding AddFieldsCommand}"/>
+        <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ActionButtonsStackPanel}">
+            <Button Style="{StaticResource ActionButton}" IsDefault="True"
+                    Content="{DynamicResource Create}" Command="{Binding CreateItemCommand}" />
+            <Button Style="{StaticResource ActionButton}" IsCancel="True"
+                    Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Fields}"
                       AllowDrop="True"
@@ -35,8 +44,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
                     <StackPanel Orientation="Vertical" Margin="10">
-                        <TextBlock Text="Name:" />
-                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="{DynamicResource NameWithColon}" Style="{StaticResource TextBoxLabel}" />
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
                         <Button Content="{DynamicResource Delete}" Command="{Binding DeleteCommand}" />
                         <Button Content="Move up" Command="{Binding MoveUpCommand}" />
                         <Button Content="Move down" Command="{Binding MoveDownCommand}" />
@@ -44,7 +53,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Content="{DynamicResource Create}" Command="{Binding CreateItemCommand}" />
-        <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
-    </StackPanel>
+    </DockPanel>
 </UserControl>

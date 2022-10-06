@@ -24,13 +24,13 @@
                     <DataTemplate DataType="{x:Type vm:TextFieldViewModel}">
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TextBoxLabel}"/>
-                            <TextBox Text="{Binding Text}" Style="{StaticResource InputTextBox}"/>
+                            <TextBox Text="{Binding Text}" Style="{StaticResource InputElement}"/>
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:PasswordFieldViewModel}">
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TextBoxLabel}"/>
-                            <TextBox Text="{Binding Password}" Style="{StaticResource InputTextBox}"/>
+                            <TextBox Text="{Binding Password}" Style="{StaticResource InputElement}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.Resources>

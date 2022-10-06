@@ -50,6 +50,8 @@ namespace EdlinSoftware.Safe.Services
 
         public void CreateStorage(StorageCreationOptions options)
         {
+            CloseStorage();
+
             try
             {
                 _connectionProvider.Database = new LiteDatabase($"Filename={options.FileName};Password={options.Password}");
@@ -70,6 +72,8 @@ namespace EdlinSoftware.Safe.Services
 
         public void OpenStorage(StorageOpeningOptions options)
         {
+            CloseStorage();
+
             try
             {
                 _connectionProvider.Database = new LiteDatabase($"Filename={options.FileName};Password={options.Password}");
@@ -84,9 +88,14 @@ namespace EdlinSoftware.Safe.Services
 
         public void CloseStorage()
         {
-            _connectionProvider.Database = null;
+            if (_connectionProvider.Database != null)
+            {
+                _connectionProvider.Database.Dispose();
 
-            _eventAggregator.GetEvent<StorageChanged>().Publish();
+                _connectionProvider.Database = null;
+
+                _eventAggregator.GetEvent<StorageChanged>().Publish();
+            }
         }
 
         public bool StorageIsOpened => _connectionProvider.Database != null;

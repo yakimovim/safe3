@@ -9,14 +9,16 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Bottom" 
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center">
-            <Button Content="{DynamicResource Ok}" Command="{Binding OkCommand}"/>
-            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
+                    Style="{StaticResource ActionButtonsStackPanel}">
+            <Button Style="{StaticResource ActionButton}" IsDefault="True"
+                    Content="{DynamicResource Ok}" Command="{Binding OkCommand}"/>
+            <Button Style="{StaticResource ActionButton}" IsCancel="True"
+                    Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="{DynamicResource LanguagesWithColon}" />
-            <ComboBox ItemsSource="{Binding Languages}" 
+            <TextBlock Style="{StaticResource TextBoxLabel}" Text="{DynamicResource LanguagesWithColon}" />
+            <ComboBox Style="{StaticResource InputElement}"
+                      ItemsSource="{Binding Languages}" 
                       DisplayMemberPath="DisplayName" 
                       SelectedItem="{Binding SelectedLanguage}"/>
         </StackPanel>

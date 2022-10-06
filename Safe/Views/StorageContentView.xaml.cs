@@ -10,6 +10,8 @@ namespace EdlinSoftware.Safe.Views
         public StorageContentView()
         {
             InitializeComponent();
+
+            Loaded += (sender, e) => search.Focus();
         }
     }
 }

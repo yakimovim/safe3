@@ -16,18 +16,21 @@
                 <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
             </StackPanel>
             <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
-            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
+            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
             <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}"/>
-            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}" />
+            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}" />
             <TextBlock Text="{DynamicResource TagsWithColon}" Style="{StaticResource TextBoxLabel}"/>
-            <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}" />
-            <StackPanel Orientation="Horizontal">
-                <Button Content="{DynamicResource AddFields}" Command="{Binding AddFieldsCommand}"/>
+            <TextBox Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}" />
+            <StackPanel Style="{StaticResource ActionButtonsStackPanel}">
+                <Button Style="{StaticResource ActionButton}"
+                    Content="{DynamicResource AddFields}" Command="{Binding AddFieldsCommand}"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="{DynamicResource Ok}" Command="{Binding SaveChangesCommand}" Style="{StaticResource ActionButton}" />
-            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" Style="{StaticResource ActionButton}" />
+        <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ActionButtonsStackPanel}">
+            <Button IsDefault="True"
+                Content="{DynamicResource Ok}" Command="{Binding SaveChangesCommand}" Style="{StaticResource ActionButton}" />
+            <Button IsCancel="True"
+                Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" Style="{StaticResource ActionButton}" />
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Fields}" 
@@ -43,7 +46,7 @@
                     <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
                         <StackPanel Orientation="Vertical" Margin="10">
                             <TextBlock Text="{DynamicResource NameWithColon}" Style="{StaticResource TextBoxLabel}" />
-                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
+                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
                             <Button Content="{DynamicResource Delete}" Command="{Binding DeleteCommand}" />
                             <Button Content="Move up" Command="{Binding MoveUpCommand}" />
                             <Button Content="Move down" Command="{Binding MoveDownCommand}" />

@@ -4,13 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
+    <Grid>
+        <StackPanel 
+            Orientation="Vertical" 
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Center"
+            Margin="50,0,50,0">
             <TextBlock Text="{DynamicResource PasswordWithColon}" Style="{StaticResource TextBoxLabel}" />
-            <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputTextBox}"/>
-            <Button Content="{DynamicResource Login}" Command="{Binding LoginCommand}" />
-            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
-    </StackPanel>
+            <PasswordBox x:Name="password" Style="{StaticResource InputElement}">
+                <b:Interaction.Behaviors>
+                    <be:BindablePasswordTextBehavior Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </b:Interaction.Behaviors>
+            </PasswordBox>
+            <StackPanel Style="{StaticResource ActionButtonsStackPanel}">
+                <Button 
+                    IsDefault="True"
+                    Content="{DynamicResource Login}" 
+                    Command="{Binding LoginCommand}"
+                    Style="{StaticResource ActionButton}"/>
+                <Button 
+                    IsCancel="True"
+                    Content="{DynamicResource Cancel}" 
+                    Command="{Binding CancelCommand}" 
+                    Style="{StaticResource ActionButton}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
 </UserControl>

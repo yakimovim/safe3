@@ -22,10 +22,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Content="{DynamicResource AddNewIcon}" Command="{Binding AddNewIconCommand}"/>
-            <Button Content="{DynamicResource Ok}" Command="{Binding SelectIconCommand}"/>
-            <Button Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}"/>
+        <StackPanel Grid.Row="1" Style="{StaticResource ActionButtonsStackPanel}">
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource AddNewIcon}" Command="{Binding AddNewIconCommand}"/>
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Ok}" Command="{Binding SelectIconCommand}"/>
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>
