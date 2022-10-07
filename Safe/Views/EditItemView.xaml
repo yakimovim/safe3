@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ctrls="clr-namespace:EdlinSoftware.Safe.Views.Controls"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -44,13 +45,22 @@
                           MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:FieldViewModel}">
-                        <StackPanel Orientation="Vertical" Margin="10">
-                            <TextBlock Text="{DynamicResource NameWithColon}" Style="{StaticResource TextBoxLabel}" />
-                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
-                            <Button Content="{DynamicResource Delete}" Command="{Binding DeleteCommand}" />
-                            <Button Content="Move up" Command="{Binding MoveUpCommand}" />
-                            <Button Content="Move down" Command="{Binding MoveDownCommand}" />
-                        </StackPanel>
+                        <DockPanel LastChildFill="True">
+                            <Image DockPanel.Dock="Left" 
+                                   Style="{StaticResource FieldImage}"
+                                   Tag="MoveField"
+                                   ToolTip="{DynamicResource MoveField}"
+                                   Source="{StaticResource MoveUpAndDownDrawingImage}" />
+                            <ctrls:ClickableImage DockPanel.Dock="Right" 
+                                   Style="{StaticResource FieldImage}"
+                                   ToolTip="{DynamicResource DeleteField}"
+                                   ClickCommand="{Binding DeleteCommand}"
+                                   Source="{StaticResource DeleteDrawingImage}" />
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <TextBlock Text="{DynamicResource NameWithColon}" Style="{StaticResource TextBoxLabel}" />
+                                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
+                            </StackPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

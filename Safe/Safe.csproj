@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\Dialogs\" />
+    <Folder Include="Views\Controls\" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Resources\Texts.ru-ru.xaml">

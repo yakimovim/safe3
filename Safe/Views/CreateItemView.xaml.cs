@@ -23,6 +23,10 @@ namespace EdlinSoftware.Safe.Views
 
         private void UIElement_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            var image = e.OriginalSource as Image;
+
+            if(image?.Tag?.ToString() != "MoveField") return;
+
             _startPoint = e.GetPosition(null);
 
             _fieldToDrag = GetFieldViewModel(e.OriginalSource);

@@ -27,4 +27,6 @@
     <v:String x:Key="NameWithColon">Name:</v:String>
     <v:String x:Key="LanguagesWithColon">Languages:</v:String>
     <v:String x:Key="CreateSubItem">Create sub-item</v:String>
+    <v:String x:Key="DeleteField">Delete field</v:String>
+    <v:String x:Key="MoveField">Move field</v:String>
 </ResourceDictionary>

@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Texts.xaml" />
+                <ResourceDictionary Source="Resources/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxLabel">
                 <Setter Property="Margin" Value="0,0,0,3"/>
@@ -30,6 +31,11 @@
                 <Setter Property="Orientation" Value="Horizontal" />
                 <Setter Property="Margin" Value="-4,10,-4,10" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+            <Style TargetType="{x:Type Image}" x:Key="FieldImage">
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="Width" Value="20" />
+                <Setter Property="Height" Value="20" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

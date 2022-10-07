@@ -26,4 +26,6 @@
     <v:String x:Key="EnterPasswordAgain">Введите пароль ещё раз:</v:String>
     <v:String x:Key="NameWithColon">Имя:</v:String>
     <v:String x:Key="CreateSubItem">Создать подэлемент</v:String>
+    <v:String x:Key="DeleteField">Удалить поле</v:String>
+    <v:String x:Key="MoveField">Переместить поле</v:String>
 </ResourceDictionary>
