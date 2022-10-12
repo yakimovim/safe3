@@ -10,7 +10,6 @@ using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
@@ -20,7 +19,13 @@ namespace EdlinSoftware.Safe.ViewModels
         private readonly IIconsRepository _iconsRepository;
 
         private Item _item;
+
         private string? _iconId;
+        public string? IconId
+        {
+            get => _iconId;
+            set => SetProperty(ref _iconId, value);
+        }
 
         public EditItemViewModel(
             IItemsRepository itemsRepository,
@@ -34,8 +39,6 @@ namespace EdlinSoftware.Safe.ViewModels
                 .ObservesProperty(() => Fields);
             CancelCommand = new DelegateCommand(OnCancel);
             AddFieldsCommand = new DelegateCommand(OnAddFields);
-            ClearIconCommand = new DelegateCommand(OnClearIcon);
-            SelectIconCommand = new DelegateCommand(OnSelectIcon);
 
             Fields.CollectionChanged += FieldsCollectionChanged;
         }
@@ -79,27 +82,6 @@ namespace EdlinSoftware.Safe.ViewModels
             DialogService.ShowAddFieldsDialog(Fields, OnFieldDeleted);
         }
 
-        private void OnSelectIcon()
-        {
-            DialogService.ShowDialog("IconsDialog", new DialogParameters(), result =>
-            {
-                if (result.Result == ButtonResult.OK)
-                {
-                    var iconId = result.Parameters.GetValue<string>("IconId");
-
-                    _iconId = iconId;
-
-                    Icon = _iconsRepository.GetIcon(_iconId);
-                }
-            });
-        }
-
-        private void OnClearIcon()
-        {
-            _iconId = null;
-            Icon = Icons.DefaultItemIcon;
-        }
-
         private void OnSaveChanges()
         {
             _item.Title = Title;
@@ -114,7 +96,7 @@ namespace EdlinSoftware.Safe.ViewModels
                 _item.Tags.AddRange(Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()));
             }
 
-            _item.IconId = _iconId;
+            _item.IconId = IconId;
 
             _itemsRepository.SaveItem(_item);
 
@@ -148,7 +130,7 @@ namespace EdlinSoftware.Safe.ViewModels
             Description = _item.Description ?? string.Empty;
             Tags = string.Join(", ", _item.Tags);
             Icon = _iconsRepository.GetIcon(_item.IconId);
-            _iconId = _item.IconId;
+            IconId = _item.IconId;
 
             Fields.Clear();
 
@@ -183,9 +165,5 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand CancelCommand { get; }
 
         public DelegateCommand AddFieldsCommand { get; }
-
-        public DelegateCommand ClearIconCommand { get; }
-
-        public DelegateCommand SelectIconCommand { get; }
     }
 }

@@ -5,17 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
-             xmlns:ctrl="clr-namespace:EdlinSoftware.Safe.Views.Controls"
+             xmlns:ctrls="clr-namespace:EdlinSoftware.Safe.Views.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding Icon}" Width="16" Height="16" />
-                <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
-                <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
-            </StackPanel>
+            <ctrls:IconSelector IconId="{Binding DataContext.IconId, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Style="{StaticResource TextBoxLabel}" Text="{DynamicResource TitleWithColon}"/>
             <TextBox Style="{StaticResource InputElement}" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Style="{StaticResource TextBoxLabel}" Text="{DynamicResource DescriptionWithColon}"/>
@@ -50,7 +46,7 @@
                                Tag="MoveField"
                                ToolTip="{DynamicResource MoveField}"
                                Source="{StaticResource MoveUpAndDownDrawingImage}" />
-                        <ctrl:ClickableImage DockPanel.Dock="Right" 
+                        <ctrls:ClickableImage DockPanel.Dock="Right" 
                                              Style="{StaticResource FieldImage}"
                                              ToolTip="{DynamicResource DeleteField}"
                                              ClickCommand="{Binding DeleteCommand}"

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ctrls="clr-namespace:EdlinSoftware.Safe.Views.Controls" 
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
@@ -15,11 +16,7 @@
                     Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}" />
         </StackPanel>
         <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding Icon}" Width="16" Height="16" />
-                <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
-                <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
-            </StackPanel>
+            <ctrls:IconSelector IconId="{Binding DataContext.IconId, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
             <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
             <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}"/>

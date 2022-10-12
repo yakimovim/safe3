@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using EdlinSoftware.Safe.Services;
 using Prism.Commands;
 using Prism.Regions;

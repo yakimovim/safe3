@@ -2,35 +2,32 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
 public class CreateItemViewModel : ItemViewModelBase
 {
-    private readonly IIconsRepository _iconsRepository;
-
     private Item? _parent;
+
     private string? _iconId;
-
-    public CreateItemViewModel(IIconsRepository iconsRepository)
+    public string? IconId
     {
-        _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+        get => _iconId;
+        set => SetProperty(ref _iconId, value);
+    }
 
+    public CreateItemViewModel()
+    {
         CancelCommand = new DelegateCommand(OnCancel);
         CreateItemCommand = new DelegateCommand(OnCreate, CanCreate)
             .ObservesProperty(() => Title)
             .ObservesProperty(() => Fields);
         AddFieldsCommand = new DelegateCommand(OnAddFields);
-        ClearIconCommand = new DelegateCommand(OnClearIcon);
-        SelectIconCommand = new DelegateCommand(OnSelectIcon);
 
         Fields.CollectionChanged += FieldsCollectionChanged;
     }
@@ -74,27 +71,6 @@ public class CreateItemViewModel : ItemViewModelBase
         DialogService.ShowAddFieldsDialog(Fields, OnFieldDeleted);
     }
 
-    private void OnSelectIcon()
-    {
-        DialogService.ShowDialog("IconsDialog", new DialogParameters(), result =>
-        {
-            if (result.Result == ButtonResult.OK)
-            {
-                var iconId = result.Parameters.GetValue<string>("IconId");
-
-                _iconId = iconId;
-
-                Icon = _iconsRepository.GetIcon(_iconId);
-            }
-        });
-    }
-
-    private void OnClearIcon()
-    {
-        _iconId = null;
-        Icon = Icons.DefaultItemIcon;
-    }
-
     private void OnFieldDeleted(object? sender, FieldViewModel field)
     {
         field.Deleted -= OnFieldDeleted;
@@ -108,7 +84,7 @@ public class CreateItemViewModel : ItemViewModelBase
         {
             Title = Title,
             Description = Description,
-            IconId = _iconId
+            IconId = IconId
         };
 
         if(!string.IsNullOrEmpty(Tags))
@@ -143,8 +119,6 @@ public class CreateItemViewModel : ItemViewModelBase
     public DelegateCommand CreateItemCommand { get; }
     public DelegateCommand CancelCommand { get; }
     public DelegateCommand AddFieldsCommand { get; }
-    public DelegateCommand ClearIconCommand { get; }
-    public DelegateCommand SelectIconCommand { get; }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {

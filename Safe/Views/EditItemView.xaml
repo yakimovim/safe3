@@ -11,11 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding Icon}" Width="16" Height="16" />
-                <Button Content="{DynamicResource ClearIcon}" Command="{Binding ClearIconCommand}"/>
-                <Button Content="{DynamicResource SelectIcon}" Command="{Binding SelectIconCommand}"/>
-            </StackPanel>
+            <ctrls:IconSelector IconId="{Binding DataContext.IconId, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
             <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputElement}"/>
             <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}"/>

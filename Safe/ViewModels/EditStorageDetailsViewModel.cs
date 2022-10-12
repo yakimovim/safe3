@@ -16,6 +16,11 @@ public class EditStorageDetailsViewModel : ViewModelBase
     private readonly IIconsRepository _iconsRepository;
 
     private string? _iconId;
+    public string? IconId
+    {
+        get => _iconId;
+        set => SetProperty(ref _iconId, value);
+    }
 
     public EditStorageDetailsViewModel(
         IStorageInfoRepository storageInfoRepository,
@@ -39,16 +44,16 @@ public class EditStorageDetailsViewModel : ViewModelBase
             {
                 var iconId = result.Parameters.GetValue<string>("IconId");
 
-                _iconId = iconId;
+                IconId = iconId;
 
-                Icon = _iconsRepository.GetIcon(_iconId);
+                Icon = _iconsRepository.GetIcon(IconId);
             }
         });
     }
 
     private void OnClearIcon()
     {
-        _iconId = null;
+        IconId = null;
         Icon = Icons.DefaultItemIcon;
     }
 
@@ -58,7 +63,7 @@ public class EditStorageDetailsViewModel : ViewModelBase
         {
             Title = Title,
             Description = Description,
-            IconId = _iconId
+            IconId = IconId
         });
 
         RegionManager.RequestNavigationToDetails("StorageDetails");
@@ -100,6 +105,7 @@ public class EditStorageDetailsViewModel : ViewModelBase
 
         Title = storageInfo.Title;
         Description = storageInfo.Description ?? string.Empty;
+        IconId = storageInfo.IconId;
     }
 
     public DelegateCommand SaveChangesCommand { get; }
