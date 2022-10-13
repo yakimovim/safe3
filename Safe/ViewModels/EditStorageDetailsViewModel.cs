@@ -1,6 +1,7 @@
 ﻿using System;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
+using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.Storage.Model;
 using Prism.Commands;
 using Prism.Regions;
@@ -20,6 +21,20 @@ public class EditStorageDetailsViewModel : ViewModelBase
         SaveChangesCommand = new DelegateCommand(OnSaveChanges, CanSaveChanges)
             .ObservesProperty(() => Title);
         CancelCommand = new DelegateCommand(OnCancel);
+    }
+
+    protected override void SubscribeToEvents()
+    {
+        EventAggregator.GetEvent<IconRemoved>()
+            .Subscribe(OnIconRemoved);
+    }
+
+    private void OnIconRemoved(string iconId)
+    {
+        if (IconId == iconId)
+        {
+            IconId = null;
+        }
     }
 
     private void OnSaveChanges()

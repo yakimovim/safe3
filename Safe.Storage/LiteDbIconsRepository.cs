@@ -37,6 +37,8 @@ namespace EdlinSoftware.Safe.Storage
         {
             var file = Storage.FindById(id);
 
+            if (file == null) return null;
+
             return new Icon(file.Id, file.OpenRead);
         }
 

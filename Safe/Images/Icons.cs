@@ -1,7 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using EdlinSoftware.Safe.Domain;
+using SharpVectors.Converters;
+using SharpVectors.Renderers.Wpf;
 
 namespace EdlinSoftware.Safe.Images;
 
@@ -15,17 +16,18 @@ public static class Icons
         {
             if (_defaultItemIcon == null)
             {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("EdlinSoftware.Safe.Images.globe16.png");
-                image.EndInit();
-                _defaultItemIcon = image;
+                _defaultItemIcon = (ImageSource) Application.Current.FindResource("GlobeDrawingImage");
             }
 
             return _defaultItemIcon;
         }
     }
+
+    private static readonly FileSvgReader SvgConverter = new FileSvgReader(new WpfDrawingSettings
+    {
+        IncludeRuntime = false,
+        TextAsGeometry = false
+    });
 
     public static ImageSource GetIcon(this IIconsRepository iconsRepository, string? iconId)
     {
@@ -35,11 +37,17 @@ public static class Icons
 
         if (icon == null) return DefaultItemIcon;
 
-        var image = new BitmapImage();
-        image.BeginInit();
-        image.StreamSource = icon.GetStream();
-        image.EndInit();
+        try
+        {
+            var drawingGroup = SvgConverter.Read(icon.GetStream());
 
-        return image;
+            var image = new DrawingImage(drawingGroup);
+
+            return image;
+        }
+        catch
+        {
+            return DefaultItemIcon;
+        }
     }
 }

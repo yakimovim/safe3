@@ -38,7 +38,23 @@ public class ItemListViewModel : ItemViewModelBase
         EventAggregator.GetEvent<ItemChanged>()
             .Subscribe(OnItemChanged, ThreadOption.PublisherThread,
                 false, HandleItemChanged);
+
+        EventAggregator.GetEvent<IconRemoved>()
+            .Subscribe(OnIconRemoved, ThreadOption.PublisherThread,
+                false, HandleIconRemoved);
     }
+
+    private bool HandleIconRemoved(string iconId)
+    {
+        return iconId == Item.IconId;
+    }
+
+    private void OnIconRemoved(string iconId)
+    {
+        Item.IconId = null;
+        Icon = Icons.DefaultItemIcon;
+    }
+
 
     private void OnItemChanged(Item item)
     {

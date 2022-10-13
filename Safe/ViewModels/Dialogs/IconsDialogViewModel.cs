@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
 using Microsoft.Win32;
 using Prism.Commands;
@@ -26,9 +27,24 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
         );
 
         AddNewIconCommand = new DelegateCommand(OnAddNewIcon);
+        DeleteIconCommand = new DelegateCommand(OnDeleteIcon, CanDeleteIcon)
+            .ObservesProperty(() => SelectedIcon);
         SelectIconCommand = new DelegateCommand(OnSelectIcon, CanSelectIcon)
             .ObservesProperty(() => SelectedIcon);
         CancelCommand = new DelegateCommand(OnCancel);
+    }
+
+    private bool CanDeleteIcon() => SelectedIcon != null;
+
+    private void OnDeleteIcon()
+    {
+        var icon = SelectedIcon!;
+
+        _iconsRepository.DeleteIcon(icon.Id);
+
+        Icons.Remove(icon);
+
+        EventAggregator.GetEvent<IconRemoved>().Publish(icon.Id);
     }
 
     private void OnAddNewIcon()
@@ -36,7 +52,9 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
         var openDialog = new OpenFileDialog
         {
             CheckFileExists = true,
-            CheckPathExists = true
+            CheckPathExists = true,
+            Filter = "SVG files|*.svg",
+            DefaultExt = ".svg"
         };
 
         if (openDialog.ShowDialog() == true)
@@ -92,6 +110,7 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
     public event Action<IDialogResult>? RequestClose;
 
     public DelegateCommand AddNewIconCommand { get; }
+    public DelegateCommand DeleteIconCommand { get; }
     public DelegateCommand SelectIconCommand { get; }
     public DelegateCommand CancelCommand { get; }
 }

@@ -26,6 +26,19 @@ public class ItemTreeViewModel : ItemViewModelBase
         set => SetProperty(ref _parent, value);
     }
 
+    private string? _iconId;
+    public string? IconId
+    {
+        get => _iconId;
+        set
+        {
+            if (SetProperty(ref _iconId, value))
+            {
+                Icon = _iconsRepository.GetIcon(value);
+            }
+        }
+    }
+
     public ItemTreeViewModel(
         IItemsRepository itemsRepository,
         IIconsRepository iconsRepository,
@@ -37,10 +50,10 @@ public class ItemTreeViewModel : ItemViewModelBase
         _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
 
         Item = item;
+        IconId = Item?.IconId;
 
         Title = Item?.Title ?? "Root";
         Description = Item?.Description ?? string.Empty;
-        Icon = _iconsRepository.GetIcon(Item?.IconId);
 
         _subItems = new Lazy<ObservableCollection<ItemTreeViewModel>>(CreateSubItems);
 
@@ -70,9 +83,28 @@ public class ItemTreeViewModel : ItemViewModelBase
                 .Subscribe(OnStorageDetailsChanged);
         }
 
+        EventAggregator.GetEvent<IconRemoved>()
+            .Subscribe(OnIconRemoved, ThreadOption.PublisherThread,
+                false, HandleIconRemoved);
+
         EventAggregator.GetEvent<ItemDeleted>()
             .Subscribe(OnItemDeleted, ThreadOption.PublisherThread,
                 false, HandleItemDeleted);
+    }
+
+    private bool HandleIconRemoved(string iconId)
+    {
+        return iconId == IconId;
+    }
+
+    private void OnIconRemoved(string iconId)
+    {
+        if (Item != null)
+        {
+            Item.IconId = null;
+        }
+
+        IconId = null;
     }
 
     private void OnItemDeleted(Item item)
@@ -98,7 +130,7 @@ public class ItemTreeViewModel : ItemViewModelBase
 
         Title = storageInfo.Title;
         Description = storageInfo.Description ?? string.Empty;
-        Icon = _iconsRepository.GetIcon(storageInfo.IconId);
+        IconId = storageInfo.IconId;
     }
 
     private bool HandleItemChanged(Item item)

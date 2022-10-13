@@ -20,6 +20,7 @@
     <v:String x:Key="SelectIcon">Select icon</v:String>
     <v:String x:Key="AddFields">Add fields</v:String>
     <v:String x:Key="AddNewIcon">Add new ...</v:String>
+    <v:String x:Key="DeleteIcon">Delete</v:String>
     <v:String x:Key="EnterStorageTitle">Enter the storage title:</v:String>
     <v:String x:Key="EnterStorageDescription">Enter the storage description:</v:String>
     <v:String x:Key="EnterPassword">Enter the password for the new storage:</v:String>

@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.Services;
 using Prism.Regions;
 
@@ -52,7 +51,7 @@ namespace EdlinSoftware.Safe.ViewModels
                     RegionManager = RegionManager,
                     Title = storageInfo.Title,
                     Description = storageInfo.Description ?? string.Empty,
-                    Icon = _iconsRepository.GetIcon(storageInfo.IconId)
+                    IconId = storageInfo.IconId
                 }
             });
         }

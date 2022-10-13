@@ -20,6 +20,7 @@
     <v:String x:Key="SelectIcon">Выбрать иконку</v:String>
     <v:String x:Key="AddFields">Добавить поля</v:String>
     <v:String x:Key="AddNewIcon">Добавить новую ...</v:String>
+    <v:String x:Key="DeleteIcon">Удалить</v:String>
     <v:String x:Key="EnterStorageTitle">Введите заголовок хранилища:</v:String>
     <v:String x:Key="EnterStorageDescription">Введите описание хранилища:</v:String>
     <v:String x:Key="EnterPassword">Введите пароль для нового хранилища:</v:String>

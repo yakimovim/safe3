@@ -18,7 +18,7 @@ namespace EdlinSoftware.Safe.ViewModels
         private readonly IItemsRepository _itemsRepository;
         private readonly IIconsRepository _iconsRepository;
 
-        private Item _item;
+        private Item _item = null!;
 
         private string? _iconId;
         public string? IconId
@@ -41,6 +41,21 @@ namespace EdlinSoftware.Safe.ViewModels
             AddFieldsCommand = new DelegateCommand(OnAddFields);
 
             Fields.CollectionChanged += FieldsCollectionChanged;
+        }
+
+        protected override void SubscribeToEvents()
+        {
+            EventAggregator.GetEvent<IconRemoved>()
+                .Subscribe(OnIconRemoved);
+        }
+
+        private void OnIconRemoved(string iconId)
+        {
+            if (IconId == iconId)
+            {
+                IconId = null;
+                Icon = Icons.DefaultItemIcon;
+            }
         }
 
         private void FieldsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
