@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using EdlinSoftware.Safe.Services;
 using Prism.Commands;
 using Prism.Regions;
@@ -113,7 +114,7 @@ namespace EdlinSoftware.Safe.ViewModels
 
             if (ConfirmPassword != Password)
             {
-                ValidationErrors[nameof(ConfirmPassword)] = "Passwords are different";
+                ValidationErrors[nameof(ConfirmPassword)] = (string) Application.Current.Resources["PasswordsAreDifferentValidationMessage"];
             }
             else
             {

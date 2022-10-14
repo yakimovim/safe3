@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Views.Dialogs;
 using Prism.Commands;
@@ -92,7 +93,7 @@ public class FieldsDialogViewModel : ViewModelBase, IDialogAware
         SelectedFields.Clear();
     }
 
-    public string Title { get; } = "Select fields";
+    public string Title { get; } = (string) Application.Current.Resources["AddFieldsDialogTitle"];
 
     public event Action<IDialogResult>? RequestClose;
 

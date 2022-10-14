@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System.Windows;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -19,7 +20,7 @@ namespace EdlinSoftware.Safe.ViewModels
                 AddExtension = true,
                 DefaultExt = ".safe",
                 CheckFileExists = false,
-                Filter = "Safe storage|*.safe"
+                Filter = $"{Application.Current.Resources["StorageFileFilter"]}|*.safe"
             };
             if (openDialog.ShowDialog() == true)
             {
@@ -37,7 +38,7 @@ namespace EdlinSoftware.Safe.ViewModels
             {
                 DefaultExt = ".safe",
                 CheckFileExists = true,
-                Filter = "Safe storage|*.safe"
+                Filter = $"{Application.Current.Resources["StorageFileFilter"]}|*.safe"
             };
             if(openDialog.ShowDialog() == true)
             {

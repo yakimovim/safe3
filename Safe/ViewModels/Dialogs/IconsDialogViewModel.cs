@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
@@ -53,7 +54,7 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
         {
             CheckFileExists = true,
             CheckPathExists = true,
-            Filter = "SVG files|*.svg",
+            Filter = $"{Application.Current.Resources["SvgFileFilter"]}|*.svg",
             DefaultExt = ".svg"
         };
 
@@ -105,7 +106,7 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
         set => SetProperty(ref _selectedIcon, value);
     }
 
-    public string Title { get; } = "Select an icon";
+    public string Title { get; } = (string) Application.Current.Resources["SelectIconDialogTitle"];
 
     public event Action<IDialogResult>? RequestClose;
 

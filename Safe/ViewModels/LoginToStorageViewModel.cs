@@ -70,7 +70,7 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand LoginCommand { get; }
         public DelegateCommand CancelCommand { get; }
 
-        private string _password;
+        private string _password = string.Empty;
 
         public string Password 
         {

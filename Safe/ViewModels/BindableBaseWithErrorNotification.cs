@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using Prism.Mvvm;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -36,7 +37,7 @@ public abstract class BindableBaseWithErrorNotification
     {
         if (string.IsNullOrWhiteSpace(propertyValue))
         {
-            ValidationErrors[propertyName] = message ?? $"{propertyName} can't be empty";
+            ValidationErrors[propertyName] = message ?? $"{propertyName} {Application.Current.Resources["PropertyCantBeEmptyValidationMessage"]}";
         }
         else
         {
@@ -50,7 +51,7 @@ public abstract class BindableBaseWithErrorNotification
     {
         if (string.IsNullOrEmpty(propertyValue))
         {
-            ValidationErrors[propertyName] = message ?? $"{propertyName} can't be empty";
+            ValidationErrors[propertyName] = message ?? $"{propertyName} {Application.Current.Resources["PropertyCantBeEmptyValidationMessage"]}";
         }
         else
         {

@@ -9,12 +9,12 @@ public abstract class ViewModelBase : BindableBaseWithErrorNotification, INaviga
 {
     [Dependency] public IRegionManager RegionManager { get; set; } = null!;
 
-    private IEventAggregator _eventAggregator = null!;
+    private IEventAggregator? _eventAggregator;
 
     [Dependency]
     public IEventAggregator EventAggregator
     {
-        get => _eventAggregator;
+        get => _eventAggregator!;
         set
         {
             _eventAggregator = value;

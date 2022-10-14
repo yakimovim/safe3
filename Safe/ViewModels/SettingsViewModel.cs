@@ -57,7 +57,7 @@ internal class SettingsViewModel : ViewModelBase
 
     public ObservableCollection<CultureInfo> Languages { get; } = new();
 
-    private CultureInfo _selectedLanguage;
+    private CultureInfo _selectedLanguage = null!;
     public CultureInfo SelectedLanguage
     {
         get => _selectedLanguage;

@@ -29,4 +29,10 @@
     <v:String x:Key="CreateSubItem">Создать подэлемент</v:String>
     <v:String x:Key="DeleteField">Удалить поле</v:String>
     <v:String x:Key="MoveField">Переместить поле</v:String>
+    <v:String x:Key="SelectIconDialogTitle">Выберите иконку</v:String>
+    <v:String x:Key="AddFieldsDialogTitle">Выберите поля</v:String>
+    <v:String x:Key="StorageFileFilter">Хранилища</v:String>
+    <v:String x:Key="SvgFileFilter">SVG файлы</v:String>
+    <v:String x:Key="PasswordsAreDifferentValidationMessage">Введённые пароли отличаются</v:String>
+    <v:String x:Key="PropertyCantBeEmptyValidationMessage">не может быть пустым</v:String>
 </ResourceDictionary>

@@ -1,7 +1,6 @@
 ﻿using System;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
-using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.Storage.Model;
 using Prism.Commands;
 using Prism.Regions;
