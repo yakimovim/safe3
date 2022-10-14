@@ -36,4 +36,8 @@
     <v:String x:Key="SvgFileFilter">SVG files</v:String>
     <v:String x:Key="PasswordsAreDifferentValidationMessage">Passwords are different</v:String>
     <v:String x:Key="PropertyCantBeEmptyValidationMessage">can't be empty</v:String>
+    <v:String x:Key="No">No</v:String>
+    <v:String x:Key="Yes">Yes</v:String>
+    <v:String x:Key="DeleteIconConfirmation">Do you really want to delete this icon?</v:String>
+    <v:String x:Key="DeleteFieldConfirmation">Do you really want to delete this field?</v:String>
 </ResourceDictionary>

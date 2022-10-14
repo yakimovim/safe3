@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
@@ -10,6 +11,7 @@ using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels
 {
@@ -170,9 +172,15 @@ namespace EdlinSoftware.Safe.ViewModels
 
         private void OnFieldDeleted(object? sender, FieldViewModel field)
         {
-            field.Deleted -= OnFieldDeleted;
-            Fields.Remove(field);
-            SaveChangesCommand.RaiseCanExecuteChanged();
+            DialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteFieldConfirmation"], res =>
+            {
+                if (res == ButtonResult.Yes)
+                {
+                    field.Deleted -= OnFieldDeleted;
+                    Fields.Remove(field);
+                    SaveChangesCommand.RaiseCanExecuteChanged();
+                }
+            });
         }
 
         public DelegateCommand SaveChangesCommand { get; }

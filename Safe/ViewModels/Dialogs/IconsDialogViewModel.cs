@@ -39,13 +39,19 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
 
     private void OnDeleteIcon()
     {
-        var icon = SelectedIcon!;
+        DialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteIconConfirmation"], res =>
+        {
+            if (res == ButtonResult.Yes)
+            {
+                var icon = SelectedIcon!;
 
-        _iconsRepository.DeleteIcon(icon.Id);
+                _iconsRepository.DeleteIcon(icon.Id);
 
-        Icons.Remove(icon);
+                Icons.Remove(icon);
 
-        EventAggregator.GetEvent<IconRemoved>().Publish(icon.Id);
+                EventAggregator.GetEvent<IconRemoved>().Publish(icon.Id);
+            }
+        });
     }
 
     private void OnAddNewIcon()
