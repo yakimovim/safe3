@@ -5,18 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             xmlns:convs="clr-namespace:EdlinSoftware.Safe.Views.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <convs:StringToVisibilityConverter x:Key="StringToVisibility" />
+    </UserControl.Resources>
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <Image Source="{Binding Icon}" Width="16" Height="16" />
             <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}"/>
             <TextBlock Text="{Binding Title}" Style="{StaticResource ValueTextBox}"/>
-            <TextBlock Text="{DynamicResource DescriptionWithColon}" Style="{StaticResource TextBoxLabel}" />
-            <TextBlock Text="{Binding Description}" Style="{StaticResource ValueTextBox}" />
-            <TextBlock Text="{DynamicResource TagsWithColon}" Style="{StaticResource TextBoxLabel}" />
-            <TextBlock Text="{Binding Tags}" Style="{StaticResource ValueTextBox}" />
+            <TextBlock 
+                Visibility="{Binding Description, Converter={StaticResource StringToVisibility}}"
+                Text="{DynamicResource DescriptionWithColon}" 
+                Style="{StaticResource TextBoxLabel}" />
+            <TextBlock 
+                Visibility="{Binding Description, Converter={StaticResource StringToVisibility}}"
+                Text="{Binding Description}" 
+                Style="{StaticResource ValueTextBox}" />
+            <TextBlock 
+                Visibility="{Binding Tags, Converter={StaticResource StringToVisibility}}"
+                Text="{DynamicResource TagsWithColon}" 
+                Style="{StaticResource TextBoxLabel}" />
+            <TextBlock 
+                Visibility="{Binding Tags, Converter={StaticResource StringToVisibility}}"
+                Text="{Binding Tags}" 
+                Style="{StaticResource ValueTextBox}" />
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Fields}">
