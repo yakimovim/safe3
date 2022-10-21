@@ -22,7 +22,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\Dialogs\" />
     <Folder Include="ViewModels\Controls\" />
     <Folder Include="Views\Converters\" />
   </ItemGroup>

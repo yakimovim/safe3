@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="Safe" Height="350" Width="525" >
+        Title="Safe" Height="350" Width="525" 
+        Icon="{StaticResource ShieldDrawingImage}">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{DynamicResource File}">
                 <MenuItem Header="{DynamicResource Close}" Command="{Binding CloseStorageCommand}" />
                 <Separator />
+                <MenuItem Header="{DynamicResource GeneratePasswordWithDots}" Command="{Binding GeneratePasswordCommand}" />
                 <MenuItem Header="{DynamicResource Settings}" Command="{Binding SettingsCommand}" />
                 <Separator />
                 <MenuItem Header="{DynamicResource Exit}" Command="{Binding ExitCommand}" />

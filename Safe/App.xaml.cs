@@ -26,6 +26,7 @@ namespace EdlinSoftware.Safe
             containerRegistry.RegisterSingleton<IConfigurationService, ConfigurationService>();
             containerRegistry.RegisterSingleton<IStorageService, StorageService>();
             containerRegistry.RegisterSingleton<ILanguagesService, LanguagesService>();
+            containerRegistry.Register<IPasswordGenerator, PasswordGenerator>();
 
             var connectionProvider = new LiteDbConnectionProvider();
             containerRegistry.RegisterSingleton<Storage.ILiteDbConnectionProvider>(() => connectionProvider);
@@ -40,6 +41,7 @@ namespace EdlinSoftware.Safe
             containerRegistry.RegisterDialog<IconsDialog, IconsDialogViewModel>();
             containerRegistry.RegisterDialog<FieldsDialog, FieldsDialogViewModel>();
             containerRegistry.RegisterDialog<ConfirmationDialog, ConfirmationDialogViewModel>();
+            containerRegistry.RegisterDialog<PasswordGenerationDialog, PasswordGenerationDialogViewModel>();
 
             RegisterViewsForNavigation(containerRegistry);
         }

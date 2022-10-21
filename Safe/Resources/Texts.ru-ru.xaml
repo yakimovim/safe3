@@ -40,4 +40,6 @@
     <v:String x:Key="Yes">Да</v:String>
     <v:String x:Key="DeleteIconConfirmation">Вы действительно хотите удалить эту иконку?</v:String>
     <v:String x:Key="DeleteFieldConfirmation">Вы действительно хотите удалить это поле?</v:String>
+    <v:String x:Key="GeneratePasswordWithDots">Сгенерировать пароль...</v:String>
+    <v:String x:Key="GeneratePasswordDialogHeader">Генерация пароля</v:String>
 </ResourceDictionary>

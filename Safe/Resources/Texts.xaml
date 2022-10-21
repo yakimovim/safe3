@@ -40,4 +40,6 @@
     <v:String x:Key="Yes">Yes</v:String>
     <v:String x:Key="DeleteIconConfirmation">Do you really want to delete this icon?</v:String>
     <v:String x:Key="DeleteFieldConfirmation">Do you really want to delete this field?</v:String>
+    <v:String x:Key="GeneratePasswordWithDots">Generate password...</v:String>
+    <v:String x:Key="GeneratePasswordDialogHeader">Generate password</v:String>
 </ResourceDictionary>

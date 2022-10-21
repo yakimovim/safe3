@@ -11,6 +11,10 @@
             <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxLabel">
                 <Setter Property="Margin" Value="0,0,0,3"/>
             </Style>
+            <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxInGrid">
+                <Setter Property="Margin" Value="0,0,5,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
             <Style TargetType="{x:Type TextBlock}" x:Key="ValueTextBox">
                 <Setter Property="Margin" Value="0,0,0,10"/>
                 <Setter Property="FontWeight" Value="DemiBold"/>

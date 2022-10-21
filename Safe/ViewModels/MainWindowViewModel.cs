@@ -20,6 +20,12 @@ internal class MainWindowViewModel : ViewModelBase
         ExitCommand = new DelegateCommand(OnExit);
         CloseStorageCommand = new DelegateCommand(OnCloseStorage);
         SettingsCommand = new DelegateCommand(OnSettings);
+        GeneratePasswordCommand = new DelegateCommand(OnGeneratePassword);
+    }
+
+    private void OnGeneratePassword()
+    {
+        DialogService.Show("PasswordGenerationDialog", null, res => { });
     }
 
     private void OnSettings()
@@ -46,6 +52,8 @@ internal class MainWindowViewModel : ViewModelBase
     public DelegateCommand ExitCommand { get; }
 
     public DelegateCommand SettingsCommand { get; }
+    
+    public DelegateCommand GeneratePasswordCommand { get; }
     
     public DelegateCommand CloseStorageCommand { get; }
 }
