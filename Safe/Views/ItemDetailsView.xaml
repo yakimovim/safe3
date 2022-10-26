@@ -40,13 +40,31 @@
                     <DataTemplate DataType="{x:Type vm:TextFieldViewModel}">
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TextBoxLabel}"/>
-                            <TextBox Text="{Binding Text}" Style="{StaticResource InputElement}"/>
+                            <DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+                                <Button DockPanel.Dock="Left" 
+                                        Style="{StaticResource SmallButtonWithImage}"
+                                        Margin="0,0,2,10"
+                                        Command="{Binding CopyToClipboardCommand}">
+                                    <Image Source="{StaticResource CopyDrawingImage}"
+                                           Style="{StaticResource SmallInButtonImage}"/>
+                                </Button>
+                                <TextBox VerticalAlignment="Center" Text="{Binding Text}" Style="{StaticResource InputElement}"/>
+                            </DockPanel>
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:PasswordFieldViewModel}">
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Name}" Style="{StaticResource TextBoxLabel}"/>
-                            <TextBox Text="{Binding Password}" Style="{StaticResource InputElement}"/>
+                            <DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+                                <Button DockPanel.Dock="Left" 
+                                        Style="{StaticResource SmallButtonWithImage}"
+                                        Margin="0,0,2,10"
+                                        Command="{Binding CopyToClipboardCommand}">
+                                    <Image Source="{StaticResource CopyDrawingImage}"
+                                           Style="{StaticResource SmallInButtonImage}"/>
+                                </Button>
+                                <TextBox Text="{Binding Password}" Style="{StaticResource InputElement}"/>
+                            </DockPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.Resources>

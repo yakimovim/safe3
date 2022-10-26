@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Windows;
 using EdlinSoftware.Safe.Domain.Model;
 using Prism.Commands;
 
@@ -22,6 +23,7 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
             .ObservesProperty(() => ContainingCollection);
         MoveDownCommand = new DelegateCommand(OnMoveDown, CanMoveDown)
             .ObservesProperty(() => ContainingCollection);
+        CopyToClipboardCommand = new DelegateCommand(OnCopyToClipboard);
 
         Validate();
     }
@@ -39,6 +41,8 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
 
         RaiseErrorsChanged(nameof(Name));
     }
+
+    protected abstract void OnCopyToClipboard();
 
     private bool CanMoveDown()
     {
@@ -140,6 +144,7 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
     public DelegateCommand DeleteCommand { get; }
     public DelegateCommand MoveUpCommand { get; }
     public DelegateCommand MoveDownCommand { get; }
+    public DelegateCommand CopyToClipboardCommand { get; }
 }
 
 public sealed class TextFieldViewModel : FieldViewModel
@@ -164,6 +169,11 @@ public sealed class TextFieldViewModel : FieldViewModel
                 RaisePropertyChanged();
             }
         }
+    }
+
+    protected override void OnCopyToClipboard()
+    {
+        Clipboard.SetText(Text);
     }
 
     public override FieldViewModel MakeCopy()
@@ -194,6 +204,11 @@ public sealed class PasswordFieldViewModel : FieldViewModel
                 RaisePropertyChanged();
             }
         }
+    }
+
+    protected override void OnCopyToClipboard()
+    {
+        Clipboard.SetText(Password);
     }
 
     public override FieldViewModel MakeCopy()
