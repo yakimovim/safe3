@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows;
 using EdlinSoftware.Safe.Domain.Model;
@@ -19,10 +18,6 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
 
 
         DeleteCommand = new DelegateCommand(OnDelete);
-        MoveUpCommand = new DelegateCommand(OnMoveUp, CanMoveUp)
-            .ObservesProperty(() => ContainingCollection);
-        MoveDownCommand = new DelegateCommand(OnMoveDown, CanMoveDown)
-            .ObservesProperty(() => ContainingCollection);
         CopyToClipboardCommand = new DelegateCommand(OnCopyToClipboard);
 
         Validate();
@@ -44,78 +39,11 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
 
     protected abstract void OnCopyToClipboard();
 
-    private bool CanMoveDown()
-    {
-        if (ContainingCollection == null) return false;
-
-        var index = ContainingCollection.IndexOf(this);
-
-        return index < ContainingCollection.Count - 1;
-    }
-
-    private void OnMoveDown()
-    {
-        var index = ContainingCollection!.IndexOf(this);
-
-        ContainingCollection.Move(index, index + 1);
-
-        MoveUpCommand.RaiseCanExecuteChanged();
-        MoveDownCommand.RaiseCanExecuteChanged();
-
-        var anotherMovedItem = ContainingCollection[index];
-
-        anotherMovedItem.MoveUpCommand.RaiseCanExecuteChanged();
-        anotherMovedItem.MoveDownCommand.RaiseCanExecuteChanged();
-    }
-
-    private bool CanMoveUp()
-    {
-        if (ContainingCollection == null) return false;
-
-        var index = ContainingCollection.IndexOf(this);
-
-        return index > 0;
-    }
-
-    private void OnMoveUp()
-    {
-        var index = ContainingCollection!.IndexOf(this);
-
-        ContainingCollection.Move(index, index - 1);
-
-        MoveUpCommand.RaiseCanExecuteChanged();
-        MoveDownCommand.RaiseCanExecuteChanged();
-
-        var anotherMovedItem = ContainingCollection[index];
-
-        anotherMovedItem.MoveUpCommand.RaiseCanExecuteChanged();
-        anotherMovedItem.MoveDownCommand.RaiseCanExecuteChanged();
-    }
-
     private ObservableCollection<FieldViewModel>? _containingCollection;
     public ObservableCollection<FieldViewModel>? ContainingCollection
     {
         get => _containingCollection;
-        set
-        {
-            if (_containingCollection != null)
-            {
-                _containingCollection.CollectionChanged -= OnContainingCollectionChanged;
-            }
-
-            SetProperty(ref _containingCollection, value);
-
-            if (_containingCollection != null)
-            {
-                _containingCollection.CollectionChanged += OnContainingCollectionChanged;
-            }
-        }
-    }
-
-    private void OnContainingCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        MoveDownCommand.RaiseCanExecuteChanged();
-        MoveUpCommand.RaiseCanExecuteChanged();
+        set => SetProperty(ref _containingCollection, value);
     }
 
     private void OnDelete()
@@ -142,8 +70,6 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
     public abstract FieldViewModel MakeCopy();
 
     public DelegateCommand DeleteCommand { get; }
-    public DelegateCommand MoveUpCommand { get; }
-    public DelegateCommand MoveDownCommand { get; }
     public DelegateCommand CopyToClipboardCommand { get; }
 }
 
