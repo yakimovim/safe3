@@ -20,14 +20,14 @@ namespace EdlinSoftware.Safe.Services
 
     public class StorageOpeningOptions
     {
-        public string FileName { get; set; }
+        public string FileName { get; set; } = string.Empty;
 
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 
     public class StorageCreationOptions : StorageOpeningOptions
     {
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
     }
 

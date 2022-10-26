@@ -6,14 +6,24 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             MinWidth="800" MinHeight="600"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="5,5,5,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <ListView Grid.Row="0" ItemsSource="{Binding Icons}"
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="MinWidth" Value="450" />
+            <Setter Property="MinHeight" Value="250" />
+            <Setter Property="Width" Value="800" />
+            <Setter Property="Height" Value="450" />
+            <Setter Property="Icon" Value="{StaticResource ShieldDrawingImage}" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <DockPanel LastChildFill="True" Margin="5,5,5,0">
+        <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ActionButtonsStackPanel}">
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource DeleteIcon}" Command="{Binding DeleteIconCommand}"/>
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource AddNewIcon}" Command="{Binding AddNewIconCommand}"/>
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Ok}" Command="{Binding SelectIconCommand}"/>
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+        <ListView ItemsSource="{Binding Icons}"
                   SelectedItem="{Binding SelectedIcon}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -28,11 +38,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackPanel Grid.Row="1" Style="{StaticResource ActionButtonsStackPanel}">
-            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource DeleteIcon}" Command="{Binding DeleteIconCommand}"/>
-            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource AddNewIcon}" Command="{Binding AddNewIconCommand}"/>
-            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Ok}" Command="{Binding SelectIconCommand}"/>
-            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Cancel}" Command="{Binding CancelCommand}"/>
-        </StackPanel>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -5,14 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             Height="80" MinWidth="500">
+             mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Icon" Value="{StaticResource ShieldDrawingImage}" />
+            <Setter Property="Height" Value="100" />
+            <Setter Property="Width" Value="500" />
+            <Setter Property="MinHeight" Value="100" />
+            <Setter Property="MinWidth" Value="500" />
+        </Style>
+    </prism:Dialog.WindowStyle>
     <Grid>
         <StackPanel Style="{StaticResource ActionButtonsStackPanel}" 
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource No}" Command="{Binding NoCommand}" />
             <Button Style="{StaticResource ActionButton}" Content="{DynamicResource Yes}" Command="{Binding YesCommand}" />
+            <Button Style="{StaticResource ActionButton}" Content="{DynamicResource No}" Command="{Binding NoCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>
