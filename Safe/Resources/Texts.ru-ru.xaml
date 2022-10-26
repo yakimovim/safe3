@@ -42,4 +42,6 @@
     <v:String x:Key="DeleteFieldConfirmation">Вы действительно хотите удалить это поле?</v:String>
     <v:String x:Key="GeneratePasswordWithDots">Сгенерировать пароль...</v:String>
     <v:String x:Key="GeneratePasswordDialogHeader">Генерация пароля</v:String>
+    <v:String x:Key="CopyToClipboard">Копировать в буфер обмена</v:String>
+    <v:String x:Key="TogglePasswordVisibility">Изменить видимость пароля</v:String>
 </ResourceDictionary>

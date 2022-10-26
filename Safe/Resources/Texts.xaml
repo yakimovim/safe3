@@ -42,4 +42,6 @@
     <v:String x:Key="DeleteFieldConfirmation">Do you really want to delete this field?</v:String>
     <v:String x:Key="GeneratePasswordWithDots">Generate password...</v:String>
     <v:String x:Key="GeneratePasswordDialogHeader">Generate password</v:String>
+    <v:String x:Key="CopyToClipboard">Copy to clipboard</v:String>
+    <v:String x:Key="TogglePasswordVisibility">Toggle password visibility</v:String>
 </ResourceDictionary>

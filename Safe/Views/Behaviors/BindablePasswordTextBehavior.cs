@@ -52,6 +52,8 @@ namespace EdlinSoftware.Safe.Views.Behaviors
             base.OnAttached();
 
             AssociatedObject.PasswordChanged += OnPasswordChanged;
+
+            AssociatedObject.Password = (string) Text;
         }
 
         protected override void OnDetaching()

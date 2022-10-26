@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Services;
 using Prism.Commands;
 
@@ -18,7 +19,7 @@ internal class MainWindowViewModel : ViewModelBase
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
         ExitCommand = new DelegateCommand(OnExit);
-        CloseStorageCommand = new DelegateCommand(OnCloseStorage);
+        CloseStorageCommand = new DelegateCommand(OnCloseStorage, CanCloseStorage);
         SettingsCommand = new DelegateCommand(OnSettings);
         GeneratePasswordCommand = new DelegateCommand(OnGeneratePassword);
     }
@@ -33,6 +34,8 @@ internal class MainWindowViewModel : ViewModelBase
         RegionManager.RequestNavigationToMainContent("Settings");
     }
 
+    private bool CanCloseStorage() => _storageService.StorageIsOpened;
+
     private void OnCloseStorage()
     {
         _storageService.CloseStorage();
@@ -41,12 +44,22 @@ internal class MainWindowViewModel : ViewModelBase
         configuration.LastOpenedStorage = null;
         _configurationService.SaveConfiguration(configuration);
 
+        RegionManager.RequestNavigationToDetails("Blank");
         RegionManager.RequestNavigationToMainContent("CreateOrOpenStorage");
     }
 
     private void OnExit()
     {
         Application.Current.Shutdown(0);
+    }
+
+    protected override void SubscribeToEvents()
+    {
+        EventAggregator.GetEvent<StorageChanged>()
+            .Subscribe(() =>
+            {
+                CloseStorageCommand.RaiseCanExecuteChanged();
+            });
     }
 
     public DelegateCommand ExitCommand { get; }
