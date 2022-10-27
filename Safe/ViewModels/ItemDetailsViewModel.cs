@@ -6,6 +6,7 @@ using System.Linq;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Images;
+using Prism.Commands;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -23,6 +24,15 @@ public class ItemDetailsViewModel : ItemViewModelBase
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+
+        EditItemCommand = new DelegateCommand(OnEditItem);
+    }
+
+    private void OnEditItem()
+    {
+        var parameters = new NavigationParameters
+            { { "Item", _item } };
+        RegionManager.RequestNavigationToDetails("EditItem", parameters);
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -63,4 +73,6 @@ public class ItemDetailsViewModel : ItemViewModelBase
             _itemsRepository.SaveItem(_item);
         }
     }
+
+    public DelegateCommand EditItemCommand { get; }
 }

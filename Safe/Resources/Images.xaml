@@ -64,4 +64,24 @@
             </DrawingGroup>
         </DrawingImage.Drawing>
     </DrawingImage>
+    <DrawingImage x:Key="SearchDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                <DrawingGroup.Transform>
+                    <TranslateTransform X="0.032021500170230865" Y="0.032021574676036835" />
+                </DrawingGroup.Transform>
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M24,24z M0,0z M24,22.586L17.738,16.324A10.016,10.016,0,1,0,16.324,17.738L22.586,24z M10,18A8,8,0,1,1,18,10A8.009,8.009,0,0,1,10,18z" />
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    <DrawingImage x:Key="EditDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                <GeometryDrawing Brush="#FF000000" Geometry="F1 M24,24z M0,0z M18.656,0.93L6.464,13.122A4.966,4.966,0,0,0,5,16.657L5,18A1,1,0,0,0,6,19L7.343,19A4.966,4.966,0,0,0,10.878,17.536L23.07,5.344A3.125,3.125,0,0,0,23.07,0.930000000000001A3.194,3.194,0,0,0,18.656,0.93z M21.656,3.93L9.464,16.122A3.02,3.02,0,0,1,7.343,17L7,17 7,16.657A3.02,3.02,0,0,1,7.878,14.536L20.07,2.344A1.148,1.148,0,0,1,21.656,2.344A1.123,1.123,0,0,1,21.656,3.93z" />
+                <GeometryDrawing Brush="#FF000000" Geometry="F1 M24,24z M0,0z M23,8.979A1,1,0,0,0,22,9.979L22,15 18,15A3,3,0,0,0,15,18L15,22 5,22A3,3,0,0,1,2,19L2,5A3,3,0,0,1,5,2L14.042,2A1,1,0,0,0,14.042,0L5,0A5.006,5.006,0,0,0,0,5L0,19A5.006,5.006,0,0,0,5,24L16.343,24A4.968,4.968,0,0,0,19.879,22.536L22.535,19.878A4.968,4.968,0,0,0,24,16.343L24,9.979A1,1,0,0,0,23,8.979z M18.465,21.122A2.975,2.975,0,0,1,17,21.922L17,18A1,1,0,0,1,18,17L21.925,17A3.016,3.016,0,0,1,21.125,18.464z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 </ResourceDictionary>

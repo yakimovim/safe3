@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Images;
+using Prism.Commands;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -17,6 +18,13 @@ public class StorageDetailsViewModel : ViewModelBase
     {
         _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+
+        EditStorageCommand = new DelegateCommand(OnEditStorage);
+    }
+
+    private void OnEditStorage()
+    {
+        RegionManager.RequestNavigationToDetails("EditStorageDetails");
     }
 
     private string _title = string.Empty;
@@ -48,4 +56,5 @@ public class StorageDetailsViewModel : ViewModelBase
         Description = storageInfo.Description ?? string.Empty;
         Icon = _iconsRepository.GetIcon(storageInfo.IconId);
     }
+    public DelegateCommand EditStorageCommand { get; }
 }

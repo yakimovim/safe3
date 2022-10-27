@@ -99,7 +99,7 @@ public sealed class TextFieldViewModel : FieldViewModel
 
     protected override void OnCopyToClipboard()
     {
-        Clipboard.SetText(Text);
+        Clipboard.SetText(Text ?? string.Empty);
     }
 
     public override FieldViewModel MakeCopy()
@@ -134,7 +134,7 @@ public sealed class PasswordFieldViewModel : FieldViewModel
 
     protected override void OnCopyToClipboard()
     {
-        Clipboard.SetText(Password);
+        Clipboard.SetText(Password ?? string.Empty);
     }
 
     public override FieldViewModel MakeCopy()

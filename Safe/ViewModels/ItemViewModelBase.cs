@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Media;
 using EdlinSoftware.Safe.Images;
 
@@ -25,7 +27,20 @@ public abstract class ItemViewModelBase : ViewModelBase
     public string Tags
     {
         get => _tags;
-        set => SetProperty(ref _tags, value);
+        set => SetProperty(ref _tags, value, () =>
+        {
+            RaisePropertyChanged(nameof(TagsCollection));
+        });
+    }
+
+    public IReadOnlyCollection<string> TagsCollection
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Tags)) return Array.Empty<string>();
+
+            return Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 
     private ImageSource _icon = Icons.DefaultItemIcon;

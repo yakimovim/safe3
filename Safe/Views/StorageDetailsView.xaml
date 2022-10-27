@@ -12,16 +12,23 @@
         <convs:StringToVisibilityConverter x:Key="StringToVisibility" />
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
-        <Image Source="{Binding Icon}" Width="16" Height="16" />
-        <TextBlock Text="{DynamicResource TitleWithColon}" Style="{StaticResource TextBoxLabel}" />
-        <TextBlock Text="{Binding Title}" Style="{StaticResource ValueTextBox}"/>
+        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+            <Image DockPanel.Dock="Left" Source="{Binding Icon}" Width="24" Height="24"
+                   Margin="0,0,10,0"/>
+            <Button Command="{Binding EditStorageCommand}"
+                    DockPanel.Dock="Right"
+                    Background="Transparent">
+                <Image Width="23" Height="23" Source="{StaticResource EditDrawingImage}" />
+            </Button>
+            <TextBlock Text="{Binding Title}" Margin="0"
+                       FontSize="18" FontWeight="SemiBold"/>
+        </DockPanel>
         <TextBlock 
             Visibility="{Binding Description, Converter={StaticResource StringToVisibility}}"
             Text="{DynamicResource DescriptionWithColon}" 
             Style="{StaticResource TextBoxLabel}" />
         <TextBlock 
             Visibility="{Binding Description, Converter={StaticResource StringToVisibility}}"
-            Text="{Binding Description}" 
-            Style="{StaticResource ValueTextBox}"/>
+            Text="{Binding Description}" Margin="0,0,0,10"/>
     </StackPanel>
 </UserControl>
