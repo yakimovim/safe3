@@ -17,6 +17,7 @@
                    Margin="0,0,10,0"/>
             <Button Command="{Binding EditStorageCommand}"
                     DockPanel.Dock="Right"
+                    ToolTip="{DynamicResource EditStorage}"
                     Background="Transparent">
                 <Image Width="23" Height="23" Source="{StaticResource EditDrawingImage}" />
             </Button>

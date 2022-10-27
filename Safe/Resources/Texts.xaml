@@ -40,8 +40,12 @@
     <v:String x:Key="Yes">Yes</v:String>
     <v:String x:Key="DeleteIconConfirmation">Do you really want to delete this icon?</v:String>
     <v:String x:Key="DeleteFieldConfirmation">Do you really want to delete this field?</v:String>
+    <v:String x:Key="DeleteItemConfirmation">Do you really want to delete this item?</v:String>
     <v:String x:Key="GeneratePasswordWithDots">Generate password...</v:String>
     <v:String x:Key="GeneratePasswordDialogHeader">Generate password</v:String>
     <v:String x:Key="CopyToClipboard">Copy to clipboard</v:String>
     <v:String x:Key="TogglePasswordVisibility">Toggle password visibility</v:String>
+    <v:String x:Key="EditItem">Edit item</v:String>
+    <v:String x:Key="EditStorage">Edit storage</v:String>
+    <v:String x:Key="DeleteItem">Delete item</v:String>
 </ResourceDictionary>

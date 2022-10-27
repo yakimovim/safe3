@@ -47,8 +47,9 @@ namespace EdlinSoftware.Safe.ViewModels
             {
                 new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository)
                 {
-                    EventAggregator = EventAggregator,
+                    DialogService = DialogService,
                     RegionManager = RegionManager,
+                    EventAggregator = EventAggregator,
                     Title = storageInfo.Title,
                     Description = storageInfo.Description ?? string.Empty,
                     IconId = storageInfo.IconId

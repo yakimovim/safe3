@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
+using EdlinSoftware.Safe.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
@@ -146,8 +149,9 @@ public class ItemTreeViewModel : ItemViewModelBase
             new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository, info.NewItem)
             {
                 Parent = this,
-                EventAggregator = EventAggregator,
-                RegionManager = RegionManager
+                DialogService = DialogService,
+                RegionManager = RegionManager,
+                EventAggregator = EventAggregator
             }
         );
 
@@ -169,9 +173,15 @@ public class ItemTreeViewModel : ItemViewModelBase
 
     private void OnDeleteItem()
     {
-        Parent!.SubItems.Remove(this);
+        DialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteItemConfirmation"], res =>
+        {
+            if (res == ButtonResult.Yes)
+            {
+                Parent!.SubItems.Remove(this);
 
-        _itemsRepository.DeleteItem(Item!);
+                _itemsRepository.DeleteItem(Item!);
+            }
+        });
     }
 
     private void OnCreateItem()
@@ -201,6 +211,7 @@ public class ItemTreeViewModel : ItemViewModelBase
             .Select(i => new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository, i)
             {
                 Parent = this,
+                DialogService = DialogService,
                 EventAggregator = EventAggregator,
                 RegionManager = RegionManager
             })

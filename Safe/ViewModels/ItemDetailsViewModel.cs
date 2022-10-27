@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
+using EdlinSoftware.Safe.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
@@ -26,6 +30,23 @@ public class ItemDetailsViewModel : ItemViewModelBase
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
 
         EditItemCommand = new DelegateCommand(OnEditItem);
+        DeleteItemCommand = new DelegateCommand(OnDeleteItem);
+    }
+
+    private void OnDeleteItem()
+    {
+        if (_item != null)
+        {
+            DialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteItemConfirmation"], res =>
+            {
+                if (res == ButtonResult.Yes)
+                {
+                    _itemsRepository.DeleteItem(_item);
+
+                    EventAggregator.GetEvent<ItemDeleted>().Publish(_item);
+                }
+            });
+        }
     }
 
     private void OnEditItem()
@@ -75,4 +96,6 @@ public class ItemDetailsViewModel : ItemViewModelBase
     }
 
     public DelegateCommand EditItemCommand { get; }
+
+    public DelegateCommand DeleteItemCommand { get; }
 }
