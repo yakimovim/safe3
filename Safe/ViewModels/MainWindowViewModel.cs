@@ -20,9 +20,17 @@ internal class MainWindowViewModel : ViewModelBase
 
         ExitCommand = new DelegateCommand(OnExit);
         CloseStorageCommand = new DelegateCommand(OnCloseStorage, CanCloseStorage);
+        ChangePasswordCommand = new DelegateCommand(OnChangePassword, CanChangePassword);
         SettingsCommand = new DelegateCommand(OnSettings);
         GeneratePasswordCommand = new DelegateCommand(OnGeneratePassword);
     }
+
+    private void OnChangePassword()
+    {
+        RegionManager.RequestNavigationToMainContent("ChangePassword");
+    }
+
+    private bool CanChangePassword() => _storageService.StorageIsOpened;
 
     private void OnGeneratePassword()
     {
@@ -59,6 +67,7 @@ internal class MainWindowViewModel : ViewModelBase
             .Subscribe(() =>
             {
                 CloseStorageCommand.RaiseCanExecuteChanged();
+                ChangePasswordCommand.RaiseCanExecuteChanged();
             });
     }
 
@@ -69,4 +78,6 @@ internal class MainWindowViewModel : ViewModelBase
     public DelegateCommand GeneratePasswordCommand { get; }
     
     public DelegateCommand CloseStorageCommand { get; }
+    
+    public DelegateCommand ChangePasswordCommand { get; }
 }

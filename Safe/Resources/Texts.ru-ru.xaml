@@ -15,6 +15,7 @@
     <v:String x:Key="Close">Закрыть</v:String>
     <v:String x:Key="Login">Войти</v:String>
     <v:String x:Key="PasswordWithColon">Пароль:</v:String>
+    <v:String x:Key="PasswordIsInvalid">Пароль неверен</v:String>
     <v:String x:Key="File">Файл</v:String>
     <v:String x:Key="ClearIcon">Очистить иконку</v:String>
     <v:String x:Key="SelectIcon">Выбрать иконку</v:String>
@@ -48,4 +49,9 @@
     <v:String x:Key="EditItem">Изменить карточку</v:String>
     <v:String x:Key="EditStorage">Изменить описание хранилища</v:String>
     <v:String x:Key="DeleteItem">Удалить карточку</v:String>
+    <v:String x:Key="EnterOldPassword">Введите старый пароль</v:String>
+    <v:String x:Key="EnterNewPassword">Введите новый пароль</v:String>
+    <v:String x:Key="EnterNewPasswordAgain">Введите новый пароль ещё раз</v:String>
+    <v:String x:Key="ChangePassword">Сменить пароль</v:String>
+    <v:String x:Key="Change">Изменить</v:String>
 </ResourceDictionary>

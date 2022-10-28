@@ -45,6 +45,10 @@ namespace EdlinSoftware.Safe.ViewModels
 
                 RegionManager.RequestNavigationToMainContent("StorageContent");
             }
+            else
+            {
+                PasswordIsValid = false;
+            }
         }
 
         private void OnCancel()
@@ -61,6 +65,7 @@ namespace EdlinSoftware.Safe.ViewModels
             }
 
             Password = string.Empty;
+            PasswordIsValid = true;
 
             _storageFilePath = storageFilePath;
 
@@ -71,11 +76,17 @@ namespace EdlinSoftware.Safe.ViewModels
         public DelegateCommand CancelCommand { get; }
 
         private string _password = string.Empty;
-
         public string Password 
         {
             get => _password;
             set => SetProperty(ref _password, value);
+        }
+
+        private bool _passwordIsValid = true;
+        public bool PasswordIsValid
+        {
+            get => _passwordIsValid;
+            set => SetProperty(ref _passwordIsValid, value);
         }
     }
 }

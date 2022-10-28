@@ -15,6 +15,7 @@
     <v:String x:Key="Close">Close</v:String>
     <v:String x:Key="Login">Login</v:String>
     <v:String x:Key="PasswordWithColon">Password:</v:String>
+    <v:String x:Key="PasswordIsInvalid">Password is invalid</v:String>
     <v:String x:Key="File">File</v:String>
     <v:String x:Key="ClearIcon">Clear icon</v:String>
     <v:String x:Key="SelectIcon">Select icon</v:String>
@@ -48,4 +49,9 @@
     <v:String x:Key="EditItem">Edit item</v:String>
     <v:String x:Key="EditStorage">Edit storage</v:String>
     <v:String x:Key="DeleteItem">Delete item</v:String>
+    <v:String x:Key="EnterOldPassword">Enter old password</v:String>
+    <v:String x:Key="EnterNewPassword">Enter new password</v:String>
+    <v:String x:Key="EnterNewPasswordAgain">Enter new password again</v:String>
+    <v:String x:Key="ChangePassword">Change password</v:String>
+    <v:String x:Key="Change">Change</v:String>
 </ResourceDictionary>

@@ -10,6 +10,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{DynamicResource File}">
                 <MenuItem Header="{DynamicResource Close}" Command="{Binding CloseStorageCommand}" />
+                <MenuItem Header="{DynamicResource ChangePassword}" Command="{Binding ChangePasswordCommand}" />
                 <Separator />
                 <MenuItem Header="{DynamicResource GeneratePasswordWithDots}" Command="{Binding GeneratePasswordCommand}" />
                 <MenuItem Header="{DynamicResource Settings}" Command="{Binding SettingsCommand}" />

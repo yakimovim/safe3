@@ -26,10 +26,6 @@
         </DockPanel>
         <TextBlock 
             Visibility="{Binding Description, Converter={StaticResource StringToVisibility}}"
-            Text="{DynamicResource DescriptionWithColon}" 
-            Style="{StaticResource TextBoxLabel}" />
-        <TextBlock 
-            Visibility="{Binding Description, Converter={StaticResource StringToVisibility}}"
             Text="{Binding Description}" Margin="0,0,0,10"/>
     </StackPanel>
 </UserControl>

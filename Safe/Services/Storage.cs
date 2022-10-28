@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Storage.Model;
 using LiteDB;
+using LiteDB.Engine;
 using Prism.Events;
 
 namespace EdlinSoftware.Safe.Services
@@ -16,6 +20,8 @@ namespace EdlinSoftware.Safe.Services
         void CloseStorage();
 
         bool StorageIsOpened { get; }
+
+        bool ChangePassword(string oldPassword, string newPassword);
     }
 
     public class StorageOpeningOptions
@@ -35,6 +41,8 @@ namespace EdlinSoftware.Safe.Services
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly LiteDbConnectionProvider _connectionProvider;
+        private string? _lastOpenedFile;
+        private byte[]? _lastOpenedStoragePasswordHash;
         private readonly IStorageInfoRepository _storageInfoRepository;
 
         public StorageService(
@@ -55,6 +63,8 @@ namespace EdlinSoftware.Safe.Services
             try
             {
                 _connectionProvider.Database = new LiteDatabase($"Filename={options.FileName};Password={options.Password}");
+                _lastOpenedFile = options.FileName;
+                _lastOpenedStoragePasswordHash = GetStringHash(options.Password);
 
                 _storageInfoRepository.SaveStorageInfo(new StorageInfo
                 {
@@ -70,6 +80,8 @@ namespace EdlinSoftware.Safe.Services
             _eventAggregator.GetEvent<StorageChanged>().Publish();
         }
 
+        private byte[] GetStringHash(string value) => SHA256.HashData(Encoding.UTF32.GetBytes(value));
+
         public void OpenStorage(StorageOpeningOptions options)
         {
             CloseStorage();
@@ -77,6 +89,8 @@ namespace EdlinSoftware.Safe.Services
             try
             {
                 _connectionProvider.Database = new LiteDatabase($"Filename={options.FileName};Password={options.Password}");
+                _lastOpenedFile = options.FileName;
+                _lastOpenedStoragePasswordHash = GetStringHash(options.Password);
             }
             catch (LiteException)
             {
@@ -93,6 +107,8 @@ namespace EdlinSoftware.Safe.Services
                 _connectionProvider.Database.Dispose();
 
                 _connectionProvider.Database = null;
+                _lastOpenedFile = null;
+                _lastOpenedStoragePasswordHash = null;
 
                 _eventAggregator.GetEvent<StorageChanged>().Publish();
             }
@@ -100,5 +116,41 @@ namespace EdlinSoftware.Safe.Services
 
         public bool StorageIsOpened => _connectionProvider.Database != null;
 
+        public bool ChangePassword(string oldPassword, string newPassword)
+        {
+            if (_connectionProvider.Database != null)
+            {
+                try
+                {
+                    var oldPasswordHash = GetStringHash(oldPassword);
+
+                    if (!oldPasswordHash.SequenceEqual(_lastOpenedStoragePasswordHash!))
+                        return false;
+
+                    _connectionProvider.Database.Rebuild(new RebuildOptions
+                    {
+                        Password = newPassword
+                    });
+
+                    var fileName = _lastOpenedFile!;
+
+                    CloseStorage();
+
+                    OpenStorage(new StorageOpeningOptions
+                    {
+                        FileName = fileName,
+                        Password = newPassword
+                    });
+
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
     }
 }

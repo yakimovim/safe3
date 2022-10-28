@@ -1,5 +1,4 @@
-﻿using EdlinSoftware.Safe.Storage;
-using Prism.Events;
+﻿using Prism.Events;
 
 namespace EdlinSoftware.Safe.Events
 {
