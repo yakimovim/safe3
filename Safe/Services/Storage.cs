@@ -22,6 +22,8 @@ namespace EdlinSoftware.Safe.Services
         bool StorageIsOpened { get; }
 
         bool ChangePassword(string oldPassword, string newPassword);
+
+        bool Export(string password, string exportFileName);
     }
 
     public class StorageOpeningOptions
@@ -44,16 +46,19 @@ namespace EdlinSoftware.Safe.Services
         private string? _lastOpenedFile;
         private byte[]? _lastOpenedStoragePasswordHash;
         private readonly IStorageInfoRepository _storageInfoRepository;
+        private readonly ExportService _exportService;
 
         public StorageService(
             IEventAggregator eventAggregator,
             LiteDbConnectionProvider connectionProvider,
-            IStorageInfoRepository storageInfoRepository
+            IStorageInfoRepository storageInfoRepository,
+            ExportService exportService
         )
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _connectionProvider = connectionProvider ?? throw new ArgumentNullException(nameof(connectionProvider));
             _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
+            _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
         }
 
         public void CreateStorage(StorageCreationOptions options)
@@ -151,6 +156,14 @@ namespace EdlinSoftware.Safe.Services
             }
 
             return false;
+        }
+
+        public bool Export(string password, string exportFileName)
+        {
+            if (!GetStringHash(password).SequenceEqual(_lastOpenedStoragePasswordHash!))
+                return false;
+
+            return _exportService.Export(exportFileName);
         }
     }
 }

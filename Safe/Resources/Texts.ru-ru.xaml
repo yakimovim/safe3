@@ -35,6 +35,7 @@
     <v:String x:Key="AddFieldsDialogTitle">Выберите поля</v:String>
     <v:String x:Key="StorageFileFilter">Хранилища</v:String>
     <v:String x:Key="SvgFileFilter">SVG файлы</v:String>
+    <v:String x:Key="JsonFileFilter">JSON файлы</v:String>
     <v:String x:Key="PasswordsAreDifferentValidationMessage">Введённые пароли отличаются</v:String>
     <v:String x:Key="PropertyCantBeEmptyValidationMessage">не может быть пустым</v:String>
     <v:String x:Key="No">Нет</v:String>
@@ -54,4 +55,6 @@
     <v:String x:Key="EnterNewPasswordAgain">Введите новый пароль ещё раз</v:String>
     <v:String x:Key="ChangePassword">Сменить пароль</v:String>
     <v:String x:Key="Change">Изменить</v:String>
+    <v:String x:Key="ExportText">Помните, что экспорт сохраняет ваши данные в открытом виде. Информация в экспортируемом файле может быть прочитана кем угодно.</v:String>
+    <v:String x:Key="Export">Экспорт</v:String>
 </ResourceDictionary>

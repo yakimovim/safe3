@@ -35,6 +35,7 @@
     <v:String x:Key="AddFieldsDialogTitle">Select fields</v:String>
     <v:String x:Key="StorageFileFilter">Safe storage</v:String>
     <v:String x:Key="SvgFileFilter">SVG files</v:String>
+    <v:String x:Key="JsonFileFilter">JSON files</v:String>
     <v:String x:Key="PasswordsAreDifferentValidationMessage">Passwords are different</v:String>
     <v:String x:Key="PropertyCantBeEmptyValidationMessage">can't be empty</v:String>
     <v:String x:Key="No">No</v:String>
@@ -54,4 +55,6 @@
     <v:String x:Key="EnterNewPasswordAgain">Enter new password again</v:String>
     <v:String x:Key="ChangePassword">Change password</v:String>
     <v:String x:Key="Change">Change</v:String>
+    <v:String x:Key="ExportText">Be aware, that export stores all data in plain text. Information in the exported file can be read by anyone.</v:String>
+    <v:String x:Key="Export">Export</v:String>
 </ResourceDictionary>
