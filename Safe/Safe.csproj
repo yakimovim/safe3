@@ -6,7 +6,11 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>EdlinSoftware.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <ApplicationIcon>Safe.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Safe.ico" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
