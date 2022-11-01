@@ -24,6 +24,8 @@ namespace EdlinSoftware.Safe.Services
         bool ChangePassword(string oldPassword, string newPassword);
 
         bool Export(string password, string exportFileName);
+
+        void Import(string importFileName);
     }
 
     public class StorageOpeningOptions
@@ -46,19 +48,19 @@ namespace EdlinSoftware.Safe.Services
         private string? _lastOpenedFile;
         private byte[]? _lastOpenedStoragePasswordHash;
         private readonly IStorageInfoRepository _storageInfoRepository;
-        private readonly ExportService _exportService;
+        private readonly ExportImportService _exportImportService;
 
         public StorageService(
             IEventAggregator eventAggregator,
             LiteDbConnectionProvider connectionProvider,
             IStorageInfoRepository storageInfoRepository,
-            ExportService exportService
+            ExportImportService exportImportService
         )
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _connectionProvider = connectionProvider ?? throw new ArgumentNullException(nameof(connectionProvider));
             _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
-            _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
+            _exportImportService = exportImportService ?? throw new ArgumentNullException(nameof(exportImportService));
         }
 
         public void CreateStorage(StorageCreationOptions options)
@@ -163,7 +165,12 @@ namespace EdlinSoftware.Safe.Services
             if (!GetStringHash(password).SequenceEqual(_lastOpenedStoragePasswordHash!))
                 return false;
 
-            return _exportService.Export(exportFileName);
+            return _exportImportService.Export(exportFileName);
+        }
+
+        public void Import(string importFileName)
+        {
+            _exportImportService.Import(importFileName);
         }
     }
 }

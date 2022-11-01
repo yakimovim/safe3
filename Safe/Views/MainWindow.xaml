@@ -12,6 +12,7 @@
                 <MenuItem Header="{DynamicResource Close}" Command="{Binding CloseStorageCommand}" />
                 <MenuItem Header="{DynamicResource ChangePassword}" Command="{Binding ChangePasswordCommand}" />
                 <MenuItem Header="{DynamicResource Export}" Command="{Binding ExportCommand}" />
+                <MenuItem Header="{DynamicResource Import}" Command="{Binding ImportCommand}" />
                 <Separator />
                 <MenuItem Header="{DynamicResource GeneratePasswordWithDots}" Command="{Binding GeneratePasswordCommand}" />
                 <MenuItem Header="{DynamicResource Settings}" Command="{Binding SettingsCommand}" />

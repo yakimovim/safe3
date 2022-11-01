@@ -25,7 +25,7 @@ namespace EdlinSoftware.Safe
         {
             containerRegistry.RegisterSingleton<IConfigurationService, ConfigurationService>();
             containerRegistry.RegisterSingleton<IStorageService, StorageService>();
-            containerRegistry.RegisterSingleton<ExportService>();
+            containerRegistry.RegisterSingleton<ExportImportService>();
             containerRegistry.RegisterSingleton<ILanguagesService, LanguagesService>();
             containerRegistry.Register<IPasswordGenerator, PasswordGenerator>();
 

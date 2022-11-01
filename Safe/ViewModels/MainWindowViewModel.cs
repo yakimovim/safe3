@@ -2,6 +2,7 @@
 using System.Windows;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Services;
+using Microsoft.Win32;
 using Prism.Commands;
 
 namespace EdlinSoftware.Safe.ViewModels;
@@ -20,8 +21,9 @@ internal class MainWindowViewModel : ViewModelBase
 
         ExitCommand = new DelegateCommand(OnExit);
         CloseStorageCommand = new DelegateCommand(OnCloseStorage, CanCloseStorage);
-        ChangePasswordCommand = new DelegateCommand(OnChangePassword, CanChangePassword);
-        ExportCommand = new DelegateCommand(OnExport, CanExport);
+        ChangePasswordCommand = new DelegateCommand(OnChangePassword, StorageIsOpened);
+        ExportCommand = new DelegateCommand(OnExport, StorageIsOpened);
+        ImportCommand = new DelegateCommand(OnImport, StorageIsOpened);
         SettingsCommand = new DelegateCommand(OnSettings);
         GeneratePasswordCommand = new DelegateCommand(OnGeneratePassword);
     }
@@ -31,14 +33,31 @@ internal class MainWindowViewModel : ViewModelBase
         RegionManager.RequestNavigationToMainContent("ChangePassword");
     }
 
-    private bool CanChangePassword() => _storageService.StorageIsOpened;
-
     private void OnExport()
     {
         RegionManager.RequestNavigationToMainContent("ExportStorage");
     }
 
-    private bool CanExport() => _storageService.StorageIsOpened;
+    private void OnImport()
+    {
+        var openDialog = new OpenFileDialog
+        {
+            CheckFileExists = true,
+            CheckPathExists = true,
+            Filter = $"{Application.Current.Resources["JsonFileFilter"]}|*.json",
+            AddExtension = true,
+            DefaultExt = ".json",
+        };
+
+        if (openDialog.ShowDialog() == true)
+        {
+            _storageService.Import(openDialog.FileName);
+
+            EventAggregator.GetEvent<StorageChanged>().Publish();
+        }
+    }
+
+    private bool StorageIsOpened() => _storageService.StorageIsOpened;
 
     private void OnGeneratePassword()
     {
@@ -77,6 +96,7 @@ internal class MainWindowViewModel : ViewModelBase
                 CloseStorageCommand.RaiseCanExecuteChanged();
                 ChangePasswordCommand.RaiseCanExecuteChanged();
                 ExportCommand.RaiseCanExecuteChanged();
+                ImportCommand.RaiseCanExecuteChanged();
             });
     }
 
@@ -91,4 +111,6 @@ internal class MainWindowViewModel : ViewModelBase
     public DelegateCommand ChangePasswordCommand { get; }
     
     public DelegateCommand ExportCommand { get; }
+    
+    public DelegateCommand ImportCommand { get; }
 }

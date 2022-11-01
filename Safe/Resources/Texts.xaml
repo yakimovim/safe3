@@ -57,4 +57,5 @@
     <v:String x:Key="Change">Change</v:String>
     <v:String x:Key="ExportText">Be aware, that export stores all data in plain text. Information in the exported file can be read by anyone.</v:String>
     <v:String x:Key="Export">Export</v:String>
+    <v:String x:Key="Import">Import</v:String>
 </ResourceDictionary>

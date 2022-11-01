@@ -57,4 +57,5 @@
     <v:String x:Key="Change">Изменить</v:String>
     <v:String x:Key="ExportText">Помните, что экспорт сохраняет ваши данные в открытом виде. Информация в экспортируемом файле может быть прочитана кем угодно.</v:String>
     <v:String x:Key="Export">Экспорт</v:String>
+    <v:String x:Key="Import">Импорт</v:String>
 </ResourceDictionary>
