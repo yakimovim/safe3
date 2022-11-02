@@ -1,0 +1,20 @@
+name: actions
+on: [push]
+jobs:
+  create-release-archive:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x' # SDK Version to use; x will use the latest version of the 6.0 channel
+      - run: dotnet tool restore
+      - run: dotnet cake
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            package/safe.zip
