@@ -337,3 +337,8 @@ tools/packages.config
 
 #Doxygen output
 doxygen_output/
+
+# Project-specific ignores
+
+output/
+package/
