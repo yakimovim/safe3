@@ -48,6 +48,7 @@
     <v:String x:Key="CopyToClipboard">Copy to clipboard</v:String>
     <v:String x:Key="TogglePasswordVisibility">Toggle password visibility</v:String>
     <v:String x:Key="EditItem">Edit item</v:String>
+    <v:String x:Key="MoveItem">Move item</v:String>
     <v:String x:Key="EditStorage">Edit storage</v:String>
     <v:String x:Key="DeleteItem">Delete item</v:String>
     <v:String x:Key="EnterOldPassword">Enter old password</v:String>
@@ -58,4 +59,6 @@
     <v:String x:Key="ExportText">Be aware, that export stores all data in plain text. Information in the exported file can be read by anyone.</v:String>
     <v:String x:Key="Export">Export</v:String>
     <v:String x:Key="Import">Import</v:String>
+    <v:String x:Key="MoveItemDialogHeader">Move item</v:String>
+    <v:String x:Key="Move">Move</v:String>
 </ResourceDictionary>

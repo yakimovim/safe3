@@ -30,7 +30,16 @@ public class ItemDetailsViewModel : ItemViewModelBase
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
 
         EditItemCommand = new DelegateCommand(OnEditItem);
+        MoveItemCommand = new DelegateCommand(OnMoveItem);
         DeleteItemCommand = new DelegateCommand(OnDeleteItem);
+    }
+
+    private void OnMoveItem()
+    {
+        if (_item != null)
+        {
+            DialogService.ShowMoveItemDialog(_item);
+        }
     }
 
     private void OnDeleteItem()
@@ -96,6 +105,8 @@ public class ItemDetailsViewModel : ItemViewModelBase
     }
 
     public DelegateCommand EditItemCommand { get; }
+    
+    public DelegateCommand MoveItemCommand { get; }
 
     public DelegateCommand DeleteItemCommand { get; }
 }

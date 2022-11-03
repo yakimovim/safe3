@@ -28,7 +28,7 @@
     <v:String x:Key="EnterPasswordAgain">Введите пароль ещё раз:</v:String>
     <v:String x:Key="NameWithColon">Имя:</v:String>
     <v:String x:Key="LanguagesWithColon">Языки:</v:String>
-    <v:String x:Key="CreateSubItem">Создать подэлемент</v:String>
+    <v:String x:Key="CreateSubItem">Создать карточку внутри этой</v:String>
     <v:String x:Key="DeleteField">Удалить поле</v:String>
     <v:String x:Key="MoveField">Переместить поле</v:String>
     <v:String x:Key="SelectIconDialogTitle">Выберите иконку</v:String>
@@ -48,6 +48,7 @@
     <v:String x:Key="CopyToClipboard">Копировать в буфер обмена</v:String>
     <v:String x:Key="TogglePasswordVisibility">Изменить видимость пароля</v:String>
     <v:String x:Key="EditItem">Изменить карточку</v:String>
+    <v:String x:Key="MoveItem">Переместить карточку</v:String>
     <v:String x:Key="EditStorage">Изменить описание хранилища</v:String>
     <v:String x:Key="DeleteItem">Удалить карточку</v:String>
     <v:String x:Key="EnterOldPassword">Введите старый пароль</v:String>
@@ -58,4 +59,6 @@
     <v:String x:Key="ExportText">Помните, что экспорт сохраняет ваши данные в открытом виде. Информация в экспортируемом файле может быть прочитана кем угодно.</v:String>
     <v:String x:Key="Export">Экспорт</v:String>
     <v:String x:Key="Import">Импорт</v:String>
+    <v:String x:Key="MoveItemDialogHeader">Переместить карточку</v:String>
+    <v:String x:Key="Move">Переместить</v:String>
 </ResourceDictionary>

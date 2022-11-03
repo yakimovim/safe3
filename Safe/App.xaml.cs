@@ -43,6 +43,7 @@ namespace EdlinSoftware.Safe
             containerRegistry.RegisterDialog<FieldsDialog, FieldsDialogViewModel>();
             containerRegistry.RegisterDialog<ConfirmationDialog, ConfirmationDialogViewModel>();
             containerRegistry.RegisterDialog<PasswordGenerationDialog, PasswordGenerationDialogViewModel>();
+            containerRegistry.RegisterDialog<MoveItemDialog, MoveItemDialogViewModel>();
 
             RegisterViewsForNavigation(containerRegistry);
         }
