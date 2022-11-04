@@ -186,6 +186,47 @@ public class ItemsRepositoryTests : IDisposable
         _itemsRepository.GetChildItems(rootItem2).Should().HaveCount(1);
     }
 
+    [Fact]
+    public void IsChildOrSelfOf()
+    {
+        var item1 = CreateItem();
+        _itemsRepository.SaveItem(item1);
+
+        var item2 = CreateItem(item1);
+        _itemsRepository.SaveItem(item2);
+
+        var item3 = CreateItem(item2);
+        _itemsRepository.SaveItem(item3);
+
+        var item4 = CreateItem(item2);
+        _itemsRepository.SaveItem(item4);
+
+        _itemsRepository.IsChildOrSelfOf(item1, null).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item2, null).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item3, null).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item4, null).Should().BeTrue();
+
+        _itemsRepository.IsChildOrSelfOf(item1, item1).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item1, item2).Should().BeFalse();
+        _itemsRepository.IsChildOrSelfOf(item1, item3).Should().BeFalse();
+        _itemsRepository.IsChildOrSelfOf(item1, item4).Should().BeFalse();
+
+        _itemsRepository.IsChildOrSelfOf(item2, item1).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item2, item2).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item2, item3).Should().BeFalse();
+        _itemsRepository.IsChildOrSelfOf(item2, item4).Should().BeFalse();
+
+        _itemsRepository.IsChildOrSelfOf(item3, item1).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item3, item2).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item3, item3).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item3, item4).Should().BeFalse();
+
+        _itemsRepository.IsChildOrSelfOf(item4, item1).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item4, item2).Should().BeTrue();
+        _itemsRepository.IsChildOrSelfOf(item4, item3).Should().BeFalse();
+        _itemsRepository.IsChildOrSelfOf(item4, item4).Should().BeTrue();
+    }
+
     public void Dispose()
     {
         _databaseProvider.Dispose();

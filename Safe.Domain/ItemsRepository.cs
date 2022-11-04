@@ -62,6 +62,9 @@ namespace EdlinSoftware.Safe.Domain
             }
         }
 
+        private static readonly StorageFieldConverter _storageFieldConverter = new StorageFieldConverter();
+        private static readonly DomainFieldConverter _domainFieldConverter = new DomainFieldConverter();
+
         private readonly IStorageItemsRepository _itemsRepository;
 
         public ItemsRepository(
@@ -80,24 +83,24 @@ namespace EdlinSoftware.Safe.Domain
 
         private IReadOnlyCollection<Item> ConstructItems(IReadOnlyCollection<Storage.Model.Item> itemsData)
         {
-            var converter = new StorageFieldConverter();
-
             return itemsData
-                .Select(i =>
-                {
-                    var item = new Item
-                    {
-                        Id = i.Id,
-                        ParentId = i.ParentId,
-                        Title = i.Title,
-                        Description = i.Description,
-                        IconId = i.IconId,
-                        Tags = new List<string>(i.Tags)
-                    };
-                    item.Fields.AddRange(i.Fields.Select(converter.CreateFrom));
-                    return item;
-                })
+                .Select(ConstructItem)
                 .ToArray();
+        }
+
+        private Item ConstructItem(Storage.Model.Item itemData)
+        {
+            var item = new Item
+            {
+                Id = itemData.Id,
+                ParentId = itemData.ParentId,
+                Title = itemData.Title,
+                Description = itemData.Description,
+                IconId = itemData.IconId,
+                Tags = new List<string>(itemData.Tags)
+            };
+            item.Fields.AddRange(itemData.Fields.Select(_storageFieldConverter.CreateFrom));
+            return item;
         }
 
         public IReadOnlyCollection<Item> GetChildItems(Item? parentItem)
@@ -118,8 +121,7 @@ namespace EdlinSoftware.Safe.Domain
                 IconId = item.IconId,
                 Tags = new List<string>(item.Tags)
             };
-            var converter = new DomainFieldConverter();
-            itemData.Fields.AddRange(item.Fields.Select(converter.CreateFrom));
+            itemData.Fields.AddRange(item.Fields.Select(_domainFieldConverter.CreateFrom));
 
             _itemsRepository.SaveItems(itemData);
 
@@ -129,6 +131,24 @@ namespace EdlinSoftware.Safe.Domain
         public void DeleteItem(Item item)
         {
             _itemsRepository.DeleteItems(item.Id);
+        }
+
+        public bool IsChildOrSelfOf(Item item, Item? probableParentItem)
+        {
+            if (probableParentItem == null) return true;
+
+            if (probableParentItem.Id == item.Id) return true;
+
+            while(item != null)
+            {
+                if (item.ParentId == probableParentItem.Id) return true;
+
+                if (item.ParentId == null) return false;
+
+                item = ConstructItem(_itemsRepository.GetItem(item.ParentId.Value)!);
+            }
+
+            return false;
         }
     }
 }

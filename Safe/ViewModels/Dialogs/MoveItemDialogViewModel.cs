@@ -66,13 +66,7 @@ public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
     {
         if(SelectedItem == null) return false;
 
-        // Check if target item is a child of moving item.
-
-        //var item = SelectedItem.Item;
-
-        //while(item != null)
-        //{
-        //}
+        if (_itemsRepository.IsChildOrSelfOf(SelectedItem.Item, _item)) return false;
 
         return true;
     }

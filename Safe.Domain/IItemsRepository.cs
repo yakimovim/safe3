@@ -13,5 +13,7 @@ namespace EdlinSoftware.Safe.Domain
         public void SaveItem(Item item);
 
         public void DeleteItem(Item item);
+
+        public bool IsChildOrSelfOf(Item item, Item? probableParentItem);
     }
 }
