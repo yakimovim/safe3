@@ -18,6 +18,7 @@
                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
         </DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ActionButtonsStackPanel}">
+            <Button Style="{StaticResource ActionButton}" Command="{Binding MoveToRootCommand}" Content="{DynamicResource MoveToRoot}" />
             <Button Style="{StaticResource ActionButton}" Command="{Binding MoveCommand}" Content="{DynamicResource Move}" />
             <Button Style="{StaticResource ActionButton}" Command="{Binding CancelCommand}" Content="{DynamicResource Cancel}" />
         </StackPanel>

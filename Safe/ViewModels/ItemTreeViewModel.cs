@@ -93,6 +93,37 @@ public class ItemTreeViewModel : ItemViewModelBase
         EventAggregator.GetEvent<ItemDeleted>()
             .Subscribe(OnItemDeleted, ThreadOption.PublisherThread,
                 false, HandleItemDeleted);
+
+        EventAggregator.GetEvent<ItemMoved>()
+            .Subscribe(OnItemMoved, ThreadOption.PublisherThread,
+                false, HandleItemMoved);
+    }
+
+    private void OnItemMoved((Item MovingItem, Item? TargetItem) info)
+    {
+        if(info.MovingItem.Equals(Item))
+        {
+            if(Parent != null)
+            {
+                Parent.SubItems.Remove(this);
+            }
+        }
+        else
+        {
+            SubItems.Add(new ItemTreeViewModel(_itemsRepository, _iconsRepository, _storageInfoRepository, info.MovingItem)
+            {
+                Parent = this,
+                DialogService = DialogService,
+                RegionManager = RegionManager,
+                EventAggregator = EventAggregator
+            });
+        }
+    }
+
+    private bool HandleItemMoved((Item MovingItem, Item? TargetItem) info)
+    {
+        return info.MovingItem.Equals(Item)
+            || ((Item == null && info.TargetItem == null) || (Item != null && Item.Equals(info.TargetItem)));
     }
 
     private bool HandleIconRemoved(string iconId)

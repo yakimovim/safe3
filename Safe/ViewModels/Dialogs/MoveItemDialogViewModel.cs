@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Threading;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
+using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Search;
 using EdlinSoftware.Safe.Views.Dialogs;
 using Prism.Commands;
@@ -37,6 +38,7 @@ public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
 
         MoveCommand = new DelegateCommand(OnMove, CanMove)
             .ObservesProperty(() => SelectedItem);
+        MoveToRootCommand = new DelegateCommand(OnMoveToRoot);
         CancelCommand = new DelegateCommand(OnCancel);
     }
 
@@ -62,11 +64,36 @@ public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
 
     private bool CanMove()
     {
-        return SelectedItem != null;
+        if(SelectedItem == null) return false;
+
+        // Check if target item is a child of moving item.
+
+        //var item = SelectedItem.Item;
+
+        //while(item != null)
+        //{
+        //}
+
+        return true;
     }
 
     private void OnMove()
     {
+        _item.MoveTo(SelectedItem!.Item);
+        _itemsRepository.SaveItem(_item);
+
+        EventAggregator.GetEvent<ItemMoved>().Publish((_item, SelectedItem.Item));
+
+        RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+    }
+
+    private void OnMoveToRoot()
+    {
+        _item.MoveTo(null);
+        _itemsRepository.SaveItem(_item);
+
+        EventAggregator.GetEvent<ItemMoved>().Publish((_item, null));
+
         RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
     }
 
@@ -119,6 +146,8 @@ public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
     }
 
     public DelegateCommand MoveCommand { get; }
+
+    public DelegateCommand MoveToRootCommand { get; }
 
     public DelegateCommand CancelCommand { get; }
 }

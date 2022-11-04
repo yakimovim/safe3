@@ -61,4 +61,5 @@
     <v:String x:Key="Import">Импорт</v:String>
     <v:String x:Key="MoveItemDialogHeader">Переместить карточку</v:String>
     <v:String x:Key="Move">Переместить</v:String>
+    <v:String x:Key="MoveToRoot">Переместить в корень хранилища</v:String>
 </ResourceDictionary>
