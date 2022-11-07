@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppInstaller
+	Uri="https://yakimovim.github.io/safe3/docs/Sage.Packaging.appinstaller"
+	Version="1.0.2.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
+	<MainBundle
+		Name="ab5817c8-39fb-486b-af40-98069cc34bf0"
+		Version="1.0.2.0"
+		Publisher="CN=IvanIakimov"
+		Uri="https://yakimovim.github.io/safe3/docs/Sage.Packaging_1.0.2.0_Test/Sage.Packaging_1.0.2.0_x64.msixbundle" />
+	<UpdateSettings>
+		<OnLaunch
+			HoursBetweenUpdateChecks="0" />
+	</UpdateSettings>
+</AppInstaller>
