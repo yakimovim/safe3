@@ -9,7 +9,7 @@
   <Identity
     Name="ab5817c8-39fb-486b-af40-98069cc34bf0"
     Publisher="CN=IvanIakimov"
-    Version="1.0.2.0" />
+    Version="1.0.3.0" />
 
   <Properties>
     <DisplayName>Sage.Packaging</DisplayName>
