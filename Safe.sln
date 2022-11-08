@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Safe.Search.Tests", "Safe.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Safe.Tests", "Safe.Tests\Safe.Tests.csproj", "{855AA01A-93F2-4B17-AED7-26FFEB2137B3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,24 @@ Global
 		{855AA01A-93F2-4B17-AED7-26FFEB2137B3}.Release|x64.Build.0 = Release|Any CPU
 		{855AA01A-93F2-4B17-AED7-26FFEB2137B3}.Release|x86.ActiveCfg = Release|Any CPU
 		{855AA01A-93F2-4B17-AED7-26FFEB2137B3}.Release|x86.Build.0 = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|x64.Build.0 = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Debug|x86.Build.0 = Debug|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|ARM.Build.0 = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|ARM64.Build.0 = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|x64.ActiveCfg = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|x64.Build.0 = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|x86.ActiveCfg = Release|Any CPU
+		{20CA9D9F-9292-4D40-9129-C5EEDAB8354C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

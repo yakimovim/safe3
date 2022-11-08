@@ -1,0 +1,7 @@
+{
+  "$schema": "./build.schema.json",
+  "Solution": "Safe.sln",
+  "MainProject": "./Safe/Safe.csproj",
+  "OutputPath": "./output",
+  "PackagePath": "./package"
+}
