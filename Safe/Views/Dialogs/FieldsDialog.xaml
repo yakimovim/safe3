@@ -5,9 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             xmlns:dlgs="clr-namespace:EdlinSoftware.Safe.ViewModels.Dialogs"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             d:DataContext="{d:DesignInstance dlgs:FieldsDialogViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              Padding="10"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -43,8 +45,8 @@
                 </b:Interaction.Behaviors>
             </ListView>
             <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="5,0,5,0">
-                <Button Content=">" Command="{Binding AddSelectedFieldCommand}" Margin="3" />
-                <Button Content="&lt;" Command="{Binding RemoveSelectedFieldCommand}"  Margin="3" />
+                <Button Content=">" Command="{Binding AddSelectedFieldsCommand}" Margin="3" />
+                <Button Content="&lt;" Command="{Binding RemoveSelectedFieldsCommand}"  Margin="3" />
                 <Button Content="&lt;&lt;" Command="{Binding ClearSelectedFieldsCommand}" Margin="3" />
             </StackPanel>
             <ListView Grid.Column="2" ItemsSource="{Binding SelectedFields}"

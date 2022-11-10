@@ -5,44 +5,44 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Search;
 using EdlinSoftware.Safe.Views.Dialogs;
-using Prism.Commands;
+using Prism.Events;
 using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
+public partial class MoveItemDialogViewModel : ObservableObject, IDialogAware
 {
     private const int MaxItems = 10;
 
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
+    private readonly IEventAggregator _eventAggregator;
     private readonly Subject<string> _searchTextChanged = new();
 
     private Item _item = null!;
 
     public MoveItemDialogViewModel(
         IItemsRepository itemsRepository,
-        IIconsRepository iconsRepository)
+        IIconsRepository iconsRepository,
+        IEventAggregator eventAggregator)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
         _searchTextChanged.Throttle(TimeSpan.FromSeconds(2))
             .SubscribeOn(new DispatcherSynchronizationContext())
-            .Subscribe(OnSearchTextChanged);
-
-        MoveCommand = new DelegateCommand(OnMove, CanMove)
-            .ObservesProperty(() => SelectedItem);
-        MoveToRootCommand = new DelegateCommand(OnMoveToRoot);
-        CancelCommand = new DelegateCommand(OnCancel);
+            .Subscribe(MakeSearch);
     }
 
-    private void OnSearchTextChanged(string searchText)
+    private void MakeSearch(string searchText)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -71,27 +71,30 @@ public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
         return true;
     }
 
-    private void OnMove()
+    [RelayCommand(CanExecute = nameof(CanMove))]
+    private void Move()
     {
         _item.MoveTo(SelectedItem!.Item);
         _itemsRepository.SaveItem(_item);
 
-        EventAggregator.GetEvent<ItemMoved>().Publish((_item, SelectedItem.Item));
+        _eventAggregator.GetEvent<ItemMoved>().Publish((_item, SelectedItem.Item));
 
         RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
     }
 
-    private void OnMoveToRoot()
+    [RelayCommand]
+    private void MoveToRoot()
     {
         _item.MoveTo(null);
         _itemsRepository.SaveItem(_item);
 
-        EventAggregator.GetEvent<ItemMoved>().Publish((_item, null));
+        _eventAggregator.GetEvent<ItemMoved>().Publish((_item, null));
 
         RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
     }
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
     }
@@ -105,45 +108,27 @@ public class MoveItemDialogViewModel : ViewModelBase, IDialogAware
         _item = parameters.GetValue<Item>("Item");
 
         _searchText = string.Empty;
-        OnSearchTextChanged(_searchText);
+        MakeSearch(_searchText);
     }
 
     public string Title => (string) Application.Current.FindResource("MoveItemDialogHeader");
 
     public event Action<IDialogResult>? RequestClose;
 
+    [ObservableProperty]
     private string _searchText = string.Empty;
-    public string SearchText
+
+    partial void OnSearchTextChanged(string value)
     {
-        get => _searchText;
-        set
-        {
-            if (SetProperty(ref _searchText, value))
-            {
-                _searchTextChanged.OnNext(value);
-            }
-        }
+        _searchTextChanged.OnNext(value);
     }
 
+    [ObservableProperty]
     private ObservableCollection<ItemListViewModel> _items = new();
-    public ObservableCollection<ItemListViewModel> Items
-    {
-        get => _items;
-        set => SetProperty(ref _items, value);
-    }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(MoveCommand))]
     private ItemListViewModel? _selectedItem;
-    public ItemListViewModel? SelectedItem
-    {
-        get => _selectedItem;
-        set => SetProperty(ref _selectedItem, value);
-    }
-
-    public DelegateCommand MoveCommand { get; }
-
-    public DelegateCommand MoveToRootCommand { get; }
-
-    public DelegateCommand CancelCommand { get; }
 }
 
 

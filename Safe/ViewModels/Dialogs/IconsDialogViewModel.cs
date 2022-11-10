@@ -3,43 +3,47 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
 using Microsoft.Win32;
-using Prism.Commands;
+using Prism.Events;
 using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public class IconsDialogViewModel : ViewModelBase, IDialogAware
+public partial class IconsDialogViewModel : ObservableObject, IDialogAware
 {
     private readonly IIconsRepository _iconsRepository;
+    private readonly IDialogService _dialogService;
+    private readonly IEventAggregator _eventAggregator;
 
-    public IconsDialogViewModel(IIconsRepository iconsRepository)
+    public IconsDialogViewModel(
+        IIconsRepository iconsRepository,
+        IDialogService dialogService,
+        IEventAggregator eventAggregator
+        )
     {
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
         Icons = new ObservableCollection<IconViewModel>(
             _iconsRepository
                 .GetAllIcons()
                 .Select(i => new IconViewModel(_iconsRepository, i))
         );
-
-        AddNewIconCommand = new DelegateCommand(OnAddNewIcon);
-        DeleteIconCommand = new DelegateCommand(OnDeleteIcon, CanDeleteIcon)
-            .ObservesProperty(() => SelectedIcon);
-        SelectIconCommand = new DelegateCommand(OnSelectIcon, CanSelectIcon)
-            .ObservesProperty(() => SelectedIcon);
-        CancelCommand = new DelegateCommand(OnCancel);
     }
 
     private bool CanDeleteIcon() => SelectedIcon != null;
 
-    private void OnDeleteIcon()
+    [RelayCommand(CanExecute = nameof(CanDeleteIcon))]
+    private void DeleteIcon()
     {
-        DialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteIconConfirmation"], res =>
+        _dialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteIconConfirmation"], res =>
         {
             if (res == ButtonResult.Yes)
             {
@@ -49,12 +53,13 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
 
                 Icons.Remove(icon);
 
-                EventAggregator.GetEvent<IconRemoved>().Publish(icon.Id);
+                _eventAggregator.GetEvent<IconRemoved>().Publish(icon.Id);
             }
         });
     }
 
-    private void OnAddNewIcon()
+    [RelayCommand]
+    private void AddNewIcon()
     {
         var openDialog = new OpenFileDialog
         {
@@ -76,21 +81,23 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
         }
     }
 
-    private void OnSelectIcon()
+    private bool CanSelectIcon() => SelectedIcon != null;
+
+    [RelayCommand(CanExecute = nameof(CanSelectIcon))]
+    private void SelectIcon()
     {
         var p = new DialogParameters { { "IconId", SelectedIcon!.Id } };
 
         RequestClose?.Invoke(new DialogResult(ButtonResult.OK, p));
     }
 
-    private bool CanSelectIcon() => SelectedIcon != null;
-
     public bool CanCloseDialog() => true;
 
     public void OnDialogClosed()
     { }
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
     }
@@ -98,28 +105,17 @@ public class IconsDialogViewModel : ViewModelBase, IDialogAware
     public void OnDialogOpened(IDialogParameters parameters)
     { }
 
+    [ObservableProperty]
     private ObservableCollection<IconViewModel> _icons = new();
-    public ObservableCollection<IconViewModel> Icons
-    {
-        get => _icons;
-        set => SetProperty(ref _icons, value);
-    }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(DeleteIconCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SelectIconCommand))]
     private IconViewModel? _selectedIcon;
-    public IconViewModel? SelectedIcon
-    {
-        get => _selectedIcon;
-        set => SetProperty(ref _selectedIcon, value);
-    }
 
     public string Title { get; } = (string) Application.Current.Resources["SelectIconDialogTitle"];
 
     public event Action<IDialogResult>? RequestClose;
-
-    public DelegateCommand AddNewIconCommand { get; }
-    public DelegateCommand DeleteIconCommand { get; }
-    public DelegateCommand SelectIconCommand { get; }
-    public DelegateCommand CancelCommand { get; }
 }
 
 public class IconViewModel

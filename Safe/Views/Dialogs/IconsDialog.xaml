@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:dlgs="clr-namespace:EdlinSoftware.Safe.ViewModels.Dialogs"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             d:DataContext="{d:DesignInstance dlgs:IconsDialogViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <prism:Dialog.WindowStyle>

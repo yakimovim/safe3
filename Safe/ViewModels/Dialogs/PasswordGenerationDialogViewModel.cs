@@ -1,13 +1,13 @@
-﻿using Prism.Commands;
-using Prism.Services.Dialogs;
+﻿using Prism.Services.Dialogs;
 using System.Windows;
 using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Services;
-using Prism.Mvvm;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public class PasswordGenerationDialogViewModel : BindableBase, IDialogAware
+public partial class PasswordGenerationDialogViewModel : ObservableObject, IDialogAware
 {
         private readonly IPasswordGenerator _passwordGenerator;
 
@@ -24,22 +24,17 @@ public class PasswordGenerationDialogViewModel : BindableBase, IDialogAware
         public PasswordGenerationDialogViewModel(IPasswordGenerator passwordGenerator)
         {
             _passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
-
-            CopyCommand = new DelegateCommand(CopyPassword, CanCopy)
-                .ObservesProperty(() => Password);
-
-            CloseCommand = new DelegateCommand(Close);
-
-            GenerateCommand = new DelegateCommand(GeneratePassword, CanGeneratePassword)
-                .ObservesProperty(() => UseLetters)
-                .ObservesProperty(() => UseDigits)
-                .ObservesProperty(() => UsePunctuation)
-                .ObservesProperty(() => PasswordLength);
         }
 
-        private bool CanCopy() => !string.IsNullOrWhiteSpace(Password);
+        private bool CanGenerate()
+        {
+            if (!(UseLetters || UseDigits || UsePunctuation)) return false;
+            if (PasswordLength <= 0) return false;
+            return true;
+        }
 
-        private void GeneratePassword()
+        [RelayCommand(CanExecute = nameof(CanGenerate))]
+        private void Generate()
         {
             Password = _passwordGenerator.Generate(
                 PasswordLength,
@@ -49,61 +44,37 @@ public class PasswordGenerationDialogViewModel : BindableBase, IDialogAware
             );
         }
 
-        private bool CanGeneratePassword()
-        {
-            if (!(UseLetters || UseDigits || UsePunctuation)) return false;
-            if (PasswordLength <= 0) return false;
-            return true;
-        }
-
+        [RelayCommand]
         private void Close()
         {
             RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
         }
 
-        private void CopyPassword()
+        private bool CanCopy() => !string.IsNullOrWhiteSpace(Password);
+
+        [RelayCommand(CanExecute = nameof(CanCopy))]
+        private void Copy()
         {
             Clipboard.SetText(Password);
         }
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(GenerateCommand))]
         private bool _useLetters = true;
-        public bool UseLetters
-        {
-            get => _useLetters;
-            set => SetProperty(ref _useLetters, value);
-        }
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(GenerateCommand))]
         private bool _useDigits = true;
-        public bool UseDigits
-        {
-            get => _useDigits;
-            set => SetProperty(ref _useDigits, value);
-        }
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(GenerateCommand))]
         private bool _usePunctuation = true;
-        public bool UsePunctuation
-        {
-            get => _usePunctuation;
-            set => SetProperty(ref _usePunctuation, value);
-        }
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(GenerateCommand))]
         private uint _passwordLength = 16;
-        public uint PasswordLength
-        {
-            get => _passwordLength;
-            set => SetProperty(ref _passwordLength, value);
-        }
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CopyCommand))]
         private string _password = string.Empty;
-        public string Password
-        {
-            get => _password;
-            set => SetProperty(ref _password, value);
-        }
-
-        public DelegateCommand CopyCommand { get; }
-
-        public DelegateCommand GenerateCommand { get; }
-
-        public DelegateCommand CloseCommand { get; }
 }
