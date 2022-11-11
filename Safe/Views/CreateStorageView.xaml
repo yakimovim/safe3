@@ -7,6 +7,8 @@
              xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:CreateStorageViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>

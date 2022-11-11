@@ -1,13 +1,14 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Storage.Model;
-using Prism.Commands;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class EditStorageDetailsViewModel : ViewModelBase
+public partial class EditStorageDetailsViewModel : ObservableViewModelBase
 {
     private readonly IStorageInfoRepository _storageInfoRepository;
 
@@ -16,10 +17,6 @@ public class EditStorageDetailsViewModel : ViewModelBase
         )
     {
         _storageInfoRepository = storageInfoRepository ?? throw new ArgumentNullException(nameof(storageInfoRepository));
-
-        SaveChangesCommand = new DelegateCommand(OnSaveChanges, CanSaveChanges)
-            .ObservesProperty(() => Title);
-        CancelCommand = new DelegateCommand(OnCancel);
     }
 
     protected override void SubscribeToEvents()
@@ -36,7 +33,8 @@ public class EditStorageDetailsViewModel : ViewModelBase
         }
     }
 
-    private void OnSaveChanges()
+    [RelayCommand(CanExecute = nameof(CanSaveChanges))]
+    private void SaveChanges()
     {
         _storageInfoRepository.SaveStorageInfo(new StorageInfo
         {
@@ -52,31 +50,23 @@ public class EditStorageDetailsViewModel : ViewModelBase
 
     private bool CanSaveChanges() => !string.IsNullOrWhiteSpace(Title);
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         RegionManager.RequestNavigationToDetails("StorageDetails");
     }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveChangesCommand))]
+    [IsNotNullOrWhiteSpace(nameof(Title))]
+    [NotifyDataErrorInfo]
     private string _title = string.Empty;
-    public string Title
-    {
-        get => _title;
-        set => SetProperty(ref _title, value, Validate);
-    }
 
+    [ObservableProperty]
     private string _description = string.Empty;
-    public string Description
-    {
-        get => _description;
-        set => SetProperty(ref _description, value);
-    }
 
+    [ObservableProperty]
     private string? _iconId;
-    public string? IconId
-    {
-        get => _iconId;
-        set => SetProperty(ref _iconId, value);
-    }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
@@ -85,14 +75,5 @@ public class EditStorageDetailsViewModel : ViewModelBase
         Title = storageInfo.Title;
         Description = storageInfo.Description ?? string.Empty;
         IconId = storageInfo.IconId;
-    }
-
-    public DelegateCommand SaveChangesCommand { get; }
-
-    public DelegateCommand CancelCommand { get; }
-
-    private void Validate()
-    {
-        CheckNullOrWhiteSpace(Title, nameof(Title));
     }
 }

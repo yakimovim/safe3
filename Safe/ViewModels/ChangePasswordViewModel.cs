@@ -1,56 +1,48 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Services;
-using Prism.Commands;
 using Prism.Regions;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-internal class ChangePasswordViewModel : ViewModelBase
+public partial class ChangePasswordViewModel : ObservableViewModelBase
 {
     private readonly IStorageService _storageService;
     private IRegionNavigationJournal _journal = null!;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangePasswordCommand))]
+    [IsNotNullOrEmpty(nameof(OldPassword))]
+    [NotifyDataErrorInfo]
     private string _oldPassword = string.Empty;
-    public string OldPassword
-    {
-        get => _oldPassword;
-        set => SetProperty(ref _oldPassword, value, Validate);
-    }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangePasswordCommand))]
+    [IsNotNullOrEmpty(nameof(NewPassword))]
+    [NotifyDataErrorInfo]
     private string _newPassword = string.Empty;
-    public string NewPassword
+
+    partial void OnNewPasswordChanged(string value)
     {
-        get => _newPassword;
-        set => SetProperty(ref _newPassword, value, Validate);
+        ValidateProperty(value, nameof(ConfirmNewPassword));
     }
     
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangePasswordCommand))]
+    [CustomValidation(typeof(ChangePasswordViewModel), nameof(ValidateConfirmNewPassword))]
+    [NotifyDataErrorInfo]
     private string _confirmNewPassword = string.Empty;
-    public string ConfirmNewPassword
-    {
-        get => _confirmNewPassword;
-        set => SetProperty(ref _confirmNewPassword, value, Validate);
-    }
 
+    [ObservableProperty]
     private bool _oldPasswordIsValid = true;
-    public bool OldPasswordIsValid
-    {
-        get => _oldPasswordIsValid;
-        set => SetProperty(ref _oldPasswordIsValid, value);
-    }
 
-    public DelegateCommand ChangePasswordCommand { get; }
-    public DelegateCommand CancelCommand { get; }
-
-    public ChangePasswordViewModel(IStorageService storageService)
+    internal ChangePasswordViewModel(IStorageService storageService)
     {
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-
-        CancelCommand = new DelegateCommand(OnCancel);
-        ChangePasswordCommand = new DelegateCommand(OnChangePassword, CanChangePassword)
-            .ObservesProperty(() => OldPassword)
-            .ObservesProperty(() => NewPassword)
-            .ObservesProperty(() => ConfirmNewPassword);
     }
 
     private bool CanChangePassword()
@@ -60,7 +52,8 @@ internal class ChangePasswordViewModel : ViewModelBase
                && string.Equals(_newPassword, _confirmNewPassword);
     }
 
-    private void OnChangePassword()
+    [RelayCommand(CanExecute = nameof(CanChangePassword))]
+    private void ChangePassword()
     {
         if (!_storageService.ChangePassword(OldPassword, NewPassword))
         {
@@ -72,7 +65,8 @@ internal class ChangePasswordViewModel : ViewModelBase
         }
     }
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         _journal.GoBack();
     }
@@ -92,21 +86,15 @@ internal class ChangePasswordViewModel : ViewModelBase
         ConfirmNewPassword = string.Empty;
     }
 
-    private void Validate()
+    public static ValidationResult ValidateConfirmNewPassword(string value, ValidationContext context)
     {
-        CheckNullOrEmpty(OldPassword, nameof(OldPassword));
-        CheckNullOrEmpty(NewPassword, nameof(NewPassword));
+        var instance = (ChangePasswordViewModel)context.ObjectInstance;
 
-        if (ConfirmNewPassword != NewPassword)
+        if (instance.ConfirmNewPassword != instance.NewPassword)
         {
-            ValidationErrors[nameof(ConfirmNewPassword)] = (string) Application.Current.Resources["PasswordsAreDifferentValidationMessage"];
-        }
-        else
-        {
-            ValidationErrors.Remove(nameof(ConfirmNewPassword));
+            return new((string) Application.Current.Resources["PasswordsAreDifferentValidationMessage"]);
         }
 
-        RaiseErrorsChanged(nameof(ConfirmNewPassword));
+        return ValidationResult.Success!;
     }
-
 }

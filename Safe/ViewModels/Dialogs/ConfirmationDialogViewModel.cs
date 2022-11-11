@@ -5,36 +5,26 @@ using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public partial class ConfirmationDialogViewModel : ViewModelBase, IDialogAware
+public partial class ConfirmationDialogViewModel : ObservableDialogBase
 {
     internal static readonly string TitlePropertyName = "Title";
 
     [RelayCommand]
     private void No()
     {
-        RequestClose?.Invoke(new DialogResult(ButtonResult.No));
+        RequestDialogClose(ButtonResult.No);
     }
 
     [RelayCommand]
     private void Yes()
     {
-        RequestClose?.Invoke(new DialogResult(ButtonResult.Yes));
+        RequestDialogClose(ButtonResult.Yes);
     }
 
-    public bool CanCloseDialog() => true;
-
-    public void OnDialogClosed()
-    {
-    }
-
-    public void OnDialogOpened(IDialogParameters parameters)
+    public override void OnDialogOpened(IDialogParameters parameters)
     {
         Title = parameters.GetValue<string>(TitlePropertyName);
     }
-
-    public string Title { get; private set; } = string.Empty;
-
-    public event Action<IDialogResult>? RequestClose;
 }
 
 public static class ConfirmationDialogExtensions

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain.Model;
@@ -11,12 +10,14 @@ using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public partial class FieldsDialogViewModel : ObservableObject, IDialogAware
+public partial class FieldsDialogViewModel : ObservableDialogBase
 {
     public const string FieldsPropertyName = "Fields";
 
     public FieldsDialogViewModel()
     {
+        SetTitleFromResource("AddFieldsDialogTitle");
+
         SelectedFields.CollectionChanged += (_, _) =>
         {
             SelectFieldsCommand.NotifyCanExecuteChanged();
@@ -71,29 +72,19 @@ public partial class FieldsDialogViewModel : ObservableObject, IDialogAware
             { FieldsPropertyName, SelectedFields }
         };
 
-        RequestClose?.Invoke(new DialogResult(ButtonResult.OK, p));
+        RequestDialogClose(ButtonResult.OK, p);
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
+        RequestDialogClose(ButtonResult.Cancel);
     }
 
-    public bool CanCloseDialog() => true;
-
-    public void OnDialogClosed()
-    {
-    }
-
-    public void OnDialogOpened(IDialogParameters parameters)
+    public override void OnDialogOpened(IDialogParameters parameters)
     {
         SelectedFields.Clear();
     }
-
-    public string Title { get; } = (string) Application.Current.Resources["AddFieldsDialogTitle"];
-
-    public event Action<IDialogResult>? RequestClose;
 
     public ObservableCollection<FieldViewModel> AvailableFields { get; } = new()
     {

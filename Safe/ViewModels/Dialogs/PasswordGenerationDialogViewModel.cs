@@ -7,23 +7,15 @@ using EdlinSoftware.Safe.Services;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public partial class PasswordGenerationDialogViewModel : ObservableObject, IDialogAware
+public partial class PasswordGenerationDialogViewModel : ObservableDialogBase
 {
         private readonly IPasswordGenerator _passwordGenerator;
-
-        public string Title => (string) Application.Current.FindResource("GeneratePasswordDialogHeader");
-
-        public event Action<IDialogResult>? RequestClose;
-
-        public bool CanCloseDialog() => true;
-
-        public void OnDialogClosed() { }
-
-        public void OnDialogOpened(IDialogParameters parameters) { }
 
         public PasswordGenerationDialogViewModel(IPasswordGenerator passwordGenerator)
         {
             _passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
+
+            SetTitleFromResource("GeneratePasswordDialogHeader");
         }
 
         private bool CanGenerate()
@@ -47,7 +39,7 @@ public partial class PasswordGenerationDialogViewModel : ObservableObject, IDial
         [RelayCommand]
         private void Close()
         {
-            RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+            RequestDialogClose(ButtonResult.OK);
         }
 
         private bool CanCopy() => !string.IsNullOrWhiteSpace(Password);

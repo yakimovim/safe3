@@ -12,30 +12,28 @@ using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Search;
 using EdlinSoftware.Safe.Views.Dialogs;
-using Prism.Events;
 using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels.Dialogs;
 
-public partial class MoveItemDialogViewModel : ObservableObject, IDialogAware
+public partial class MoveItemDialogViewModel : ObservableDialogBase
 {
     private const int MaxItems = 10;
 
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
-    private readonly IEventAggregator _eventAggregator;
     private readonly Subject<string> _searchTextChanged = new();
 
     private Item _item = null!;
 
     public MoveItemDialogViewModel(
         IItemsRepository itemsRepository,
-        IIconsRepository iconsRepository,
-        IEventAggregator eventAggregator)
+        IIconsRepository iconsRepository)
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
-        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+
+        SetTitleFromResource("MoveItemDialogHeader");
 
         _searchTextChanged.Throttle(TimeSpan.FromSeconds(2))
             .SubscribeOn(new DispatcherSynchronizationContext())
@@ -77,9 +75,9 @@ public partial class MoveItemDialogViewModel : ObservableObject, IDialogAware
         _item.MoveTo(SelectedItem!.Item);
         _itemsRepository.SaveItem(_item);
 
-        _eventAggregator.GetEvent<ItemMoved>().Publish((_item, SelectedItem.Item));
+        EventAggregator.GetEvent<ItemMoved>().Publish((_item, SelectedItem.Item));
 
-        RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+        RequestDialogClose(ButtonResult.OK);
     }
 
     [RelayCommand]
@@ -88,32 +86,24 @@ public partial class MoveItemDialogViewModel : ObservableObject, IDialogAware
         _item.MoveTo(null);
         _itemsRepository.SaveItem(_item);
 
-        _eventAggregator.GetEvent<ItemMoved>().Publish((_item, null));
+        EventAggregator.GetEvent<ItemMoved>().Publish((_item, null));
 
-        RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+        RequestDialogClose(ButtonResult.OK);
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
+        RequestDialogClose(ButtonResult.Cancel);
     }
 
-    public bool CanCloseDialog() => true;
-
-    public void OnDialogClosed() { }
-
-    public void OnDialogOpened(IDialogParameters parameters)
+    public override void OnDialogOpened(IDialogParameters parameters)
     {
         _item = parameters.GetValue<Item>("Item");
 
         _searchText = string.Empty;
         MakeSearch(_searchText);
     }
-
-    public string Title => (string) Application.Current.FindResource("MoveItemDialogHeader");
-
-    public event Action<IDialogResult>? RequestClose;
 
     [ObservableProperty]
     private string _searchText = string.Empty;

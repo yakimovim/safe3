@@ -1,57 +1,49 @@
 ﻿using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using Prism.Commands;
 using Prism.Regions;
 
-namespace EdlinSoftware.Safe.ViewModels
+namespace EdlinSoftware.Safe.ViewModels;
+
+public partial class CreateOrOpenStorageViewModel : ObservableViewModelBase
 {
-    internal class CreateOrOpenStorageViewModel : ViewModelBase
+    [RelayCommand]
+    private void Create()
     {
-        public CreateOrOpenStorageViewModel()
+        var openDialog = new OpenFileDialog
         {
-            CreateCommand = new DelegateCommand(OnCreateStorage);
-            OpenCommand = new DelegateCommand(OnOpenStorage);
-        }
-
-        private void OnCreateStorage()
+            AddExtension = true,
+            DefaultExt = ".safe",
+            CheckFileExists = false,
+            Filter = $"{Application.Current.Resources["StorageFileFilter"]}|*.safe"
+        };
+        if (openDialog.ShowDialog() == true)
         {
-            var openDialog = new OpenFileDialog
-            {
-                AddExtension = true,
-                DefaultExt = ".safe",
-                CheckFileExists = false,
-                Filter = $"{Application.Current.Resources["StorageFileFilter"]}|*.safe"
-            };
-            if (openDialog.ShowDialog() == true)
-            {
-                var parameters = new NavigationParameters
+            var parameters = new NavigationParameters
                 {
                     { "StoragePath", openDialog.FileName }
                 };
-                RegionManager.RequestNavigationToMainContent("CreateStorage", parameters);
-            }
+            RegionManager.RequestNavigationToMainContent("CreateStorage", parameters);
         }
+    }
 
-        private void OnOpenStorage()
+    [RelayCommand]
+    private void Open()
+    {
+        var openDialog = new OpenFileDialog
         {
-            var openDialog = new OpenFileDialog
-            {
-                DefaultExt = ".safe",
-                CheckFileExists = true,
-                Filter = $"{Application.Current.Resources["StorageFileFilter"]}|*.safe"
-            };
-            if(openDialog.ShowDialog() == true)
-            {
-                var parameters = new NavigationParameters
+            DefaultExt = ".safe",
+            CheckFileExists = true,
+            Filter = $"{Application.Current.Resources["StorageFileFilter"]}|*.safe"
+        };
+        if (openDialog.ShowDialog() == true)
+        {
+            var parameters = new NavigationParameters
                 {
                     { "StoragePath", openDialog.FileName }
                 };
-                RegionManager.RequestNavigationToMainContent("LoginToStorage", parameters);
-            }
+            RegionManager.RequestNavigationToMainContent("LoginToStorage", parameters);
         }
-
-        public DelegateCommand CreateCommand { get; }
-
-        public DelegateCommand OpenCommand { get; }
     }
 }
+
