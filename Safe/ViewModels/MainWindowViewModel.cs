@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Services;
 using Microsoft.Win32;
-using Prism.Commands;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-internal class MainWindowViewModel : ViewModelBase
+internal partial class MainWindowViewModel : ObservableViewModelBase
 {
     private readonly IConfigurationService _configurationService;
     private readonly IStorageService _storageService;
@@ -18,27 +18,22 @@ internal class MainWindowViewModel : ViewModelBase
     {
         _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-
-        ExitCommand = new DelegateCommand(OnExit);
-        CloseStorageCommand = new DelegateCommand(OnCloseStorage, CanCloseStorage);
-        ChangePasswordCommand = new DelegateCommand(OnChangePassword, StorageIsOpened);
-        ExportCommand = new DelegateCommand(OnExport, StorageIsOpened);
-        ImportCommand = new DelegateCommand(OnImport, StorageIsOpened);
-        SettingsCommand = new DelegateCommand(OnSettings);
-        GeneratePasswordCommand = new DelegateCommand(OnGeneratePassword);
     }
 
-    private void OnChangePassword()
+    [RelayCommand(CanExecute = nameof(StorageIsOpened))]
+    private void ChangePassword()
     {
         RegionManager.RequestNavigationToMainContent("ChangePassword");
     }
 
-    private void OnExport()
+    [RelayCommand(CanExecute = nameof(StorageIsOpened))]
+    private void Export()
     {
         RegionManager.RequestNavigationToMainContent("ExportStorage");
     }
 
-    private void OnImport()
+    [RelayCommand(CanExecute = nameof(StorageIsOpened))]
+    private void Import()
     {
         var openDialog = new OpenFileDialog
         {
@@ -59,19 +54,20 @@ internal class MainWindowViewModel : ViewModelBase
 
     private bool StorageIsOpened() => _storageService.StorageIsOpened;
 
-    private void OnGeneratePassword()
+    [RelayCommand]
+    private void GeneratePassword()
     {
-        DialogService.Show("PasswordGenerationDialog", null, res => { });
+        DialogService.Show("PasswordGenerationDialog", null, _ => { });
     }
 
-    private void OnSettings()
+    [RelayCommand]
+    private void Settings()
     {
         RegionManager.RequestNavigationToMainContent("Settings");
     }
 
-    private bool CanCloseStorage() => _storageService.StorageIsOpened;
-
-    private void OnCloseStorage()
+    [RelayCommand(CanExecute = nameof(StorageIsOpened))]
+    private void CloseStorage()
     {
         _storageService.CloseStorage();
 
@@ -83,7 +79,8 @@ internal class MainWindowViewModel : ViewModelBase
         RegionManager.RequestNavigationToMainContent("CreateOrOpenStorage");
     }
 
-    private void OnExit()
+    [RelayCommand]
+    private void Exit()
     {
         Application.Current.Shutdown(0);
     }
@@ -93,24 +90,10 @@ internal class MainWindowViewModel : ViewModelBase
         EventAggregator.GetEvent<StorageChanged>()
             .Subscribe(() =>
             {
-                CloseStorageCommand.RaiseCanExecuteChanged();
-                ChangePasswordCommand.RaiseCanExecuteChanged();
-                ExportCommand.RaiseCanExecuteChanged();
-                ImportCommand.RaiseCanExecuteChanged();
+                CloseStorageCommand.NotifyCanExecuteChanged();
+                ChangePasswordCommand.NotifyCanExecuteChanged();
+                ExportCommand.NotifyCanExecuteChanged();
+                ImportCommand.NotifyCanExecuteChanged();
             });
     }
-
-    public DelegateCommand ExitCommand { get; }
-
-    public DelegateCommand SettingsCommand { get; }
-    
-    public DelegateCommand GeneratePasswordCommand { get; }
-    
-    public DelegateCommand CloseStorageCommand { get; }
-    
-    public DelegateCommand ChangePasswordCommand { get; }
-    
-    public DelegateCommand ExportCommand { get; }
-    
-    public DelegateCommand ImportCommand { get; }
 }

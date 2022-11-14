@@ -8,6 +8,8 @@
              xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              xmlns:conv="clr-namespace:EdlinSoftware.Safe.Views.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:LoginToStorageViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

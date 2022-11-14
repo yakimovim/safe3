@@ -3,11 +3,12 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class StorageContentViewModel : ViewModelBase
+public partial class StorageContentViewModel : ObservableViewModelBase
 {
     private readonly Subject<string> _searchTextChanged = new();
 
@@ -15,10 +16,10 @@ public class StorageContentViewModel : ViewModelBase
     {
         _searchTextChanged.Throttle(TimeSpan.FromSeconds(2))
             .SubscribeOn(new DispatcherSynchronizationContext())
-            .Subscribe(OnSearchTextChanged);
+            .Subscribe(OnSearchForText);
     }
 
-    private void OnSearchTextChanged(string searchText)
+    private void OnSearchForText(string searchText)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -37,17 +38,11 @@ public class StorageContentViewModel : ViewModelBase
         });
     }
 
+    [ObservableProperty]
     private string _searchText = string.Empty;
-    
-    public string SearchText
+
+    partial void OnSearchTextChanged(string value)
     {
-        get => _searchText;
-        set
-        {
-            if (SetProperty(ref _searchText, value))
-            {
-                _searchTextChanged.OnNext(value);
-            }
-        }
+        _searchTextChanged.OnNext(value);
     }
 }

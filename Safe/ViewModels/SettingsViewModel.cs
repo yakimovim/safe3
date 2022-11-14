@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Services;
-using Prism.Commands;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-internal class SettingsViewModel : ViewModelBase
+internal partial class SettingsViewModel : ObservableViewModelBase
 {
     private readonly IConfigurationService _configurationService;
     private readonly ILanguagesService _languagesService;
@@ -21,12 +22,10 @@ internal class SettingsViewModel : ViewModelBase
     {
         _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
         _languagesService = languagesService ?? throw new ArgumentNullException(nameof(languagesService));
-
-        CancelCommand = new DelegateCommand(OnCancel);
-        OkCommand = new DelegateCommand(OnOk);
     }
 
-    private void OnOk()
+    [RelayCommand]
+    private void Ok()
     {
         _languagesService.CurrentLanguage = SelectedLanguage;
 
@@ -39,7 +38,8 @@ internal class SettingsViewModel : ViewModelBase
         _journal.GoBack();
     }
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         _journal.GoBack();
     }
@@ -57,13 +57,6 @@ internal class SettingsViewModel : ViewModelBase
 
     public ObservableCollection<CultureInfo> Languages { get; } = new();
 
+    [ObservableProperty]
     private CultureInfo _selectedLanguage = null!;
-    public CultureInfo SelectedLanguage
-    {
-        get => _selectedLanguage;
-        set => SetProperty(ref _selectedLanguage, value);
-    }
-
-    public DelegateCommand CancelCommand { get; set; }
-    public DelegateCommand OkCommand { get; set; }
 }

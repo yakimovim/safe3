@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Services;
 using Microsoft.Win32;
-using Prism.Commands;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-internal class ExportStorageViewModel : ViewModelBase
+internal partial class ExportStorageViewModel : ObservableViewModelBase
 {
     private readonly IStorageService _storageService;
     private IRegionNavigationJournal _journal = null!;
@@ -15,10 +16,6 @@ internal class ExportStorageViewModel : ViewModelBase
     public ExportStorageViewModel(IStorageService storageService)
     {
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-
-        ExportCommand = new DelegateCommand(OnExport, CanExport)
-            .ObservesProperty(() => Password);
-        CancelCommand = new DelegateCommand(OnCancel);
     }
 
     private bool CanExport()
@@ -26,7 +23,8 @@ internal class ExportStorageViewModel : ViewModelBase
         return !string.IsNullOrEmpty(_password);
     }
 
-    private void OnExport()
+    [RelayCommand(CanExecute = nameof(CanExport))]
+    private void Export()
     {
         var openDialog = new OpenFileDialog
         {
@@ -51,7 +49,8 @@ internal class ExportStorageViewModel : ViewModelBase
         }
     }
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         _journal.GoBack();
     }
@@ -64,20 +63,10 @@ internal class ExportStorageViewModel : ViewModelBase
         PasswordIsValid = true;
     }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ExportCommand))]
     private string _password = string.Empty;
-    public string Password
-    {
-        get => _password;
-        set => SetProperty(ref _password, value);
-    }
 
+    [ObservableProperty]
     private bool _passwordIsValid = true;
-    public bool PasswordIsValid
-    {
-        get => _passwordIsValid;
-        set => SetProperty(ref _passwordIsValid, value);
-    }
-
-    public DelegateCommand ExportCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
 }

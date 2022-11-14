@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
@@ -9,7 +10,7 @@ using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class StorageListViewModel : ViewModelBase
+public partial class StorageListViewModel : ObservableViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
@@ -39,26 +40,19 @@ public class StorageListViewModel : ViewModelBase
         }
     }
 
+    [ObservableProperty]
     private ObservableCollection<ItemListViewModel> _items = new();
-    public ObservableCollection<ItemListViewModel> Items
-    {
-        get => _items;
-        set => SetProperty(ref _items, value);
-    }
 
+    [ObservableProperty]
     private ItemListViewModel? _selectedItem;
 
-    public ItemListViewModel? SelectedItem
+    partial void OnSelectedItemChanged(ItemListViewModel? value)
     {
-        get => _selectedItem;
-        set
+        if (value != null)
         {
-            if (SetProperty(ref _selectedItem, value) && value != null)
-            {
-                var parameters = new NavigationParameters
-                    { { "Item", value.Item } };
-                RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
-            }
+            var parameters = new NavigationParameters
+                { { "Item", value.Item } };
+            RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
         }
     }
 
