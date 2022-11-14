@@ -2,12 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain.Model;
-using Prism.Commands;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public abstract class FieldViewModel : BindableBaseWithErrorNotification
+public abstract partial class FieldViewModel : ObservableViewModelBase
 {
     internal Field Field { get; }
 
@@ -16,41 +17,22 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
     {
         Field = field ?? throw new ArgumentNullException(nameof(field));
 
-
-        DeleteCommand = new DelegateCommand(OnDelete);
-        CopyToClipboardCommand = new DelegateCommand(OnCopyToClipboard);
-
-        Validate();
+        ValidateAllProperties();
     }
 
-    private void Validate()
-    {
-        if (string.IsNullOrWhiteSpace(Name))
-        {
-            ValidationErrors[nameof(Name)] = "Name can't be empty";
-        }
-        else
-        {
-            ValidationErrors.Remove(nameof(Name));
-        }
+    [RelayCommand]
+    protected abstract void CopyToClipboard();
 
-        RaiseErrorsChanged(nameof(Name));
-    }
-
-    protected abstract void OnCopyToClipboard();
-
+    [ObservableProperty]
     private ObservableCollection<FieldViewModel>? _containingCollection;
-    public ObservableCollection<FieldViewModel>? ContainingCollection
-    {
-        get => _containingCollection;
-        set => SetProperty(ref _containingCollection, value);
-    }
 
-    private void OnDelete()
+    [RelayCommand]
+    private void Delete()
     {
         Deleted?.Invoke(this, this);
     }
 
+    [IsNotNullOrWhiteSpace(nameof(Name))]
     public string Name
     {
         get => Field.Name;
@@ -58,9 +40,10 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
         {
             if (Field.Name != value)
             {
+                OnPropertyChanging();
                 Field.Name = value;
-                RaisePropertyChanged();
-                Validate();
+                ValidateProperty(value);
+                OnPropertyChanged();
             }
         }
     }
@@ -68,9 +51,6 @@ public abstract class FieldViewModel : BindableBaseWithErrorNotification
     public event EventHandler<FieldViewModel>? Deleted;
 
     public abstract FieldViewModel MakeCopy();
-
-    public DelegateCommand DeleteCommand { get; }
-    public DelegateCommand CopyToClipboardCommand { get; }
 }
 
 public sealed class TextFieldViewModel : FieldViewModel
@@ -91,13 +71,14 @@ public sealed class TextFieldViewModel : FieldViewModel
         {
             if (_field.Text != value)
             {
+                OnPropertyChanging();
                 _field.Text = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
     }
 
-    protected override void OnCopyToClipboard()
+    protected override void CopyToClipboard()
     {
         Clipboard.SetText(Text ?? string.Empty);
     }
@@ -126,13 +107,14 @@ public sealed class PasswordFieldViewModel : FieldViewModel
         {
             if (_field.Password != value)
             {
+                OnPropertyChanging();
                 _field.Password = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
     }
 
-    protected override void OnCopyToClipboard()
+    protected override void CopyToClipboard()
     {
         Clipboard.SetText(Password ?? string.Empty);
     }

@@ -4,18 +4,18 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.ViewModels.Dialogs;
-using Prism.Commands;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class ItemDetailsViewModel : ItemViewModelBase
+internal partial class ItemDetailsViewModel : ItemViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
@@ -28,13 +28,10 @@ public class ItemDetailsViewModel : ItemViewModelBase
     {
         _itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
-
-        EditItemCommand = new DelegateCommand(OnEditItem);
-        MoveItemCommand = new DelegateCommand(OnMoveItem);
-        DeleteItemCommand = new DelegateCommand(OnDeleteItem);
     }
 
-    private void OnMoveItem()
+    [RelayCommand]
+    private void MoveItem()
     {
         if (_item != null)
         {
@@ -42,7 +39,8 @@ public class ItemDetailsViewModel : ItemViewModelBase
         }
     }
 
-    private void OnDeleteItem()
+    [RelayCommand]
+    private void DeleteItem()
     {
         if (_item != null)
         {
@@ -58,7 +56,8 @@ public class ItemDetailsViewModel : ItemViewModelBase
         }
     }
 
-    private void OnEditItem()
+    [RelayCommand]
+    private void EditItem()
     {
         var parameters = new NavigationParameters
             { { "Item", _item } };
@@ -103,10 +102,4 @@ public class ItemDetailsViewModel : ItemViewModelBase
             _itemsRepository.SaveItem(_item);
         }
     }
-
-    public DelegateCommand EditItemCommand { get; }
-    
-    public DelegateCommand MoveItemCommand { get; }
-
-    public DelegateCommand DeleteItemCommand { get; }
 }

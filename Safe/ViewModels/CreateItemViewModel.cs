@@ -3,6 +3,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.ViewModels.Dialogs;
@@ -12,24 +14,18 @@ using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class CreateItemViewModel : ItemViewModelBase
+public partial class CreateItemViewModel : ItemViewModelBase
 {
     private Item? _parent;
 
+    [ObservableProperty]
     private string? _iconId;
-    public string? IconId
-    {
-        get => _iconId;
-        set => SetProperty(ref _iconId, value);
-    }
 
     public CreateItemViewModel()
     {
-        CancelCommand = new DelegateCommand(OnCancel);
-        CreateItemCommand = new DelegateCommand(OnCreate, CanCreate)
+        CreateItemCommand = new DelegateCommand(OnCreateItem, CanCreateItem)
             .ObservesProperty(() => Title)
             .ObservesProperty(() => Fields);
-        AddFieldsCommand = new DelegateCommand(OnAddFields);
 
         Fields.CollectionChanged += FieldsCollectionChanged;
     }
@@ -68,7 +64,10 @@ public class CreateItemViewModel : ItemViewModelBase
         CreateItemCommand.RaiseCanExecuteChanged();
     }
 
-    private void OnAddFields()
+    public DelegateCommand CreateItemCommand { get; }
+
+    [RelayCommand]
+    private void AddFields()
     {
         DialogService.ShowAddFieldsDialog(Fields, OnFieldDeleted);
     }
@@ -86,7 +85,7 @@ public class CreateItemViewModel : ItemViewModelBase
         });
     }
 
-    private void OnCreate()
+    private void OnCreateItem()
     {
         var item = new Item(_parent)
         {
@@ -108,7 +107,7 @@ public class CreateItemViewModel : ItemViewModelBase
         EventAggregator.GetEvent<NewItemCreated>().Publish((item, _parent));
     }
 
-    private bool CanCreate()
+    private bool CanCreateItem()
     {
         if (Fields.Count > 0 && Fields.Any(f => f.HasErrors))
         {
@@ -118,15 +117,12 @@ public class CreateItemViewModel : ItemViewModelBase
         return !string.IsNullOrWhiteSpace(Title);
     }
 
-    private void OnCancel()
+    [RelayCommand]
+    private void Cancel()
     {
         var parameters = new NavigationParameters { { "Item", _parent } };
         RegionManager.RequestNavigationToDetails("ItemDetails", parameters);
     }
-
-    public DelegateCommand CreateItemCommand { get; }
-    public DelegateCommand CancelCommand { get; }
-    public DelegateCommand AddFieldsCommand { get; }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {

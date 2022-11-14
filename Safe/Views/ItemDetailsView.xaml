@@ -9,6 +9,8 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:be="clr-namespace:EdlinSoftware.Safe.Views.Behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:ItemDetailsViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

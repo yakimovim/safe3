@@ -1,52 +1,38 @@
 ﻿using System;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Images;
-using Prism.Commands;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels.Controls;
 
-public class IconSelectorViewModel : ViewModelBase
+public partial class IconSelectorViewModel : ObservableViewModelBase
 {
     private readonly IIconsRepository _iconsRepository;
 
     public IconSelectorViewModel(IIconsRepository iconsRepository)
     {
         _iconsRepository = iconsRepository ?? throw new ArgumentNullException(nameof(iconsRepository));
-
-        ClearIconCommand = new DelegateCommand(OnClearIcon);
-        SelectIconCommand = new DelegateCommand(OnSelectIcon);
     }
 
     public override bool IsNavigationTarget(NavigationContext navigationContext) => false;
 
+    [ObservableProperty]
     private string? _iconId;
-    public string? IconId
+
+    partial void OnIconIdChanged(string? value)
     {
-        get => _iconId;
-        set
-        {
-            if (SetProperty(ref _iconId, value))
-            {
-                Icon = _iconsRepository.GetIcon(value);
-            }
-        }
+        Icon = _iconsRepository.GetIcon(value);
     }
 
+    [ObservableProperty]
     private ImageSource _icon = Icons.DefaultItemIcon;
-    public ImageSource Icon
-    {
-        get => _icon;
-        set => SetProperty(ref _icon, value);
-    }
 
-    public DelegateCommand ClearIconCommand { get; }
-
-    public DelegateCommand SelectIconCommand { get; }
-
-    private void OnSelectIcon()
+    [RelayCommand]
+    private void SelectIcon()
     {
         DialogService.ShowDialog("IconsDialog", new DialogParameters(), result =>
         {
@@ -59,7 +45,8 @@ public class IconSelectorViewModel : ViewModelBase
         });
     }
 
-    private void OnClearIcon()
+    [RelayCommand]
+    private void ClearIcon()
     {
         IconId = null;
     }

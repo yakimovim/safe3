@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
              xmlns:ctrls="clr-namespace:EdlinSoftware.Safe.Views.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:viewModels="clr-namespace:EdlinSoftware.Safe.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:CreateItemViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel LastChildFill="True">

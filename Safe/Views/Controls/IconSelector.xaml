@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:ctrls="clr-namespace:EdlinSoftware.Safe.ViewModels.Controls"
+             d:DataContext="{d:DesignInstance ctrls:IconSelectorViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Horizontal" Margin="0,10,0,10">

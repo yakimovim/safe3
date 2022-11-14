@@ -2,44 +2,36 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
 using EdlinSoftware.Safe.ViewModels.Dialogs;
-using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class ItemTreeViewModel : ItemViewModelBase
+public partial class ItemTreeViewModel : ItemViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
     private readonly IStorageInfoRepository _storageInfoRepository;
     public readonly Item? Item;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(DeleteItemCommand))]
     private ItemTreeViewModel? _parent;
 
-    public ItemTreeViewModel? Parent
-    {
-        get => _parent;
-        set => SetProperty(ref _parent, value);
-    }
-
+    [ObservableProperty]
     private string? _iconId;
-    public string? IconId
+
+    partial void OnIconIdChanged(string? value)
     {
-        get => _iconId;
-        set
-        {
-            if (SetProperty(ref _iconId, value))
-            {
-                Icon = _iconsRepository.GetIcon(value);
-            }
-        }
+        Icon = _iconsRepository.GetIcon(value);
     }
 
     public ItemTreeViewModel(
@@ -59,13 +51,6 @@ public class ItemTreeViewModel : ItemViewModelBase
         Description = Item?.Description ?? string.Empty;
 
         _subItems = new Lazy<ObservableCollection<ItemTreeViewModel>>(CreateSubItems);
-
-        DeleteItemCommand = new DelegateCommand(OnDeleteItem, CanDeleteItem)
-            .ObservesProperty(() => Parent);
-
-        CreateItemCommand = new DelegateCommand(OnCreateItem);
-
-        EditItemCommand = new DelegateCommand(OnEditItem);
     }
 
     protected override void SubscribeToEvents()
@@ -202,7 +187,8 @@ public class ItemTreeViewModel : ItemViewModelBase
                && Parent != null;
     }
 
-    private void OnDeleteItem()
+    [RelayCommand(CanExecute = nameof(CanDeleteItem))]
+    private void DeleteItem()
     {
         DialogService.ShowConfirmationDialog((string) Application.Current.Resources["DeleteItemConfirmation"], res =>
         {
@@ -215,14 +201,16 @@ public class ItemTreeViewModel : ItemViewModelBase
         });
     }
 
-    private void OnCreateItem()
+    [RelayCommand]
+    private void CreateItem()
     {
         var parameters = new NavigationParameters
             { { "Parent", Item } };
         RegionManager.RequestNavigationToDetails("CreateItem", parameters);
     }
 
-    private void OnEditItem()
+    [RelayCommand]
+    private void EditItem()
     {
         if (Item != null)
         {
@@ -269,10 +257,4 @@ public class ItemTreeViewModel : ItemViewModelBase
             _itemsRepository.SaveItem(Item);
         }
     }
-
-    public DelegateCommand DeleteItemCommand { get; }
-
-    public DelegateCommand CreateItemCommand { get; }
-
-    public DelegateCommand EditItemCommand { get; }
 }

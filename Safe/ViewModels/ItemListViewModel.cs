@@ -1,15 +1,15 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.Input;
 using EdlinSoftware.Safe.Domain;
 using EdlinSoftware.Safe.Domain.Model;
 using EdlinSoftware.Safe.Events;
 using EdlinSoftware.Safe.Images;
-using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 
 namespace EdlinSoftware.Safe.ViewModels;
 
-public class ItemListViewModel : ItemViewModelBase
+public partial class ItemListViewModel : ItemViewModelBase
 {
     private readonly IItemsRepository _itemsRepository;
     private readonly IIconsRepository _iconsRepository;
@@ -27,10 +27,6 @@ public class ItemListViewModel : ItemViewModelBase
         Title = Item.Title;
         Description = Item.Description ?? string.Empty;
         Icon = _iconsRepository.GetIcon(Item.IconId);
-
-        DeleteItemCommand = new DelegateCommand(OnDeleteItem);
-
-        EditItemCommand = new DelegateCommand(OnEditItem);
     }
 
     protected override void SubscribeToEvents()
@@ -68,21 +64,19 @@ public class ItemListViewModel : ItemViewModelBase
         return item.Equals(Item);
     }
 
-    private void OnDeleteItem()
+    [RelayCommand]
+    private void DeleteItem()
     {
         _itemsRepository.DeleteItem(Item);
 
         EventAggregator.GetEvent<ItemDeleted>().Publish(Item);
     }
 
-    private void OnEditItem()
+    [RelayCommand]
+    private void EditItem()
     {
         var parameters = new NavigationParameters
                     { { "Item", Item } };
         RegionManager.RequestNavigationToDetails("EditItem", parameters);
     }
-
-    public DelegateCommand DeleteItemCommand { get; }
-
-    public DelegateCommand EditItemCommand { get; }
 }
