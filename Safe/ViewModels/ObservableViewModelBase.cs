@@ -42,13 +42,11 @@ public abstract class ObservableViewModelBase : ObservableValidator, INavigation
 
 public sealed class IsNotNullOrEmptyAttribute : ValidationAttribute
 {
-    public IsNotNullOrEmptyAttribute(string propertyName, string? message = null)
+    public IsNotNullOrEmptyAttribute(string? message = null)
     {
-        PropertyName = propertyName;
         Message = message;
     }
 
-    public string PropertyName { get; }
     public string? Message { get; }
 
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
@@ -62,19 +60,17 @@ public sealed class IsNotNullOrEmptyAttribute : ValidationAttribute
             return ValidationResult.Success!;
         }
 
-        return new(Message ?? $"{PropertyName} {Application.Current.Resources["PropertyCantBeEmptyValidationMessage"]}");
+        return new(Message ?? $"{validationContext.DisplayName} {Application.Current.Resources["PropertyCantBeEmptyValidationMessage"]}");
     }
 }
 
 public sealed class IsNotNullOrWhiteSpaceAttribute : ValidationAttribute
 {
-    public IsNotNullOrWhiteSpaceAttribute(string propertyName, string? message = null)
+    public IsNotNullOrWhiteSpaceAttribute(string? message = null)
     {
-        PropertyName = propertyName;
         Message = message;
     }
 
-    public string PropertyName { get; }
     public string? Message { get; }
 
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
@@ -88,6 +84,6 @@ public sealed class IsNotNullOrWhiteSpaceAttribute : ValidationAttribute
             return ValidationResult.Success!;
         }
 
-        return new(Message ?? $"{PropertyName} {Application.Current.Resources["PropertyCantBeEmptyValidationMessage"]}");
+        return new(Message ?? $"{validationContext.DisplayName} {Application.Current.Resources["PropertyCantBeEmptyValidationMessage"]}");
     }
 }

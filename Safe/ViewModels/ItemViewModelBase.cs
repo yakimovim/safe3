@@ -11,7 +11,7 @@ namespace EdlinSoftware.Safe.ViewModels;
 public abstract partial class ItemViewModelBase : ObservableViewModelBase
 {
     [ObservableProperty]
-    [IsNotNullOrWhiteSpace(nameof(Title))]
+    [IsNotNullOrWhiteSpace]
     [NotifyDataErrorInfo]
     [NotifyPropertyChangedRecipients]
     private string _title = string.Empty;

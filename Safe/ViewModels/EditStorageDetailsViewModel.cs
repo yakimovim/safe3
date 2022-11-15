@@ -58,7 +58,7 @@ public partial class EditStorageDetailsViewModel : ObservableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveChangesCommand))]
-    [IsNotNullOrWhiteSpace(nameof(Title))]
+    [IsNotNullOrWhiteSpace]
     [NotifyDataErrorInfo]
     private string _title = string.Empty;
 

@@ -32,7 +32,7 @@ public abstract partial class FieldViewModel : ObservableViewModelBase
         Deleted?.Invoke(this, this);
     }
 
-    [IsNotNullOrWhiteSpace(nameof(Name))]
+    [IsNotNullOrWhiteSpace]
     public string Name
     {
         get => Field.Name;

@@ -16,13 +16,13 @@ public partial class ChangePasswordViewModel : ObservableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ChangePasswordCommand))]
-    [IsNotNullOrEmpty(nameof(OldPassword))]
+    [IsNotNullOrEmpty]
     [NotifyDataErrorInfo]
     private string _oldPassword = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ChangePasswordCommand))]
-    [IsNotNullOrEmpty(nameof(NewPassword))]
+    [IsNotNullOrEmpty]
     [NotifyDataErrorInfo]
     private string _newPassword = string.Empty;
 

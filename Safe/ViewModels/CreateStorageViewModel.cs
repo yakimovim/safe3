@@ -77,7 +77,7 @@ public partial class CreateStorageViewModel : ObservableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
-    [IsNotNullOrWhiteSpace(nameof(Title))]
+    [IsNotNullOrWhiteSpace]
     [NotifyDataErrorInfo]
     private string _title = string.Empty;
 
@@ -86,7 +86,7 @@ public partial class CreateStorageViewModel : ObservableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
-    [IsNotNullOrWhiteSpace(nameof(Password))]
+    [IsNotNullOrWhiteSpace]
     [NotifyDataErrorInfo]
     private string _password = string.Empty;
 
