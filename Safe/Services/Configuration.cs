@@ -23,7 +23,7 @@ namespace EdlinSoftware.Safe.Services
         {
             var settingsJson = File.ReadAllText("settings.json");
 
-            return JsonSerializer.Deserialize<Configuration>(settingsJson);
+            return JsonSerializer.Deserialize<Configuration>(settingsJson)!;
         }
 
         public void SaveConfiguration(Configuration configuration)

@@ -3,11 +3,13 @@ using System;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
+[assembly: CLSCompliant(false)]
+
 namespace EdlinSoftware.Safe.Search
 {
     public class SearchModelBuilder : SearchStringBaseListener
     {
-        private static IReadOnlyDictionary<string, Fields> _allowedFields =
+        private static readonly IReadOnlyDictionary<string, Fields> AllowedFields =
             new Dictionary<string, Fields>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "title", Fields.Title },
@@ -59,9 +61,9 @@ namespace EdlinSoftware.Safe.Search
             var fieldText = fieldContext.GetText();
             var text = textContext.GetText().Trim('"');
 
-            if (_allowedFields.ContainsKey(fieldText))
+            if (AllowedFields.ContainsKey(fieldText))
             {
-                _result!.AddLast(new SearchStringElement(text, _allowedFields[fieldText]));
+                _result!.AddLast(new SearchStringElement(text, AllowedFields[fieldText]));
             }
             else
             {

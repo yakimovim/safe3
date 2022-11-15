@@ -50,6 +50,7 @@ class Build : NukeBuild
             DotNetBuild(_ => _
                 .SetConfiguration(Configuration)
                 .SetProjectFile(Solution)
+                .EnableNoRestore()
             );
         });
 
@@ -60,6 +61,8 @@ class Build : NukeBuild
             DotNetTest(_ => _
                 .SetConfiguration(Configuration)
                 .SetProjectFile(Solution)
+                .EnableNoRestore()
+                .EnableNoBuild()
             );
         });
 
@@ -71,6 +74,8 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetProject(MainProject)
                 .SetOutput(OutputPath)
+                .EnableNoRestore()
+                .EnableNoBuild()
             );
         });
 

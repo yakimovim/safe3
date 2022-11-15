@@ -8,7 +8,7 @@ namespace EdlinSoftware.Safe.Storage.Model
 
         public int? ParentId { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 

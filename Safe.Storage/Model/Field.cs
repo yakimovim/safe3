@@ -4,7 +4,7 @@ namespace EdlinSoftware.Safe.Storage.Model
 {
     public abstract class Field
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public abstract void Visit(IFieldVisitor visitor);
 
@@ -13,8 +13,8 @@ namespace EdlinSoftware.Safe.Storage.Model
 
     public sealed class TextField : Field
     {
-        [BsonField("Value")]
-        public string Text { get; set; }
+        [BsonField("Value")] 
+        public string Text { get; set; } = string.Empty;
 
         public override void Visit(IFieldVisitor visitor)
         {
@@ -30,7 +30,7 @@ namespace EdlinSoftware.Safe.Storage.Model
     public sealed class PasswordField : Field
     {
         [BsonField("Value")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         public override void Visit(IFieldVisitor visitor)
         {

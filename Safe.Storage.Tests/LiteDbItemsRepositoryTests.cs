@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace EdlinSoftware.Safe.Storage.Tests;
 
-public class LiteDbItemsRepositoryTests : IDisposable
+public sealed class LiteDbItemsRepositoryTests : IDisposable
 {
     private readonly LiteDbDatabaseProvider _databaseProvider;
     private readonly LiteDbItemsRepository _itemsRepository;
@@ -21,7 +21,7 @@ public class LiteDbItemsRepositoryTests : IDisposable
     [Fact]
     public void SaveNullItem()
     {
-        Action act = () => _itemsRepository.SaveItems(new Item[] { null });
+        Action act = () => _itemsRepository.SaveItems(new Item[] { null! });
 
         act.Should().Throw<ArgumentException>();
     }

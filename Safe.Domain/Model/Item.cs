@@ -45,7 +45,17 @@ namespace EdlinSoftware.Safe.Domain.Model
 
         public override int GetHashCode()
         {
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
             return Id;
         }
+
+        public static bool operator ==(Item? a, Item? b)
+        {
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null)) return true;
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Item? a, Item? b) => !(a == b);
     }
 }
